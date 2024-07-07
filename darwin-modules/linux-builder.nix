@@ -1,0 +1,16 @@
+{
+  nix.linux-builder = {
+    enable = true;
+    maxJobs = 10;
+    ephemeral = true;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 100 * 1024;
+          memorySize = 16 * 1024;
+        };
+        cores = 8;
+      };
+    };
+  };
+}
