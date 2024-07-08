@@ -14,7 +14,6 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     ez-configs.url = "github:ehllie/ez-configs";
     nixos-tests.url = "github:esselius/nixos-tests";
-    devshell.url = "github:numtide/devshell";
 
     agenix.url = "github:ryantm/agenix";
   };
@@ -22,7 +21,6 @@
   outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
-        inputs.devshell.flakeModule
         inputs.ez-configs.flakeModule
         inputs.nixos-tests.flakeModule
       ];
@@ -38,18 +36,14 @@
         nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
       };
       perSystem = { system, pkgs, config, lib, specialArgs, options }: {
-        devshells.default = {
-          env = [{
-            name = "PLAYWRIGHT_BROWSERS_PATH";
-            value = pkgs.playwright-driver.browsers;
-          }];
-        };
-
         nixosTests = {
           path = ./tests;
           args = {
             inherit inputs;
             myModules = self.nixosModules;
+          };
+          env = {
+            PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
           };
         };
       };

@@ -1,4 +1,4 @@
-name: "NixOS Tests"
+name: "Darwin Rebuild"
 on:
   pull_request:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -14,5 +14,5 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - uses: DeterminateSystems/flake-checker-action@main
 
-      - name: Monitoring Auth
-        run: nix run .#nixosTests.monitoring-auth
+      - name: Build Fox darwin config
+        run: nix run nix-darwin -- build --flake .#Fox
