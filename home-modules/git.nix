@@ -49,18 +49,35 @@
     };
   };
 
-  programs.fish.functions = {
-    glo.body = "cd (${pkgs.ghq}/bin/ghq root)/$argv";
-    github-repos.body = ''${pkgs.gh}/bin/gh repo list "$argv" -L 1000 --json sshUrl -q ".[].sshUrl"'';
-    github-starred.body = "${pkgs.gh}/bin/gh api /user/starred --paginate -q '.[].ssh_url'";
-    github-get-all.body = ''
-      github-starred | ${pkgs.ghq}/bin/ghq get -u -P
-      github-repos (${pkgs.gh}/bin/gh api /user -q '.login') | ${pkgs.ghq}/bin/ghq get -u -P
+  programs.fish = {
+    shellAliases = {
+      gcb = "git checkout -b";
+      gs = "git status -sb";
+      "gcan!" = "git commit -v -a --no-edit --amend";
+      gcam = "git commit -a -m";
+      gl = "git pull";
+      gp = "git push";
+      gpsup = "git push --set-upstream origin (git rev-parse --abbrev-ref HEAD)";
+      gpf = "git push --force-with-lease";
+    };
 
-      for org in (${pkgs.gh}/bin/gh api /user/orgs -q '.[].login')
-        github-repos $org | ${pkgs.ghq}/bin/ghq get -u -P
-      end
-    '';
+    shellAbbrs = {
+      gco = "git checkout";
+    };
+
+    functions = {
+      glo.body = "cd (${pkgs.ghq}/bin/ghq root)/$argv";
+      github-repos.body = ''${pkgs.gh}/bin/gh repo list "$argv" -L 1000 --json sshUrl -q ".[].sshUrl"'';
+      github-starred.body = "${pkgs.gh}/bin/gh api /user/starred --paginate -q '.[].ssh_url'";
+      github-get-all.body = ''
+        github-starred | ${pkgs.ghq}/bin/ghq get -u -P
+        github-repos (${pkgs.gh}/bin/gh api /user -q '.login') | ${pkgs.ghq}/bin/ghq get -u -P
+
+        for org in (${pkgs.gh}/bin/gh api /user/orgs -q '.[].login')
+          github-repos $org | ${pkgs.ghq}/bin/ghq get -u -P
+        end
+      '';
+    };
   };
 
   xdg.configFile."fish/completions/glo.fish".text = "complete -f -c glo -a '(${pkgs.ghq}/bin/ghq list | sort)'";

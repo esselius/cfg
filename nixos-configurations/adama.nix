@@ -7,7 +7,6 @@
     ezModules.user-peteresselius
     ezModules.auth
     ezModules.monitoring
-    ezModules.secrets
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

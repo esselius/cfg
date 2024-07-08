@@ -2,10 +2,9 @@
 
 {
   imports = [
-    ezModules.user-peteresselius
-    ezModules.desktop
-    ezModules.case-sensitive-nix-store
+    ezModules.tiling-wm
     ezModules.homebrew
+    ezModules.user-peteresselius
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";

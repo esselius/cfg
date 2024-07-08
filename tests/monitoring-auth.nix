@@ -52,6 +52,7 @@
               sub_mode = "hashed_user_id";
               include_claims_in_id_token = true;
               issuer_mode = "per_provider";
+              redirect_uris = "http://localhost:3000/login/generic_oauth";
             };
           }
           {
@@ -72,6 +73,7 @@
     monitoring = {
       enable = true;
       grafana = {
+        domain = "localhost";
         oauth = {
           client_id_file = builtins.toFile "grafana-client-id" "grafana";
           client_secret_file = builtins.toFile "grafana-client-secret" "secret";

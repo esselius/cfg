@@ -5,7 +5,10 @@
     ezModules.context
     ezModules.linux-builder
     ezModules.nix-multi-user
-    ezModules.shell
-    ezModules.flakes
+    ezModules.case-sensitive-nix-store
   ];
+
+  nix.extraOptions = ''
+    extra-experimental-features = nix-command flakes
+  '';
 }

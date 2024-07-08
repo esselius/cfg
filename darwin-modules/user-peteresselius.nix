@@ -6,4 +6,7 @@
     home = "/Users/peteresselius";
     shell = pkgs.fish;
   };
+
+  programs.fish.enable = true;
+  environment.shells = [ pkgs.fish ];
 }

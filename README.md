@@ -1,6 +1,6 @@
 # Usage
 
-Install nix with the DeterminateSystems nix-installer
+Install nix with the [DeterminateSystems nix-installer](https://github.com/DeterminateSystems/nix-installer)
 
 ```shell
 $ nix-installer plan macos --case-sensitive --extra-conf "use-case-hack = false" --encrypt true > plan.json

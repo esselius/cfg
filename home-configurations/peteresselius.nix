@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ezModules.shell
-    ezModules.ssh
-    ezModules.git
-    ezModules.secrets
     ezModules.asdf
+    ezModules.fish-shell
+    ezModules.git
+    ezModules.ssh
+    ezModules.tools
   ];
 
   home.stateVersion = "24.05";
