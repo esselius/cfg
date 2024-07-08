@@ -404,7 +404,7 @@
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-darwin"
         ]
       },
       "locked": {
@@ -512,6 +512,22 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-darwin": {
+      "locked": {
+        "lastModified": 1720403641,
+        "narHash": "sha256-RIcGeoV6rzAbNIqm4cCi/eHTShs3Z5PA33veZtoW2fc=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "01dc5b0c71ad19d15e53d363e84bbe13c43c7e6f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-24.05-darwin",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -749,6 +765,7 @@
         "nix-homebrew": "nix-homebrew",
         "nixos-tests": "nixos-tests",
         "nixpkgs": "nixpkgs_8",
+        "nixpkgs-darwin": "nixpkgs-darwin",
         "raspberry-pi-nix": "raspberry-pi-nix"
       }
     },

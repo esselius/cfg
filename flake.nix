@@ -1,12 +1,13 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     authentik-nix.url = "github:nix-community/authentik-nix/node-22";
 
     nix-darwin.url = "github:lnl7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 

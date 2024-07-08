@@ -4,10 +4,6 @@
   programs = {
     fish = {
       shellAbbrs = {
-        k = "kubectl";
-        kcuc = "kubectl config use-context";
-        kccc = "kubectl config current-context";
-
         rg = "rg -S --hidden --glob '!.git/*'";
       };
     };
@@ -16,9 +12,12 @@
   };
 
   home.packages = with pkgs; [
-    nixpkgs-fmt
+    cmatrix
     jq
-    zstd
     nixos-rebuild
+    nixpkgs-fmt
+    socat
+    watch
+    zstd
   ];
 }
