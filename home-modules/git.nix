@@ -66,5 +66,4 @@
   xdg.configFile."fish/completions/glo.fish".text = "complete -f -c glo -a '(${pkgs.ghq}/bin/ghq list | sort)'";
 
   home.packages = with pkgs; [ gh ghq ];
-
 }

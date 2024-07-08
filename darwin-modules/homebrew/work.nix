@@ -11,6 +11,7 @@
       "intellij-idea"
       "intune-company-portal"
       "microsoft-teams"
+      "tunnelblick"
     ];
 
     brews = lib.mkIf (config.context == "work") [
