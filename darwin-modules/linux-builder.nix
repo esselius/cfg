@@ -1,7 +1,7 @@
 {
   nix.linux-builder = {
     enable = true;
-    maxJobs = 10;
+    maxJobs = 4;
     ephemeral = true;
     config = {
       virtualisation = {
