@@ -3,6 +3,7 @@
 {
   imports = [
     ezModules.context
+    ezModules.authentik
   ];
 
   nix.settings.trusted-users = [ "root" "@wheel" ];

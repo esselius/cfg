@@ -8,6 +8,9 @@ in
   options.monitoring = {
     enable = mkEnableOption "Enable Grafana";
     grafana = {
+      domain = mkOption {
+        type = types.str;
+      };
       oauth = {
         auth_url = mkOption {
           type = types.str;
@@ -32,6 +35,7 @@ in
       enable = true;
       settings = {
         server = {
+          domain = cfg.grafana.domain;
           http_port = 3000;
           http_addr = "0.0.0.0";
         };
