@@ -19,5 +19,6 @@
     nixpkgs-fmt
     jq
     zstd
+    nixos-rebuild
   ];
 }
