@@ -18,4 +18,8 @@
     set -x EMAIL (cat ${config.age.secrets.email.path})
     set -x DBT_USER (cat ${config.age.secrets.email.path})
   '';
+  # age.secrets.github-token.file = ../secrets/github-token.age;
+  # nix.extraOptions = ''
+  #   !include ${config.age.secrets.github-token.path}
+  # '';
 }

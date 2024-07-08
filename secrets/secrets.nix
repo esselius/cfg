@@ -5,4 +5,5 @@ in
 {
   "work-email.age".publicKeys = [ work-peteresselius ];
   "home-email.age".publicKeys = [ home-peteresselius ];
+  "github-token.age".publicKeys = [ work-peteresselius home-peteresselius ];
 }
