@@ -27,6 +27,7 @@
         globalArgs = { inherit inputs; };
 
         darwin.hosts.Fox.userHomeModules = [ "peteresselius" ];
+        darwin.hosts.Petere-MBP.userHomeModules = [ "peteresselius" ];
         nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
       };
     };
