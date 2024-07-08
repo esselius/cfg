@@ -15,4 +15,4 @@ jobs:
       - uses: DeterminateSystems/flake-checker-action@main
 
       - name: Build Fox darwin config
-        run: nix run nix-darwin -- build --flake .#Fox
+        run: nix run nix-darwin -- check --flake .#Fox
