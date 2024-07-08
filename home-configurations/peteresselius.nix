@@ -6,6 +6,7 @@
     ezModules.ssh
     ezModules.git
     ezModules.secrets
+    ezModules.asdf
   ];
 
   home.stateVersion = "24.05";
@@ -15,5 +16,6 @@
   age.secrets.email.file = ../secrets/${config.context}-email.age;
   programs.fish.shellInit = ''
     set -x EMAIL (cat ${config.age.secrets.email.path})
+    set -x DBT_USER (cat ${config.age.secrets.email.path})
   '';
 }
