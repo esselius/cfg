@@ -22,6 +22,9 @@
     nixos-tests.url = "github:esselius/nixos-tests";
 
     agenix.url = "github:ryantm/agenix";
+
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ self, flake-parts, ... }:

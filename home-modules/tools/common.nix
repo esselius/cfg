@@ -1,6 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
+  imports = [
+    inputs.nix-index-database.hmModules.nix-index
+  ];
   programs = {
     fish = {
       shellAbbrs = {
@@ -8,10 +11,13 @@
       };
     };
 
+    nix-index-database.comma.enable = true;
+
     ripgrep.enable = true;
   };
 
   home.packages = with pkgs; [
+    cachix
     cmatrix
     jq
     nixos-rebuild
@@ -19,6 +25,5 @@
     socat
     watch
     zstd
-    cachix
   ];
 }
