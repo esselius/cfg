@@ -10,7 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: docker/setup-qemu-action@v3                                     # ⑴
+
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: "extra-platforms = aarch64-linux"
 
       - uses: cachix/cachix-action@v15
         with:
