@@ -5,7 +5,11 @@ on:
     branches:
       - main
 jobs:
-  tests:
+  nixos-rebuild:
+    strategy:
+      matrix:
+        host:
+          - adama
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,5 +26,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check adama nixos config
-        run: nix run nixpkgs#nixos-rebuild -- build --flake .#adama
+      - name: Check nixos config
+        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}

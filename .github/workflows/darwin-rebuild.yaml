@@ -5,7 +5,12 @@ on:
     branches:
       - main
 jobs:
-  tests:
+  darwin-rebuild:
+    strategy:
+      matrix:
+        host:
+          - Fox
+          - Petere-MBP
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,8 +25,5 @@ jobs:
 
       - uses: DeterminateSystems/flake-checker-action@main
 
-      - name: Check Fox darwin config
-        run: nix run nix-darwin -- check --flake .#Fox
-
-      - name: Check Petere-MBP darwin config
-        run: nix run nix-darwin -- check --flake .#Petere-MBP
+      - name: Check darwin config
+        run: nix run nix-darwin -- check --flake .#${{ matrix.host }}

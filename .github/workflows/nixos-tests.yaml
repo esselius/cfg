@@ -5,7 +5,11 @@ on:
     branches:
       - main
 jobs:
-  tests:
+  nixos-tests:
+    strategy:
+      matrix:
+        test:
+          - monitoring-auth
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,4 +23,4 @@ jobs:
           extraPullNames: nix-community
 
       - name: Monitoring Auth
-        run: nix run .#nixosTests.monitoring-auth
+        run: nix run .#nixosTests.${{ matrix.test }}
