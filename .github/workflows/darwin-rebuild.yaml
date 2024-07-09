@@ -1,16 +1,17 @@
-name: "NixOS Tests"
+name: "Darwin Rebuild"
 on:
   pull_request:
   push:
     branches:
       - main
 jobs:
-  nixos-tests:
+  darwin-rebuild:
     strategy:
       matrix:
-        test:
-          - monitoring-auth
-    runs-on: ubuntu-latest
+        host:
+          - Fox
+          - Petere-MBP
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -22,5 +23,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Monitoring Auth
-        run: nix run .#nixosTests.${{ matrix.test }}
+      - uses: DeterminateSystems/flake-checker-action@main
+
+      - name: Check darwin config
+        run: nix run nix-darwin -- check --flake .#${{ matrix.host }}

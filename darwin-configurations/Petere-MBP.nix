@@ -3,7 +3,7 @@
 {
   imports = [
     ezModules.tiling-wm
-    ezModules.homebrew
+    ezModules.homebrew-packages
     ezModules.user-peteresselius
   ];
 

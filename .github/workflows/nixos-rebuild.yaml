@@ -1,20 +1,24 @@
-name: "NixOS Tests"
+name: "NixOS Rebuild"
 on:
   pull_request:
   push:
     branches:
       - main
 jobs:
-  nixos-tests:
+  nixos-rebuild:
     strategy:
       matrix:
-        test:
-          - monitoring-auth
+        host:
+          - adama
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - uses: docker/setup-qemu-action@v3                                     # ⑴
+
       - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: "extra-platforms = aarch64-linux"
 
       - uses: cachix/cachix-action@v15
         with:
@@ -22,5 +26,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Monitoring Auth
-        run: nix run .#nixosTests.${{ matrix.test }}
+      - name: Check nixos config
+        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}

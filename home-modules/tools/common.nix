@@ -19,5 +19,6 @@
     socat
     watch
     zstd
+    cachix
   ];
 }
