@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     authentik-nix.url = "github:nix-community/authentik-nix/node-22";
