@@ -481,16 +481,16 @@
     },
     "nixpkgs-darwin": {
       "locked": {
-        "lastModified": 1720440425,
-        "narHash": "sha256-phkmIS2VK3TFklRCaSs8ztqBrnycnj+eKa2HrKDhtyk=",
+        "lastModified": 1720492477,
+        "narHash": "sha256-PV6LKJpj43tuKAMEfmXiKZjlOW1IqZORUJ8WYcdLtGE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2e45bfd5361ccdbebe45b68ae2021aea0078eb00",
+        "rev": "64f145f456b7a3953f191cad9e257cd88412044e",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixpkgs-24.05-darwin",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -535,6 +535,22 @@
       "original": {
         "type": "tarball",
         "url": "https://github.com/NixOS/nixpkgs/archive/eb9ceca17df2ea50a250b6b27f7bf6ab0186f198.tar.gz"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1720440425,
+        "narHash": "sha256-phkmIS2VK3TFklRCaSs8ztqBrnycnj+eKa2HrKDhtyk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "2e45bfd5361ccdbebe45b68ae2021aea0078eb00",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "nixpkgs_2": {
@@ -712,6 +728,7 @@
         "nixos-tests": "nixos-tests",
         "nixpkgs": "nixpkgs_7",
         "nixpkgs-darwin": "nixpkgs-darwin",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "raspberry-pi-nix": "raspberry-pi-nix"
       }
     },
