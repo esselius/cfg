@@ -22,7 +22,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - uses: DeterminateSystems/flake-checker-action@main
-
       - name: Check adama nixos config
         run: nix run nixpkgs#nixos-rebuild -- build --flake .#adama

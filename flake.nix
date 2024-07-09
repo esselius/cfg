@@ -1,4 +1,9 @@
 {
+  nixConfig = {
+    extra-substituters = "https://esselius.cachix.org";
+    extra-trusted-public-keys = "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA=";
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";

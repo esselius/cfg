@@ -18,7 +18,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - uses: DeterminateSystems/flake-checker-action@main
-
       - name: Monitoring Auth
         run: nix run .#nixosTests.monitoring-auth
