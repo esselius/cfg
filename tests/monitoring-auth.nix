@@ -14,6 +14,7 @@
       inputs.authentik-nix.nixosModules.default
 
       myModules.auth
+      myModules.authentik-blueprints
       myModules.monitoring
     ];
 
@@ -26,50 +27,50 @@
         AUTHENTIK_BOOTSTRAP_PASSWORD=password
         AUTHENTIK_BOOTSTRAP_TOKEN=token
       '';
-      blueprints = [{
-        metadata.name = "grafana-oauth";
-        entries = [
-          {
-            model = "authentik_providers_oauth2.oauth2provider";
-            state = "present";
-            identifiers.name = "Grafana";
-            id = "provider";
-            attrs = {
-              authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
-              authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
-              client_type = "confidential";
-              client_id = "grafana";
-              client_secret = "secret";
-              access_code_validity = "minutes=1";
-              access_token_validity = "minutes=5";
-              refresh_token_validity = "days=30";
-              property_mappings = [
-                "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
-                "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
-                "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
-                "!Find [authentik_providers_oauth2.scopemapping, [scope_name, offline_access]]"
-              ];
-              sub_mode = "hashed_user_id";
-              include_claims_in_id_token = true;
-              issuer_mode = "per_provider";
-              redirect_uris = "http://localhost:3000/login/generic_oauth";
-            };
-          }
-          {
-            model = "authentik_core.application";
-            state = "present";
-            identifiers.slug = "grafana";
-            id = "grafana";
-            attrs = {
-              name = "Grafana";
-              provider = "!KeyOf provider";
-              policy_engine_mode = "any";
-            };
-          }
-        ];
-      }];
-    };
 
+    };
+    services.authentik.blueprints = [{
+      metadata.name = "grafana-oauth";
+      entries = [
+        {
+          model = "authentik_providers_oauth2.oauth2provider";
+          state = "present";
+          identifiers.name = "Grafana";
+          id = "provider";
+          attrs = {
+            authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
+            authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
+            client_type = "confidential";
+            client_id = "grafana";
+            client_secret = "secret";
+            access_code_validity = "minutes=1";
+            access_token_validity = "minutes=5";
+            refresh_token_validity = "days=30";
+            property_mappings = [
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, offline_access]]"
+            ];
+            sub_mode = "hashed_user_id";
+            include_claims_in_id_token = true;
+            issuer_mode = "per_provider";
+            redirect_uris = "http://localhost:3000/login/generic_oauth";
+          };
+        }
+        {
+          model = "authentik_core.application";
+          state = "present";
+          identifiers.slug = "grafana";
+          id = "grafana";
+          attrs = {
+            name = "Grafana";
+            provider = "!KeyOf provider";
+            policy_engine_mode = "any";
+          };
+        }
+      ];
+    }];
     monitoring = {
       enable = true;
       grafana = {
