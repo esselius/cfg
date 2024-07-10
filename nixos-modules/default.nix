@@ -3,8 +3,6 @@
 {
   imports = [
     ezModules.context
-    ezModules.authentik
-    ezModules.authentik-blueprints
     ezModules.agenix
   ];
 

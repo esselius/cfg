@@ -1,6 +1,8 @@
 { config, lib, pkgs, mkAuthentikScope, ... }:
 
 let
+  cfg = config.services.authentik.blueprints;
+
   inherit (builtins) map toJSON toFile;
   inherit (lib) types mkOption mkEnableOption mkIf getAttr escapeShellArg escapeShellArgs concatMapStringsSep;
 
@@ -68,8 +70,8 @@ let
 
   copyBlueprints = concatMapStringsSep
     "\n"
-    (blueprint: "cat ${blueprint.file} | sed -E 's/\"(!(Env|KeyOf|Find) [^\"]+)\"/\\1/g' > $out/blueprints/custom/${blueprint.filename}")
-    config.services.authentik.blueprints;
+    (blueprint: "sed -E 's/\"(!(Env|KeyOf|Find) [^\"]+)\"/\\1/g' < ${blueprint.file} > $out/blueprints/custom/${blueprint.filename}")
+    cfg;
 
   customScope = (mkAuthentikScope { inherit pkgs; }).overrideScope (final: prev: {
     authentikComponents = prev.authentikComponents // {
@@ -96,6 +98,8 @@ in
   };
 
   config = {
-    services.authentik.authentikComponents = mkIf (config.services.authentik.blueprints != [ ]) customScope.authentikComponents;
+    services.authentik = mkIf (config.services.authentik.blueprints != [ ]) {
+      inherit (customScope) authentikComponents;
+    };
   };
 }
