@@ -1,4 +1,4 @@
-{ inputs, ezModules, config, ... }:
+{ ezModules, config, ... }:
 
 {
   imports = [

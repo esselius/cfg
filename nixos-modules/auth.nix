@@ -1,10 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.auth;
-
-  inherit (builtins) map toJSON toFile;
-  inherit (lib) types mkOption mkEnableOption mkIf getAttr escapeShellArg escapeShellArgs concatMapStringsSep;
+  inherit (lib) types mkOption mkEnableOption mkIf;
 in
 {
   options = {

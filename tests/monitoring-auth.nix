@@ -3,7 +3,7 @@
 {
   name = "monitoring-auth";
 
-  nodes.machine = { modulesPath, ... }: {
+  nodes.machine = {
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
     virtualisation = {

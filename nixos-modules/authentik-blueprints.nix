@@ -3,8 +3,8 @@
 let
   cfg = config.services.authentik.blueprints;
 
-  inherit (builtins) map toJSON toFile;
-  inherit (lib) types mkOption mkEnableOption mkIf getAttr escapeShellArg escapeShellArgs concatMapStringsSep;
+  inherit (builtins) toJSON toFile;
+  inherit (lib) types mkOption mkIf concatMapStringsSep;
 
   blueprint = types.submodule ({ config, ... }: {
     options = {
