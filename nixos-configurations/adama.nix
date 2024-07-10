@@ -6,6 +6,8 @@
     ezModules.sshd
     ezModules.user-peteresselius
     ezModules.auth
+    ezModules.authentik
+    ezModules.authentik-blueprints
     ezModules.monitoring
   ];
 
