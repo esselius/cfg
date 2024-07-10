@@ -1,11 +1,11 @@
 { config, lib, ... }:
 
 let
-  cfg = config.monitoring;
+  cfg = config.profiles.monitoring;
   inherit (lib) types mkOption mkIf mkEnableOption;
 in
 {
-  options.monitoring = {
+  options.profiles.monitoring = {
     enable = mkEnableOption "Enable Grafana";
     grafana = {
       domain = mkOption {

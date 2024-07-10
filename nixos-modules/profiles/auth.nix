@@ -1,19 +1,13 @@
 { config, lib, ... }:
 
 let
-  cfg = config.auth;
+  cfg = config.profiles.auth;
   inherit (lib) types mkOption mkEnableOption mkIf;
 in
 {
   options = {
-    auth = {
+    profiles.auth = {
       enable = mkEnableOption "auth";
-      env-file = mkOption {
-        type = types.str;
-      };
-      vhost = mkOption {
-        type = types.str;
-      };
       listen_http = mkOption {
         type = types.str;
         default = "0.0.0.0:9000";
@@ -28,7 +22,6 @@ in
   config = mkIf cfg.enable {
     services.authentik = {
       enable = true;
-      environmentFile = cfg.env-file;
       settings = {
         listen = {
           listen_http = cfg.listen_http;

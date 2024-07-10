@@ -13,22 +13,20 @@
     imports = [
       inputs.authentik-nix.nixosModules.default
 
-      myModules.auth
       myModules.authentik-blueprints
-      myModules.monitoring
+      myModules.profiles
     ];
 
     networking.firewall.enable = false;
 
-    auth = {
+    profiles.auth = {
       enable = true;
-      env-file = builtins.toFile "authentik-env-file" ''
-        AUTHENTIK_SECRET_KEY=qwerty123456
-        AUTHENTIK_BOOTSTRAP_PASSWORD=password
-        AUTHENTIK_BOOTSTRAP_TOKEN=token
-      '';
-
     };
+    services.authentik.environmentFile = builtins.toFile "authentik-env-file" ''
+      AUTHENTIK_SECRET_KEY=qwerty123456
+      AUTHENTIK_BOOTSTRAP_PASSWORD=password
+      AUTHENTIK_BOOTSTRAP_TOKEN=token
+    '';
     services.authentik.blueprints = [{
       metadata.name = "grafana-oauth";
       entries = [
@@ -71,7 +69,7 @@
         }
       ];
     }];
-    monitoring = {
+    profiles.monitoring = {
       enable = true;
       grafana = {
         domain = "localhost";
