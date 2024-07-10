@@ -44,7 +44,7 @@
         darwin.hosts.Petere-MBP.userHomeModules = [ "peteresselius" ];
         nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
       };
-      perSystem = { system, pkgs, config, lib, specialArgs, options }: {
+      perSystem = { pkgs, ... }: {
         nixosTests = {
           path = ./tests;
           args = {
