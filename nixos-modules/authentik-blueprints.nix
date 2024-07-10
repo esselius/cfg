@@ -73,7 +73,7 @@ let
     (blueprint: "sed -E 's/\"(!(Env|KeyOf|Find) [^\"]+)\"/\\1/g' < ${blueprint.file} > $out/blueprints/custom/${blueprint.filename}")
     cfg;
 
-  customScope = (mkAuthentikScope { inherit pkgs; }).overrideScope (final: prev: {
+  customScope = (mkAuthentikScope { inherit pkgs; }).overrideScope (_final: prev: {
     authentikComponents = prev.authentikComponents // {
       staticWorkdirDeps = prev.authentikComponents.staticWorkdirDeps.overrideAttrs
         (oA: {
