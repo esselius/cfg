@@ -5,10 +5,6 @@
     ezModules.hardware-rpi5
     ezModules.sshd
     ezModules.user-peteresselius
-    ezModules.auth
-    ezModules.authentik
-    ezModules.authentik-blueprints
-    ezModules.monitoring
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
@@ -20,10 +16,10 @@
   networking.firewall.allowedTCPPorts = [ 3000 9000 ];
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
-  auth = {
+  profiles.auth = {
     enable = true;
-    env-file = config.age.secrets.authentik-env.path;
   };
+  services.authentik.environmentFile = config.age.secrets.authentik-env.path;
 
   services.authentik.blueprints = [{
     metadata.name = "grafana-oauth";
@@ -66,7 +62,7 @@
       }
     ];
   }];
-  monitoring = {
+  profiles.monitoring = {
     enable = true;
     grafana = {
       domain = "adama";

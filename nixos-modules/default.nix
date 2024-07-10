@@ -3,6 +3,7 @@
 {
   imports = [
     ezModules.context
+    ezModules.profiles
     ezModules.agenix
   ];
 
