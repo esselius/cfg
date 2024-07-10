@@ -13,8 +13,8 @@
     imports = [
       inputs.authentik-nix.nixosModules.default
 
-      myModules.profiles
       myModules.authentik-blueprints
+      myModules.profiles
     ];
 
     networking.firewall.enable = false;

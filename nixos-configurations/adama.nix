@@ -6,11 +6,11 @@
   imports = [
     inputs.authentik-nix.nixosModules.default
 
+    ezModules.authentik-blueprints
     ezModules.hardware-rpi5
+    ezModules.profiles
     ezModules.sshd
     ezModules.user-peteresselius
-    ezModules.profiles
-    ezModules.authentik-blueprints
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
