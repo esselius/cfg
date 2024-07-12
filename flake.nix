@@ -18,7 +18,7 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    ez-configs.url = "github:ehllie/ez-configs";
+    ez-configs.url = "github:esselius/ez-configs/patch-1";
     nixos-tests.url = "github:esselius/nixos-tests";
 
     agenix.url = "github:ryantm/agenix";
