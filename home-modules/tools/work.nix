@@ -14,6 +14,7 @@
     k9s
     krew
     minio-client
+    sqlfluff
     stern
   ]);
 }
