@@ -1,8 +1,9 @@
-{ ezModules, ... }:
+{ ezModules, lib, ... }:
 
 {
   imports = [
     ezModules.user-peteresselius
+    ezModules.sshd
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -14,12 +15,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.wireless.enable = true;
-  networking.wireless.userControlled.enable = true;
-
   time.timeZone = "Europe/Stockholm";
-
-  networking.useDHCP = true;
 
   boot.initrd.availableKernelModules = [ "uhci_hcd" "ehci_pci" "ata_piix" "ahci" "firewire_ohci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
@@ -40,4 +36,8 @@
   swapDevices = [{
     device = "/dev/disk/by-label/swap";
   }];
+
+  services.xserver.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
 }
