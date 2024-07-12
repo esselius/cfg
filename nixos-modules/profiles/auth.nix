@@ -8,6 +8,9 @@ in
   options = {
     profiles.auth = {
       enable = mkEnableOption "auth";
+      domain = mkOption {
+        type = types.str;
+      };
       listen_http = mkOption {
         type = types.str;
         default = "0.0.0.0:9000";
