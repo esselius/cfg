@@ -108,15 +108,16 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1706611666,
-        "narHash": "sha256-N+SyoAEqf3QIXMYZ81kuxrOP6b0692M+hbGLHU9wf1I=",
-        "owner": "ehllie",
+        "lastModified": 1720792356,
+        "narHash": "sha256-5WmTdtALYr8zSTBEeyKWos08pqNwRJ2SiT/vAnw19TU=",
+        "owner": "esselius",
         "repo": "ez-configs",
-        "rev": "84c60a73eba0b5405943580d52b1581de5b1ee7c",
+        "rev": "97badf2de027f0c8e1c4d89187aafd3e248214a0",
         "type": "github"
       },
       "original": {
-        "owner": "ehllie",
+        "owner": "esselius",
+        "ref": "patch-1",
         "repo": "ez-configs",
         "type": "github"
       }
