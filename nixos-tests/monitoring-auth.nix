@@ -26,12 +26,17 @@
 
     profiles.auth = {
       enable = true;
+      domain = "authentik.localho.st";
     };
+
+    profiles.ingress.enable = true;
+
     services.authentik.environmentFile = builtins.toFile "authentik-env-file" ''
       AUTHENTIK_SECRET_KEY=qwerty123456
       AUTHENTIK_BOOTSTRAP_PASSWORD=password
       AUTHENTIK_BOOTSTRAP_TOKEN=token
     '';
+
     services.authentik.blueprints = [{
       metadata.name = "grafana-oauth";
       entries = [
@@ -58,7 +63,7 @@
             sub_mode = "hashed_user_id";
             include_claims_in_id_token = true;
             issuer_mode = "per_provider";
-            redirect_uris = "http://localhost:3000/login/generic_oauth";
+            redirect_uris = "http://grafana.localho.st/login/generic_oauth";
           };
         }
         {
@@ -76,14 +81,15 @@
     }];
     profiles.monitoring = {
       enable = true;
-      domain = "localhost";
+      domain = "grafana.localho.st";
+      root_url = "%(protocol)s://%(domain)s/";
       oauth = {
         name = "Authentik";
         client_id_file = builtins.toFile "grafana-client-id" "grafana";
         client_secret_file = builtins.toFile "grafana-client-secret" "secret";
-        auth_url = "http://127.0.0.1:9000/application/o/authorize/";
-        token_url = "http://127.0.0.1:9000/application/o/token/";
-        api_url = "http://127.0.0.1:9000/application/o/userinfo/";
+        auth_url = "http://authentik.localho.st/application/o/authorize/";
+        token_url = "http://authentik.localho.st/application/o/token/";
+        api_url = "http://authentik.localho.st/application/o/userinfo/";
       };
     };
   };
@@ -91,7 +97,12 @@
   extraPythonPackages = p: [ p.playwright ];
 
   testScript = ''
+    import os
+    from playwright.sync_api import sync_playwright, expect
+
     start_all()
+
+    machine.forward_port(80, 80)
 
     with subtest("Wait for authentik services to start"):
       machine.wait_for_unit("postgresql.service")
@@ -99,23 +110,22 @@
       machine.wait_for_unit("authentik-migrate.service")
       machine.wait_for_unit("authentik-worker.service")
       machine.wait_for_unit("authentik.service")
+      machine.wait_for_unit("nginx.service")
 
     with subtest("Wait for Authentik itself to initialize"):
       machine.wait_for_open_port(9000)
-      machine.wait_until_succeeds("curl -fL http://localhost:9000/if/flow/initial-setup/ >&2")
+      machine.wait_until_succeeds("curl -fL http://authentik.localho.st/if/flow/initial-setup/ >&2")
 
     with subtest("Wait for Authentik blueprints to be applied"):
-      machine.wait_until_succeeds("curl -f http://localhost:9000/application/o/grafana/.well-known/openid-configuration >&2")
-
-    from playwright.sync_api import sync_playwright, expect
+      machine.wait_until_succeeds("curl -f http://authentik.localho.st/application/o/grafana/.well-known/openid-configuration >&2")
 
     with sync_playwright() as p:
-      browser = p.chromium.launch()
+      browser = p.chromium.launch(headless=os.environ.get("HEADLESS", "true") != "false")
       page = browser.new_page()
       page.set_default_timeout(30000)
 
       with subtest("Login page"):
-        page.goto("http://localhost:3000/login")
+        page.goto("http://grafana.localho.st/login")
         page.reload()
         page.get_by_role("link", name="Sign in with Authentik").click()
       with subtest("Enter username"):

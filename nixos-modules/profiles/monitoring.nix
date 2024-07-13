@@ -42,7 +42,7 @@ in
         server = {
           inherit (cfg) domain root_url;
           http_port = 3000;
-          http_addr = "0.0.0.0";
+          http_addr = "127.0.0.1";
         };
         "auth.generic_oauth" = {
           enabled = true;
@@ -72,10 +72,10 @@ in
       };
     };
 
-    services.nginx.virtualHosts."grafana.localho.st" = {
+    services.nginx.virtualHosts.${cfg.domain} = {
       locations."/" = {
         proxyWebsockets = true;
-        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}/";
+        proxyPass = "http://${config.services.grafana.settings.server.http_addr}:${toString config.services.grafana.settings.server.http_port}/";
       };
     };
   };
