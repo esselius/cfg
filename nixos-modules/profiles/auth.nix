@@ -13,11 +13,11 @@ in
       };
       listen_http = mkOption {
         type = types.str;
-        default = "0.0.0.0:9000";
+        default = "127.0.0.1:9000";
       };
       listen_metrics = mkOption {
         type = types.str;
-        default = "0.0.0.0:9300";
+        default = "127.0.0.1:9300";
       };
     };
   };
@@ -30,6 +30,13 @@ in
           listen_http = cfg.listen_http;
           listen_metrics = cfg.listen_metrics;
         };
+      };
+    };
+
+    services.nginx.virtualHosts.${cfg.domain} = {
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://" + cfg.listen_http;
       };
     };
 
