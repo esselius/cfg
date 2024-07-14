@@ -27,6 +27,7 @@ jobs:
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
           nix: true
+          gc-max-store-size: 1073741824
 
       - uses: cachix/cachix-action@v15
         with:

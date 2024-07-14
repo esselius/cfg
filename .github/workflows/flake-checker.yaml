@@ -12,4 +12,12 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
+      - name: Restore and cache Nix store
+        uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          nix: true
+          gc-max-store-size: 1073741824
+
       - uses: DeterminateSystems/flake-checker-action@main
