@@ -10,6 +10,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - run: nix --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel
+      - uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          nix: true
+          paths: |
+            /nix/store
+            ~/.cache/nix
+            ~root/.cache/nix
+
+      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel
