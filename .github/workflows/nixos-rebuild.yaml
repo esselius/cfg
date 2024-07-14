@@ -17,9 +17,20 @@ jobs:
 
       - uses: docker/setup-qemu-action@v3
 
+      - name: "Cache Nix store"
+        uses: actions/cache@v3.0.8
+        id: nix-cache
+        with:
+          path: /tmp/nixcache
+          key: nr-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+
       - uses: DeterminateSystems/nix-installer-action@main
         with:
           extra-conf: "extra-platforms = aarch64-linux"
+
+      - name: "Import Nix store cache"
+        if: "steps.nix-cache.outputs.cache-hit == 'true'"
+        run: "nix-store --import < /tmp/nixcache"
 
       - uses: cachix/cachix-action@v15
         with:
@@ -29,3 +40,7 @@ jobs:
 
       - name: Check nixos config
         run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
+
+      - name: "Export Nix store cache"
+        if: "steps.nix-cache.outputs.cache-hit != 'true'"
+        run: "nix-store --export $(find /nix/store -maxdepth 1 -name '*-*') > /tmp/nixcache"
