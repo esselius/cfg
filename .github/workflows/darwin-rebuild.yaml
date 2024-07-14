@@ -17,6 +17,13 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
+      - name: Restore and cache Nix store
+        uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+          nix: true
+
       - uses: cachix/cachix-action@v15
         with:
           name: esselius
