@@ -15,7 +15,6 @@ jobs:
         with:
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-${{ runner.os }}-
-          nix: true
           paths: |
             /nix/store
             ~/.cache/nix
