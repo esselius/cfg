@@ -1,4 +1,4 @@
-{ myModules, inputs, ... }:
+{ ezModules, inputs, ... }:
 
 {
   name = "monitoring-auth";
@@ -13,8 +13,8 @@
     imports = [
       inputs.authentik-nix.nixosModules.default
 
-      myModules.authentik-blueprints
-      myModules.profiles
+      ezModules.authentik-blueprints
+      ezModules.profiles
     ];
 
     networking.firewall.enable = false;

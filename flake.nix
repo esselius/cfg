@@ -47,10 +47,10 @@
       };
       perSystem = { pkgs, ... }: {
         nixosTests = {
-          path = ./tests;
+          path = ./nixos-tests;
           args = {
             inherit inputs;
-            myModules = self.nixosModules;
+            ezModules = self.nixosModules;
           };
           env = {
             PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;

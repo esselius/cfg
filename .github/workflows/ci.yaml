@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  generate-matrix:
+    name: Generate job matrices
+    runs-on: ubuntu-latest
+    outputs:
+      darwin-configurations: ${{ steps.x.outputs.matrix }}
+      darwin-modules: ${{ steps.x.outputs.matrix }}
+      home-configurations: ${{ steps.x.outputs.matrix }}
+      home-modules: ${{ steps.x.outputs.matrix }}
+      nixos-configurations: ${{ steps.x.outputs.matrix }}
+      nixos-modules: ${{ steps.x.outputs.matrix }}
+      nixos-tests: ${{ steps.x.outputs.matrix }}
+    steps:
+      - name: Get changes
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          dir_names_max_depth: 1
+          dir_names: true
+          matrix: true
+
+      # nix
+
+      # - name: Generate matrix | Infrastructure
+      #   id: neo-infrastructure
+      #   uses: hellofresh/action-changed-files@v3
+      #   with:
+      #       pattern: infrastructure/(?P<environment>[^/]+)
+      #       default-patterns: |
+      #           terraform-modules
+      #           deploy.sh
+
+      # - name: Generate matrix | Library
+      #   id: neo-library
+      #   uses: hellofresh/action-changed-files@v3
+      #   with:
+      #       pattern: library/(?P<lib>(?!common)[^/]+)
+      #       default-patterns: |
+      #           library/common
+
+  # infrastructure:
+  #   runs-on: ubuntu-latest
+  #   needs: [ generate-matrix ] # don't forget this!
+  #   strategy:
+  #     matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix-infrastructure) }}
+  #   if: ${{ fromJson(needs.generate-matrix.outputs.matrix-infrastructure).include[0] }} # skip if the matrix is empty!
+  #   steps:
+  #       - name: Deploy infrastructure
+  #         run: echo "Deploying ${{ matrix.environment }}"
+
+  # build:
+  #   runs-on: ubuntu-latest
+  #   needs: [ generate-matrix ]
+  #   strategy:
+  #     matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix-build) }}
+  #   if: ${{ fromJson(needs.generate-matrix.outputs.matrix-build).include[0] }}
+  #   steps:
+  #       - name: Building library
+  #         run: echo "Building ${{ matrix.lib }}"
