@@ -20,7 +20,7 @@ jobs:
             ~/.cache/nix
             ~root/.cache/nix
 
-      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel
+      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel --no-eval-cache
 
   cain:
     runs-on: ubuntu-latest
@@ -37,4 +37,4 @@ jobs:
             ~/.cache/nix
             ~root/.cache/nix
 
-      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.cain.config.system.build.toplevel
+      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.cain.config.system.build.toplevel --no-eval-cache
