@@ -5,7 +5,24 @@ on:
     branches:
       - main
 jobs:
-  gen-matrix:
+  adama:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nixbuild/nix-quick-install-action@v28
+
+      - uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-adama-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-adama-${{ runner.os }}-
+          paths: |
+            /nix/store
+            ~/.cache/nix
+            ~root/.cache/nix
+
+      - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel
+
+  cain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
