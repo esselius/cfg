@@ -10,19 +10,31 @@
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
+    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.url = "github:nix-community/authentik-nix/node-22";
+    authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
+    authentik-nix.inputs.flake-parts.follows = "flake-parts";
 
     nix-darwin.url = "github:lnl7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
+    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     # https://github.com/ehllie/ez-configs/pull/9
-    ez-configs.url = "github:esselius/ez-configs/patch-1";
+    ez-configs.url = "github:ehllie/ez-configs";
+    ez-configs.inputs.nixpkgs.follows = "nixpkgs";
+    ez-configs.inputs.flake-parts.follows = "flake-parts";
     nixos-tests.url = "github:esselius/nixos-tests";
+    nixos-tests.inputs.flake-parts.follows = "flake-parts";
 
     agenix.url = "github:ryantm/agenix";
+    agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.inputs.home-manager.follows = "home-manager";
+    agenix.inputs.darwin.follows = "nix-darwin";
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
