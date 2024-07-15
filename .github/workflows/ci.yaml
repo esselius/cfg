@@ -13,8 +13,8 @@ jobs:
 
       - uses: nix-community/cache-nix-action@v5
         with:
-          primary-key: nix-adama-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
-          restore-prefixes-first-match: nix-adama-${{ runner.os }}-
+          primary-key: nix-v2-adama-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-v2-adama-${{ runner.os }}-
           paths: |
             /nix/store
             ~/.cache/nix
@@ -30,8 +30,8 @@ jobs:
 
       - uses: nix-community/cache-nix-action@v5
         with:
-          primary-key: nix-cain-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
-          restore-prefixes-first-match: nix-cain-${{ runner.os }}-
+          primary-key: nix-v2-cain-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-v2-cain-${{ runner.os }}-
           paths: |
             /nix/store
             ~/.cache/nix
