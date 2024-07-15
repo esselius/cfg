@@ -10,17 +10,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: nixbuild/nix-quick-install-action@v28
-        with:
-          nix_conf: auto-optimise-store = true
 
       - uses: nix-community/cache-nix-action@v5
         with:
-          primary-key: nix-v3-adama-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          primary-key: nix-v4-adama-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-v3-adama-${{ runner.os }}-
           paths: |
             /nix/store
-            ~/.cache/nix
-            ~root/.cache/nix
 
       - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.adama.config.system.build.toplevel
 
@@ -29,16 +25,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: nixbuild/nix-quick-install-action@v28
-        with:
-          nix_conf: auto-optimise-store = true
 
       - uses: nix-community/cache-nix-action@v5
         with:
-          primary-key: nix-v3-cain-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
+          primary-key: nix-v4-cain-${{ runner.os }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-v3-cain-${{ runner.os }}-
           paths: |
             /nix/store
-            ~/.cache/nix
-            ~root/.cache/nix
 
       - run: nix --accept-flake-config --extra-experimental-features 'flakes nix-command' path-info --derivation .#nixosConfigurations.cain.config.system.build.toplevel
