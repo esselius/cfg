@@ -8,9 +8,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
-    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
+    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-23-11";
     authentik-nix.url = "github:nix-community/authentik-nix/node-22";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.flake-parts.follows = "flake-parts";
