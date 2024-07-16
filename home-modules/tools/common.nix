@@ -19,6 +19,7 @@
   home.packages = with pkgs; [
     cachix
     cmatrix
+    direnv
     jq
     nixos-rebuild
     nixpkgs-fmt
