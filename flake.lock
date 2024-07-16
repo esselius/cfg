@@ -32,16 +32,16 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1720779891,
-        "narHash": "sha256-n+4K2qGyyzkUzayXcn5NHBvajcKyAgQIwdm7+G0SWoM=",
-        "owner": "nix-community",
+        "lastModified": 1721161185,
+        "narHash": "sha256-tb6G+pRgKkPAwrV168zkyXsXayn0VsJGy98HT/2b7eA=",
+        "owner": "esselius",
         "repo": "authentik-nix",
-        "rev": "0fc8ad134944c511fc412943531c5c4732cf1a58",
+        "rev": "0828d02592151ec718a62cd19c36b65bb8989aae",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "ref": "version/2024.6.1",
+        "owner": "esselius",
+        "ref": "patch-1",
         "repo": "authentik-nix",
         "type": "github"
       }
