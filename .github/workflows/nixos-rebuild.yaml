@@ -28,4 +28,4 @@ jobs:
           extraPullNames: nix-community
 
       - name: Check nixos config
-        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
+        run: nix run nixpkgs#nixos-rebuild -- dry-build --flake .#${{ matrix.host }}
