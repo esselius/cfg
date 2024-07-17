@@ -15,7 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v28
+
+      - uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-darwin-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-darwin-${{ matrix.host }}-
+          nix: true
 
       - uses: cachix/cachix-action@v15
         with:
