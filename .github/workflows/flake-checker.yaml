@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v28
 
       - uses: DeterminateSystems/flake-checker-action@main
