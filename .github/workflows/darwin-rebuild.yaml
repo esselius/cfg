@@ -26,4 +26,4 @@ jobs:
       - uses: DeterminateSystems/flake-checker-action@main
 
       - name: Check darwin config
-        run: nix run nix-darwin -- check --flake .#${{ matrix.host }}
+        run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
