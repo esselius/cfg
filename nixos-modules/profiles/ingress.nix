@@ -8,6 +8,10 @@ in
   options = {
     profiles.ingress = {
       enable = mkEnableOption "ingress";
+      port = mkOption {
+        type = types.int;
+        default = 80;
+      };
     };
   };
 
@@ -15,6 +19,8 @@ in
     services = {
       nginx = {
         enable = true;
+
+        defaultHTTPListenPort = cfg.port;
 
         statusPage = true;
 
