@@ -17,15 +17,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - uses: nix-community/cache-nix-action@v5
-        with:
-          primary-key: nix-darwin-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
-          restore-prefixes-first-match: nix-darwin-${{ matrix.host }}-
-          paths: |
-            /nix/store
-            ~/.cache/nix
-            ~root/.cache/nix
-
       - uses: cachix/cachix-action@v15
         with:
           name: esselius
