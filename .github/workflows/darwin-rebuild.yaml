@@ -21,6 +21,7 @@ jobs:
         with:
           primary-key: nix-darwin-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-darwin-${{ matrix.host }}-
+          nix: false
           paths: |
             /nix/store
             ~/.cache/nix
