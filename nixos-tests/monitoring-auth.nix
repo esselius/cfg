@@ -9,7 +9,7 @@
     virtualisation = {
       cores = 3;
       memorySize = 4096;
-      forwardPorts = [{ host.port = 8080; guest.port = 80; }];
+      forwardPorts = [{ host.port = 8080; guest.port = 8080; }];
     };
 
     imports = [
@@ -26,7 +26,10 @@
       domain = "authentik.localho.st";
     };
 
-    profiles.ingress.enable = true;
+    profiles.ingress = {
+      enable = true;
+      port = 8080;
+    };
 
     services.authentik.environmentFile = builtins.toFile "authentik-env-file" ''
       AUTHENTIK_SECRET_KEY=qwerty123456
@@ -60,7 +63,7 @@
             sub_mode = "hashed_user_id";
             include_claims_in_id_token = true;
             issuer_mode = "per_provider";
-            redirect_uris = "http://grafana.localho.st/login/generic_oauth";
+            redirect_uris = "http://grafana.localho.st:8080/login/generic_oauth";
           };
         }
         {
@@ -79,14 +82,14 @@
     profiles.monitoring = {
       enable = true;
       domain = "grafana.localho.st";
-      root_url = "%(protocol)s://%(domain)s/";
+      root_url = "%(protocol)s://%(domain)s:8080/";
       oauth = {
         name = "Authentik";
         client_id_file = builtins.toFile "grafana-client-id" "grafana";
         client_secret_file = builtins.toFile "grafana-client-secret" "secret";
-        auth_url = "http://authentik.localho.st/application/o/authorize/";
-        token_url = "http://authentik.localho.st/application/o/token/";
-        api_url = "http://authentik.localho.st/application/o/userinfo/";
+        auth_url = "http://authentik.localho.st:8080/application/o/authorize/";
+        token_url = "http://authentik.localho.st:8080/application/o/token/";
+        api_url = "http://authentik.localho.st:8080/application/o/userinfo/";
       };
     };
   };
@@ -109,10 +112,10 @@
 
     with subtest("Wait for Authentik itself to initialize"):
       machine.wait_for_open_port(9000)
-      machine.wait_until_succeeds("curl -fL http://authentik.localho.st/if/flow/initial-setup/ >&2")
+      machine.wait_until_succeeds("curl -fL http://authentik.localho.st:8080/if/flow/initial-setup/ >&2")
 
     with subtest("Wait for Authentik blueprints to be applied"):
-      machine.wait_until_succeeds("curl -f http://authentik.localho.st/application/o/grafana/.well-known/openid-configuration >&2")
+      machine.wait_until_succeeds("curl -f http://authentik.localho.st:8080/application/o/grafana/.well-known/openid-configuration >&2")
 
     with sync_playwright() as p:
       browser = p.chromium.launch(headless=os.environ.get("HEADLESS", "true") != "false")
@@ -120,7 +123,7 @@
       page.set_default_timeout(30000)
 
       with subtest("Login page"):
-        page.goto("http://grafana.localho.st/login")
+        page.goto("http://grafana.localho.st:8080/login")
         page.reload()
         page.get_by_role("link", name="Sign in with Authentik").click()
       with subtest("Enter username"):
