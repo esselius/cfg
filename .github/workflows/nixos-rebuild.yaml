@@ -17,9 +17,15 @@ jobs:
 
       - uses: docker/setup-qemu-action@v3
 
-      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: nixbuild/nix-quick-install-action@v28
         with:
-          extra-conf: "extra-platforms = aarch64-linux"
+          nix_conf: extra-platforms = aarch64-linux
+
+      - uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-nixos-${{ matrix.host }}-
+          nix: true
 
       - uses: cachix/cachix-action@v15
         with:
@@ -28,4 +34,4 @@ jobs:
           extraPullNames: nix-community
 
       - name: Check nixos config
-        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
+        run: nix run nixpkgs#nixos-rebuild -- dry-build --flake .#${{ matrix.host }}
