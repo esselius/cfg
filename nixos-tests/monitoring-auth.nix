@@ -7,12 +7,10 @@
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
     virtualisation = {
+      memorySize = 2048;
       cores = 3;
       memorySize = 4096;
-      forwardPorts = [
-        { host.port = 3000; guest.port = 3000; }
-        { host.port = 9000; guest.port = 9000; }
-      ];
+      forwardPorts = [{ host.port = 80; guest.port = 80; }];
     };
 
     imports = [
@@ -101,8 +99,6 @@
     from playwright.sync_api import sync_playwright, expect
 
     start_all()
-
-    machine.forward_port(80, 80)
 
     with subtest("Wait for authentik services to start"):
       machine.wait_for_unit("postgresql.service")
