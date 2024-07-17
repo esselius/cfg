@@ -7,7 +7,8 @@
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
     virtualisation = {
-      memorySize = 2048;
+      memorySize = 4096;
+      cores = 3;
       forwardPorts = [{ host.port = 8080; guest.port = 8080; }];
     };
 
