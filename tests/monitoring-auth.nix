@@ -8,7 +8,7 @@
 
     virtualisation = {
       memorySize = 2048;
-      forwardPorts = [{ host.port = 80; guest.port = 80; }];
+      forwardPorts = [{ host.port = 8080; guest.port = 80; }];
     };
 
     imports = [
