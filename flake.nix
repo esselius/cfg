@@ -12,7 +12,7 @@
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-23-11";
-    authentik-nix.url = "github:nix-community/authentik-nix/node-22";
+    authentik-nix.url = "github:esselius/authentik-nix/patch-1";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.flake-parts.follows = "flake-parts";
 

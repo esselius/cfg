@@ -42,16 +42,16 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1719402686,
-        "narHash": "sha256-MkHcXybi0aEydeLvLKNtJBa3oOy8oCq1uarrLgQzUCM=",
-        "owner": "nix-community",
+        "lastModified": 1721161185,
+        "narHash": "sha256-tb6G+pRgKkPAwrV168zkyXsXayn0VsJGy98HT/2b7eA=",
+        "owner": "esselius",
         "repo": "authentik-nix",
-        "rev": "1646cf92cefa0eb6e74f33afe61ae4b2d0d20afe",
+        "rev": "0828d02592151ec718a62cd19c36b65bb8989aae",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "ref": "node-22",
+        "owner": "esselius",
+        "ref": "patch-1",
         "repo": "authentik-nix",
         "type": "github"
       }
@@ -59,16 +59,16 @@
     "authentik-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1719398211,
-        "narHash": "sha256-d4UsYRqHRNabhh28GZZRijmZ1pd9D/o1a4L4d7Yn39M=",
+        "lastModified": 1720727154,
+        "narHash": "sha256-SMupiJGJbkBn33JP4WLF3IsBdt3SN3JvZg/EYlz443g=",
         "owner": "goauthentik",
         "repo": "authentik",
-        "rev": "5afceaa55f4d831db0cf9d80562e86eb43b622ec",
+        "rev": "9075270b01e784d25f2ec08b82e73f1ce3086184",
         "type": "github"
       },
       "original": {
         "owner": "goauthentik",
-        "ref": "version/2024.4.3",
+        "ref": "version/2024.6.1",
         "repo": "authentik",
         "type": "github"
       }
