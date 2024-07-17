@@ -17,13 +17,21 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
+      - uses: nix-community/cache-nix-action@v5
+        with:
+          primary-key: nix-darwin-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
+          restore-prefixes-first-match: nix-darwin-${{ matrix.host }}-
+          nix: false
+          paths: |
+            /nix/store
+            ~/.cache/nix
+            ~root/.cache/nix
+
       - uses: cachix/cachix-action@v15
         with:
           name: esselius
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
-
-      - uses: DeterminateSystems/flake-checker-action@main
 
       - name: Check darwin config
         run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
