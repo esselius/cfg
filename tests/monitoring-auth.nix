@@ -8,6 +8,7 @@
 
     virtualisation = {
       memorySize = 2048;
+      forwardPorts = [{ host.port = 80; guest.port = 80; }];
     };
 
     imports = [
@@ -96,8 +97,6 @@
     from playwright.sync_api import sync_playwright, expect
 
     start_all()
-
-    machine.forward_port(80, 80)
 
     with subtest("Wait for authentik services to start"):
       machine.wait_for_unit("postgresql.service")
