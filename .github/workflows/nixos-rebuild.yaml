@@ -34,4 +34,4 @@ jobs:
           extraPullNames: nix-community
 
       - name: Check nixos config
-        run: nix run nixpkgs#nixos-rebuild -- dry-build --flake .#${{ matrix.host }}
+        run: nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
