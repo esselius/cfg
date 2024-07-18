@@ -1,6 +1,8 @@
 name: "NixOS Rebuild"
 on:
   pull_request:
+    paths-ignore:
+      - darwin-*
   push:
     branches:
       - main

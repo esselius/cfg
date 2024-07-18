@@ -1,6 +1,8 @@
 name: "NixOS Tests"
 on:
   pull_request:
+    paths-ignore:
+      - darwin-*
   push:
     branches:
       - main
