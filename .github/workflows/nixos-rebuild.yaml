@@ -25,7 +25,7 @@ jobs:
         with:
           primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-nixos-${{ matrix.host }}-
-          nix: true
+          save: github.ref == 'ref/head/main'
 
       - uses: cachix/cachix-action@v15
         with:

@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  tests:
+  flake-checker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
