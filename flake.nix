@@ -59,7 +59,7 @@
       };
       perSystem = { pkgs, ... }: {
         nixosTests = {
-          path = ./tests;
+          path = ./nixos-tests;
           args = {
             inherit inputs;
             myModules = self.nixosModules;

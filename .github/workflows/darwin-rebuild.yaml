@@ -2,7 +2,7 @@ name: "Darwin Rebuild"
 on:
   pull_request:
     paths-ignore:
-      - nixos-*
+      - nixos-*/**
   push:
     branches:
       - main
