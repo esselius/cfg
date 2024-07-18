@@ -1,6 +1,8 @@
 name: "NixOS Tests"
 on:
   pull_request:
+    paths-ignore:
+      - darwin-*
   push:
     branches:
       - main
@@ -20,7 +22,7 @@ jobs:
         with:
           primary-key: nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-tests-${{ matrix.test }}-
-          nix: true
+          save: github.ref == 'ref/head/main'
 
       - uses: cachix/cachix-action@v15
         with:

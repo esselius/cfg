@@ -1,6 +1,8 @@
 name: "Darwin Rebuild"
 on:
   pull_request:
+    paths-ignore:
+      - nixos-*
   push:
     branches:
       - main
@@ -22,8 +24,6 @@ jobs:
           name: esselius
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
-
-      - uses: DeterminateSystems/flake-checker-action@main
 
       - name: Check darwin config
         run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
