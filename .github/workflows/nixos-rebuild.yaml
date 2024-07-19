@@ -4,6 +4,7 @@ on:
     paths-ignore:
       - darwin-*/**
       - home-*/**
+      - nixos-tests/**
   push:
     branches:
       - main
