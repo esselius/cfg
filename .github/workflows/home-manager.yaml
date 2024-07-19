@@ -1,14 +1,14 @@
-name: "Darwin Rebuild"
+name: "Home Manager"
 on:
   pull_request:
     paths-ignore:
-      - home-*/**
+      - darwin-*/**
       - nixos-*/**
   push:
     branches:
       - main
 jobs:
-  darwin-rebuild:
+  home-manager:
     strategy:
       matrix:
         host:
@@ -26,5 +26,5 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check darwin config
-        run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
+      - name: Check home-manager config
+        run: nix path-info --derivation .#homeConfigurations."peteresselius@${{ matrix.host }}".activation-script

@@ -3,6 +3,7 @@ on:
   pull_request:
     paths-ignore:
       - darwin-*/**
+      - home-*/**
   push:
     branches:
       - main
