@@ -5,7 +5,6 @@ let
 in
 {
   imports = [
-    ezModules.asdf
     ezModules.fish-shell
     ezModules.git
     ezModules.ssh
@@ -26,6 +25,7 @@ in
 
     (mkIf (config.context == "work") {
       profiles.tools = {
+        asdf = true;
         k8s = true;
         minio = true;
       };
