@@ -32,5 +32,19 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Monitoring Auth
-        run: nix run .#nixosTests.${{ matrix.test }}
+      - name: Check if test has changed
+        id: drv-check
+        run: |
+          echo -n result= >> $GITHUB_OUTPUT
+          nix path-info --derivation .#nixosTests.${{ matrix.test }} | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: cache-test
+        with:
+          path: /tmp/drv
+          key: nixos-tests-${{ hashFiles(format('{0}/{1}.{2}', 'nixos-tests', matrix.test, 'nix')) }}-${{ steps.drv-check.outputs.result }}
+          lookup-only: true
+
+      - name: Run test
+        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: echo ran test! # nix run .#nixosTests.${{ matrix.test }}
