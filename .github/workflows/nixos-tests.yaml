@@ -38,9 +38,9 @@ jobs:
           nix path-info --derivation .#nixosTests.${{ matrix.test }} | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
 
       - uses: nix-community/cache-nix-action/save@v5
+        if: github.ref == 'ref/head/main'
         with:
           primary-key: nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
-          save: github.ref == 'ref/head/main'
 
       - uses: actions/cache@v4
         id: cache-test

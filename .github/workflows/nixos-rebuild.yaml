@@ -40,9 +40,9 @@ jobs:
         run: nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
 
       - uses: nix-community/cache-nix-action/save@v5
+        if: github.ref == 'ref/head/main'
         with:
           primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
-          save: github.ref == 'ref/head/main'
 
       - name: Check nixos config
         run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
