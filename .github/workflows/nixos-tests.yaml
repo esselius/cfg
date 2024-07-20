@@ -20,11 +20,10 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v28
 
-      - uses: nix-community/cache-nix-action@v5
+      - uses: nix-community/cache-nix-action/restore@v5
         with:
           primary-key: nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-tests-${{ matrix.test }}-
-          save: github.ref == 'ref/head/main'
 
       - uses: cachix/cachix-action@v15
         with:
@@ -38,6 +37,11 @@ jobs:
           echo -n result= >> $GITHUB_OUTPUT
           nix path-info --derivation .#nixosTests.${{ matrix.test }} | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
 
+      - uses: nix-community/cache-nix-action/save@v5
+        with:
+          primary-key: nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
+          save: github.ref == 'ref/head/main'
+
       - uses: actions/cache@v4
         id: cache-test
         with:
@@ -47,4 +51,4 @@ jobs:
 
       - name: Run test
         if: steps.cache-test.outputs.cache-hit != 'true'
-        run: echo ran test! # nix run .#nixosTests.${{ matrix.test }}
+        run: nix run .#nixosTests.${{ matrix.test }}
