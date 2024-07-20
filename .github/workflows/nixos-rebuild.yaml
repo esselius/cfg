@@ -37,12 +37,23 @@ jobs:
           extraPullNames: nix-community
 
       - name: Check nixos config
-        run: nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+        id: drv-check
+        run: |
+          echo -n result= >> $GITHUB_OUTPUT
+          nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
 
       - uses: nix-community/cache-nix-action/save@v5
         if: github.ref == 'ref/head/main'
         with:
           primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
 
+      - uses: actions/cache@v4
+        id: cache-test
+        with:
+          path: /tmp/drv
+          key: nixos-${{ hashFiles(format('{0}/{1}.{2}', 'nixos-configurations', matrix.host, 'nix')) }}-${{ steps.drv-check.outputs.result }}
+          lookup-only: true
+
       - name: Check nixos config
+        if: steps.cache-test.outputs.cache-hit != 'true'
         run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
