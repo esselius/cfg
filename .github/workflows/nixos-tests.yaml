@@ -31,7 +31,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check if test has changed
+      - name: Evaluate nixos test
         id: drv-check
         run: |
           echo -n result= >> $GITHUB_OUTPUT

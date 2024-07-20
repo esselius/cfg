@@ -3,7 +3,6 @@ on:
   pull_request:
     paths-ignore:
       - darwin-*/**
-      - home-*/**
       - nixos-tests/**
   push:
     branches:
@@ -36,7 +35,7 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check nixos config
+      - name: Evaluate nixos config
         id: drv-check
         run: |
           echo -n result= >> $GITHUB_OUTPUT
@@ -54,6 +53,6 @@ jobs:
           key: nixos-${{ hashFiles(format('{0}/{1}.{2}', 'nixos-configurations', matrix.host, 'nix')) }}-${{ steps.drv-check.outputs.result }}
           lookup-only: true
 
-      - name: Check nixos config
+      - name: Build nixos config
         if: steps.cache-test.outputs.cache-hit != 'true'
         run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
