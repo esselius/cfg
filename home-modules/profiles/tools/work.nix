@@ -48,6 +48,7 @@ in
         minio-client
         sqlfluff
         stern
+        kustomize
       ];
     })
 
