@@ -25,11 +25,10 @@ jobs:
         with:
           nix_conf: extra-platforms = aarch64-linux
 
-      - uses: nix-community/cache-nix-action@v5
+      - uses: nix-community/cache-nix-action/restore@v5
         with:
           primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-nixos-${{ matrix.host }}-
-          save: github.ref == 'ref/head/main'
 
       - uses: cachix/cachix-action@v15
         with:
@@ -39,3 +38,11 @@ jobs:
 
       - name: Check nixos config
         run: nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+
+      - uses: nix-community/cache-nix-action/save@v5
+        with:
+          primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
+          save: github.ref == 'ref/head/main'
+
+      - name: Check nixos config
+        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
