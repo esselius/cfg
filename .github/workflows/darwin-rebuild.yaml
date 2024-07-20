@@ -2,7 +2,6 @@ name: "Darwin Rebuild"
 on:
   pull_request:
     paths-ignore:
-      - home-*/**
       - nixos-*/**
   push:
     branches:
@@ -26,5 +25,19 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check darwin config
-        run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
+      - name: Evaluate darwin config
+        id: drv-check
+        run: |
+          echo -n result= >> $GITHUB_OUTPUT
+          nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 | tee /tmp/drv >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: cache-test
+        with:
+          path: /tmp/drv
+          key: nixos-${{ hashFiles(format('{0}/{1}.{2}', 'darwin-configurations', matrix.host, 'nix')) }}-${{ steps.drv-check.outputs.result }}
+          lookup-only: true
+
+      - name: Build darwin config
+        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: nix run nix-darwin -- build --flake .#${{ matrix.host }}

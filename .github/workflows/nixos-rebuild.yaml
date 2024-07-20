@@ -3,7 +3,6 @@ on:
   pull_request:
     paths-ignore:
       - darwin-*/**
-      - home-*/**
       - nixos-tests/**
   push:
     branches:
@@ -25,11 +24,10 @@ jobs:
         with:
           nix_conf: extra-platforms = aarch64-linux
 
-      - uses: nix-community/cache-nix-action@v5
+      - uses: nix-community/cache-nix-action/restore@v5
         with:
           primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
           restore-prefixes-first-match: nix-nixos-${{ matrix.host }}-
-          save: github.ref == 'ref/head/main'
 
       - uses: cachix/cachix-action@v15
         with:
@@ -37,5 +35,24 @@ jobs:
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
 
-      - name: Check nixos config
-        run: nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
+      - name: Evaluate nixos config
+        id: drv-check
+        run: |
+          echo -n result= >> $GITHUB_OUTPUT
+          nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
+
+      - uses: nix-community/cache-nix-action/save@v5
+        if: github.ref == 'ref/head/main'
+        with:
+          primary-key: nix-nixos-${{ matrix.host }}-${{ hashFiles('**/*.nix') }}
+
+      - uses: actions/cache@v4
+        id: cache-test
+        with:
+          path: /tmp/drv
+          key: nixos-${{ hashFiles(format('{0}/{1}.{2}', 'nixos-configurations', matrix.host, 'nix')) }}-${{ steps.drv-check.outputs.result }}
+          lookup-only: true
+
+      - name: Build nixos config
+        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
