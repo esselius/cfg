@@ -27,4 +27,18 @@ jobs:
           extraPullNames: nix-community
 
       - name: Check darwin config
-        run: nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
+        id: drv-check
+        run: |
+          echo -n result= >> $GITHUB_OUTPUT
+          nix path-info --derivation .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 | tee /tmp/drv >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        id: cache-test
+        with:
+          path: /tmp/drv
+          key: nixos-${{ hashFiles(format('{0}/{1}.{2}', 'darwin-configurations', matrix.host, 'nix')) }}-${{ steps.drv-check.outputs.result }}
+          lookup-only: true
+
+      - name: Check nixos config
+        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: nix run nix-darwin -- build --flake .#${{ matrix.host }}
