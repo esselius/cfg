@@ -39,7 +39,7 @@ jobs:
         id: drv-check
         run: |
           echo -n result= >> $GITHUB_OUTPUT
-          nix path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
+          nix --accept-flake-config path-info --derivation .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
 
       - uses: nix-community/cache-nix-action/save@v5
         if: github.ref == 'ref/head/main'
@@ -55,4 +55,4 @@ jobs:
 
       - name: Build nixos config
         if: steps.cache-test.outputs.cache-hit != 'true'
-        run: nix run nixpkgs#nixos-rebuild -- build --flake .#${{ matrix.host }}
+        run: nix --accept-flake-config build .#${{ matrix.host }}.config.system.build.toplevel
