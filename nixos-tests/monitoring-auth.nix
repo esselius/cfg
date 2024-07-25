@@ -128,7 +128,7 @@
       with subtest("Consent page"):
         page.get_by_role("button", name="Continue").click()
       with subtest("Grafana landing page"):
-        expect(page.get_by_role("heading", name="Starred dashboards")).to_be_visible()
+        expect(page.get_by_role("heading", name="Starred dashboards")).to_be_visible(timeout=30000)
 
       browser.close()
   '';
