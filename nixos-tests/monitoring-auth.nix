@@ -7,7 +7,12 @@
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
     virtualisation = {
-      memorySize = 2048;
+      cores = 3;
+      memorySize = 4096;
+      forwardPorts = [
+        { host.port = 3000; guest.port = 3000; }
+        { host.port = 9000; guest.port = 9000; }
+      ];
     };
 
     imports = [
@@ -103,14 +108,12 @@
     with subtest("Wait for Authentik blueprints to be applied"):
       machine.wait_until_succeeds("curl -f http://localhost:9000/application/o/grafana/.well-known/openid-configuration >&2")
 
-    machine.forward_port(3000, 3000)
-    machine.forward_port(9000, 9000)
-
     from playwright.sync_api import sync_playwright, expect
 
     with sync_playwright() as p:
       browser = p.chromium.launch()
       page = browser.new_page()
+      page.set_default_timeout(30000)
 
       with subtest("Login page"):
         page.goto("http://localhost:3000/login")
@@ -125,7 +128,7 @@
       with subtest("Consent page"):
         page.get_by_role("button", name="Continue").click()
       with subtest("Grafana landing page"):
-        expect(page.get_by_role("heading", name="Starred dashboards")).to_be_visible()
+        expect(page.get_by_role("heading", name="Starred dashboards")).to_be_visible(timeout=30000)
 
       browser.close()
   '';
