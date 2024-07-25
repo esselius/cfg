@@ -55,4 +55,4 @@ jobs:
 
       - name: Build nixos config
         if: steps.cache-test.outputs.cache-hit != 'true'
-        run: nix --accept-flake-config build .#${{ matrix.host }}.config.system.build.toplevel
+        run: nix --accept-flake-config build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel

@@ -40,4 +40,4 @@ jobs:
 
       - name: Build darwin config
         if: steps.cache-test.outputs.cache-hit != 'true'
-        run: nix --accept-flake-config build .#${{ matrix.host }}.config.system.build.toplevel
+        run: nix --accept-flake-config build .#darwinConfigurations.${{ matrix.host }}.config.system.build.toplevel
