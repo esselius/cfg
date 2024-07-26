@@ -13,3 +13,5 @@ jobs:
       - uses: nixbuild/nix-quick-install-action@v28
 
       - uses: DeterminateSystems/flake-checker-action@main
+
+      - run: nix flake check
