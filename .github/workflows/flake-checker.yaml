@@ -12,4 +12,12 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v28
 
+      - uses: cachix/cachix-action@v15
+        with:
+          name: esselius
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+
       - uses: DeterminateSystems/flake-checker-action@main
+
+      - run: nix flake check --all-systems
