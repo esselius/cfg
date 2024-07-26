@@ -12,7 +12,7 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v28
 
-      - uses: nix-community/cache-nix-action/restore@v5
+      - uses: nix-community/cache-nix-action@v5
         with:
           primary-key: flake-checker-${{ hashFiles('**/*.nix') }}-${{ hashFiles('flake.lock') }}
           restore-prefixes-first-match: flake-checker-
