@@ -7,26 +7,31 @@ in
 {
   options.profiles.monitoring = {
     enable = mkEnableOption "Enable Grafana";
-    grafana = {
-      domain = mkOption {
+    domain = mkOption {
+      type = types.str;
+    };
+    root_url = mkOption {
+      type = types.str;
+      default = "%(protocol)s://%(domain)s:%(http_port)s/";
+    };
+    oauth = {
+      name = mkOption {
         type = types.str;
       };
-      oauth = {
-        auth_url = mkOption {
-          type = types.str;
-        };
-        token_url = mkOption {
-          type = types.str;
-        };
-        api_url = mkOption {
-          type = types.str;
-        };
-        client_id_file = mkOption {
-          type = types.path;
-        };
-        client_secret_file = mkOption {
-          type = types.path;
-        };
+      auth_url = mkOption {
+        type = types.str;
+      };
+      token_url = mkOption {
+        type = types.str;
+      };
+      api_url = mkOption {
+        type = types.str;
+      };
+      client_id_file = mkOption {
+        type = types.path;
+      };
+      client_secret_file = mkOption {
+        type = types.path;
       };
     };
   };
@@ -35,19 +40,19 @@ in
       enable = true;
       settings = {
         server = {
-          domain = cfg.grafana.domain;
+          inherit (cfg) domain root_url;
           http_port = 3000;
           http_addr = "0.0.0.0";
         };
         "auth.generic_oauth" = {
           enabled = true;
-          name = "Authentik";
-          client_id = "$__file{${cfg.grafana.oauth.client_id_file}}";
-          client_secret = "$__file{${cfg.grafana.oauth.client_secret_file}}";
+          name = cfg.oauth.name;
+          client_id = "$__file{${cfg.oauth.client_id_file}}";
+          client_secret = "$__file{${cfg.oauth.client_secret_file}}";
           scopes = "openid email profile offline_access";
-          auth_url = cfg.grafana.oauth.auth_url;
-          token_url = cfg.grafana.oauth.token_url;
-          api_url = cfg.grafana.oauth.api_url;
+          auth_url = cfg.oauth.auth_url;
+          token_url = cfg.oauth.token_url;
+          api_url = cfg.oauth.api_url;
           tls_skip_verify_insecure = true;
           allow_assign_grafana_admin = true;
           role_attribute_path = "contains(groups[*], 'Grafana Admin') && 'GrafanaAdmin' || 'Viewer'";

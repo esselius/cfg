@@ -26,12 +26,15 @@
 
     profiles.auth = {
       enable = true;
+      domain = "localhost";
     };
+
     services.authentik.environmentFile = builtins.toFile "authentik-env-file" ''
       AUTHENTIK_SECRET_KEY=qwerty123456
       AUTHENTIK_BOOTSTRAP_PASSWORD=password
       AUTHENTIK_BOOTSTRAP_TOKEN=token
     '';
+
     services.authentik.blueprints = [{
       metadata.name = "grafana-oauth";
       entries = [
@@ -76,15 +79,14 @@
     }];
     profiles.monitoring = {
       enable = true;
-      grafana = {
-        domain = "localhost";
-        oauth = {
-          client_id_file = builtins.toFile "grafana-client-id" "grafana";
-          client_secret_file = builtins.toFile "grafana-client-secret" "secret";
-          auth_url = "http://127.0.0.1:9000/application/o/authorize/";
-          token_url = "http://127.0.0.1:9000/application/o/token/";
-          api_url = "http://127.0.0.1:9000/application/o/userinfo/";
-        };
+      domain = "localhost";
+      oauth = {
+        name = "Authentik";
+        client_id_file = builtins.toFile "grafana-client-id" "grafana";
+        client_secret_file = builtins.toFile "grafana-client-secret" "secret";
+        auth_url = "http://127.0.0.1:9000/application/o/authorize/";
+        token_url = "http://127.0.0.1:9000/application/o/token/";
+        api_url = "http://127.0.0.1:9000/application/o/userinfo/";
       };
     };
   };
