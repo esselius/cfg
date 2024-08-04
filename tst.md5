@@ -1,0 +1,6 @@
+26bd1df6cd43f04948e495e1bdd996dd  flake.nix
+15cab121d1d2089145f0029f472e794d  nixos-modules/authentik-blueprints.nix
+7ba4a080aa2d026bd29860b4b4cc27ed  nixos-modules/profiles/auth.nix
+e43bb76e6c4e3853726b6adcf80bceda  nixos-modules/profiles/default.nix
+c33644b7cf86570d728bfa7e18d9e15f  nixos-modules/profiles/monitoring.nix
+b56ff8d6256f3a57efdc7e9841e62390  nixos-tests/monitoring-auth.nix
