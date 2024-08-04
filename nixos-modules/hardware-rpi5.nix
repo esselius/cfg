@@ -8,5 +8,6 @@
   raspberry-pi-nix = {
     uboot.enable = false;
     pin-inputs.enable = true;
+    board = "bcm2712";
   };
 }

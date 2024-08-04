@@ -9,9 +9,9 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
 
-    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
+    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.0";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.url = "github:esselius/authentik-nix/patch-1";
+    authentik-nix.url = "github:nix-community/authentik-nix/version/2024.6.1";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.flake-parts.follows = "flake-parts";
 
