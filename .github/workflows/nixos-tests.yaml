@@ -20,6 +20,16 @@ jobs:
 
       - uses: nixbuild/nix-quick-install-action@v28
 
+      - uses: actions/cache/restore@v4
+        id: md5
+        with:
+          path: files.md5
+          key: fast-nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
+          restore-keys: fast-nix-tests-${{ matrix.test }}-
+
+      - if: steps.md5.outputs.cache-hit == 'true'
+        run: md5sum files.md
+
       - uses: nix-community/cache-nix-action/restore@v5
         with:
           primary-key: nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
@@ -36,6 +46,12 @@ jobs:
         run: |
           echo -n result= >> $GITHUB_OUTPUT
           nix path-info --derivation .#nixosTests.${{ matrix.test }} | base64 -w 0 | tee /tmp/drv >> $GITHUB_OUTPUT
+          ./deps-output.sh .#nixosTests.${{ maxtrix.test }} > files.md5
+
+      - uses: actions/cache/save@v4
+        with:
+          path: files.md5
+          key: fast-nix-tests-${{ matrix.test }}-${{ hashFiles('**/*.nix') }}
 
       - uses: nix-community/cache-nix-action/save@v5
         if: github.ref == 'ref/head/main'
