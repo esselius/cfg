@@ -3,12 +3,57 @@
 {
   name = "monitoring-auth";
 
-  nodes.machine = { pkgs, ... }: {
+  nodes.monitoring = { modulesPath, pkgs, ...}: {
+    virtualisation = {
+      memorySize = 2048;
+      forwardPorts = [
+        { host.port = 3000; guest.port = 3000; }
+      ];
+    };
+
+    imports = [
+      inputs.authentik-nix.nixosModules.default
+
+      myModules.profiles
+      (modulesPath + "/../tests/common/user-account.nix")
+    ];
+
+    networking.firewall.enable = false;
+
+    profiles.monitoring = {
+      enable = true;
+      domain = "monitoring";
+      oauth = {
+        name = "Authentik";
+        client_id_file = builtins.toFile "grafana-client-id" "grafana";
+        client_secret_file = builtins.toFile "grafana-client-secret" "secret";
+        auth_url = "http://auth:9000/application/o/authorize/";
+        token_url = "http://auth:9000/application/o/token/";
+        api_url = "http://auth:9000/application/o/userinfo/";
+      };
+    };
+
+    environment.sessionVariables = {
+      PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
+    };
+
+    environment.systemPackages = [
+      (pkgs.writers.writePython3Bin "test_auth"
+        {
+          libraries = [ pkgs.python3Packages.playwright ];
+        } (builtins.readFile ./monitoring-auth.py))
+    ];
+  };
+
+  nodes.auth = { modulesPath, ...}: {
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
     virtualisation = {
-      cores = 6;
-      memorySize = 8192;
+      cores = 3;
+      memorySize = 4096;
+      forwardPorts = [
+        { host.port = 9000; guest.port = 9000; }
+      ];
     };
 
     imports = [
@@ -16,13 +61,14 @@
 
       myModules.authentik-blueprints
       myModules.profiles
+      (modulesPath + "/../tests/common/user-account.nix")
     ];
 
     networking.firewall.enable = false;
 
     profiles.auth = {
       enable = true;
-      domain = "localhost";
+      domain = "auth";
     };
 
     services.authentik.environmentFile = builtins.toFile "authentik-env-file" ''
@@ -60,7 +106,7 @@
             sub_mode = "hashed_user_id";
             include_claims_in_id_token = true;
             issuer_mode = "per_provider";
-            redirect_uris = "http://localhost:3000/login/generic_oauth";
+            redirect_uris = "http://monitoring:3000/login/generic_oauth";
           };
         }
         {
@@ -76,93 +122,32 @@
         }
       ];
     }];
-    profiles.monitoring = {
-      enable = true;
-      domain = "localhost";
-      oauth = {
-        name = "Authentik";
-        client_id_file = builtins.toFile "grafana-client-id" "grafana";
-        client_secret_file = builtins.toFile "grafana-client-secret" "secret";
-        auth_url = "http://localhost:9000/application/o/authorize/";
-        token_url = "http://localhost:9000/application/o/token/";
-        api_url = "http://localhost:9000/application/o/userinfo/";
-      };
-    };
-
-    environment.sessionVariables = {
-      PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
-    };
-
-    environment.systemPackages = [
-      (pkgs.writers.writePython3Bin "test_auth" {
-        libraries = [pkgs.python3Packages.playwright];
-      } ''
-        from playwright.sync_api import sync_playwright, expect
-
-        with sync_playwright() as p:
-            browser = p.chromium.launch()
-
-            context = browser.new_context()
-            context.set_default_timeout(30000)
-            context.tracing.start(screenshots=True, snapshots=True)
-            page = context.new_page()
-
-            try:
-                print("Login page")
-                page.goto("http://localhost:3000/login")
-                # page.reload()
-                page.get_by_role("link", name="Sign in with Authentik").click()
-
-                print("Enter username")
-                page.get_by_placeholder("Email or Username").fill("akadmin")
-                page.get_by_role("button", name="Log in").click()
-
-                # page.reload()
-                print("Enter password")
-                page.get_by_placeholder("Please enter your password").fill("password")
-                page.get_by_role("button", name="Continue").click()
-
-                print("Consent page")
-                page.get_by_role("button", name="Continue").click()
-
-                print("Grafana landing page")
-                x = expect(page.get_by_role("heading", name="Starred dashboards"))
-                x.to_be_visible()
-            except Exception as e:
-                raise e
-            finally:
-                context.tracing.stop(path="/tmp/trace.zip")
-                context.close()
-                browser.close()
-      '')
-    ];
   };
-
-  extraPythonPackages = p: [ p.playwright ];
 
   testScript = ''
     start_all()
 
     with subtest("Wait for authentik services to start"):
-      machine.wait_for_unit("postgresql.service")
-      machine.wait_for_unit("redis-authentik.service")
-      machine.wait_for_unit("authentik-migrate.service")
-      machine.wait_for_unit("authentik-worker.service")
-      machine.wait_for_unit("authentik.service")
+      auth.wait_for_unit("postgresql.service")
+      auth.wait_for_unit("redis-authentik.service")
+      auth.wait_for_unit("authentik-migrate.service")
+      auth.wait_for_unit("authentik-worker.service")
+      auth.wait_for_unit("authentik.service")
 
     with subtest("Wait for Authentik itself to initialize"):
-      machine.wait_for_open_port(9000)
-      machine.wait_until_succeeds("curl -fL http://localhost:9000/if/flow/initial-setup/ >&2")
+      auth.wait_for_open_port(9000)
+      auth.wait_until_succeeds("curl -fL http://localhost:9000 >&2")
+      auth.wait_until_succeeds("curl -fL http://localhost:9000/flows/-/default/authentication/ >&2")
 
     with subtest("Wait for Authentik blueprints to be applied"):
-      machine.wait_until_succeeds("curl -f http://localhost:9000/application/o/grafana/.well-known/openid-configuration >&2")
+      auth.wait_until_succeeds("curl -f http://localhost:9000/application/o/grafana/.well-known/openid-configuration >&2")
 
     with subtest("Test auth"):
-      ret, output = machine.execute("test_auth")
+      ret, output = monitoring.execute("test_auth")
       print(output)
 
       if ret != 0:
-        machine.copy_from_vm("/tmp/trace.zip", ".")
+        monitoring.copy_from_vm("/tmp/trace.zip", ".")
         exit(1)
   '';
 }
