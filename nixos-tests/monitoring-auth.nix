@@ -45,8 +45,14 @@
     ];
   };
 
-  nodes.auth = { modulesPath, ...}: {
+  nodes.auth = { config, modulesPath, ...}: {
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
+
+    fileSystems.${config.services.postgresql.dataDir} = {
+      device = "none";
+      fsType = "tmpfs";
+      options = [ "size=1G" "mode=777" ];
+    };
 
     virtualisation = {
       cores = 3;
