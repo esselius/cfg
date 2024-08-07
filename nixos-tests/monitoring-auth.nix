@@ -3,7 +3,7 @@
 {
   name = "monitoring-auth";
 
-  nodes.monitoring = { modulesPath, pkgs, ...}: {
+  nodes.monitoring = { modulesPath, pkgs, ... }: {
     virtualisation = {
       memorySize = 2048;
       forwardPorts = [
@@ -41,18 +41,15 @@
       (pkgs.writers.writePython3Bin "test_auth"
         {
           libraries = [ pkgs.python3Packages.playwright ];
-        } (builtins.readFile ./monitoring-auth.py))
+        }
+        (builtins.readFile ./monitoring-auth.py))
     ];
   };
 
-  nodes.auth = { config, modulesPath, ...}: {
+  nodes.auth = { modulesPath, ... }: {
     _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
-    fileSystems.${config.services.postgresql.dataDir} = {
-      device = "none";
-      fsType = "tmpfs";
-      options = [ "size=1G" "mode=777" ];
-    };
+    services.postgresql.dataDir = "/tmp/pg";
 
     virtualisation = {
       cores = 3;
