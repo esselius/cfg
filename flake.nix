@@ -27,8 +27,6 @@
     ez-configs.url = "github:ehllie/ez-configs";
     ez-configs.inputs.nixpkgs.follows = "nixpkgs";
     ez-configs.inputs.flake-parts.follows = "flake-parts";
-    nixos-tests.url = "github:esselius/nixos-tests";
-    nixos-tests.inputs.flake-parts.follows = "flake-parts";
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
@@ -43,7 +41,6 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.ez-configs.flakeModule
-        inputs.nixos-tests.flakeModule
       ];
 
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
@@ -55,18 +52,6 @@
         darwin.hosts.Fox.userHomeModules = [ "peteresselius" ];
         darwin.hosts.Petere-MBP.userHomeModules = [ "peteresselius" ];
         nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
-      };
-      perSystem = { pkgs, ... }: {
-        nixosTests = {
-          path = ./nixos-tests;
-          args = {
-            inherit inputs;
-            myModules = self.nixosModules;
-          };
-          env = {
-            PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
-          };
-        };
       };
     };
 }
