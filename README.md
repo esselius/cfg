@@ -36,6 +36,12 @@ $ cd secrets
 $ agenix --rekey
 ```
 
+Copy user secret decryption key to home dir.
+
+```shell
+$ scp ~/.ssh/id_ed25519 adama:.ssh/
+```
+
 Deploy refreshed secrets.
 
 ```shell

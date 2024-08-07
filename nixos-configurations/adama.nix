@@ -22,6 +22,7 @@
   networking.firewall.allowedTCPPorts = [ 3000 9000 ];
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
+
   profiles.auth = {
     enable = true;
   };

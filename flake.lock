@@ -350,26 +350,6 @@
         "type": "github"
       }
     },
-    "nixos-tests": {
-      "inputs": {
-        "flake-parts": [
-          "flake-parts"
-        ]
-      },
-      "locked": {
-        "lastModified": 1720452198,
-        "narHash": "sha256-H5nna5qTrSTFqzp69NR2XK/0UFJ9Umb7o6NU6bM4IOU=",
-        "owner": "esselius",
-        "repo": "nixos-tests",
-        "rev": "41b67f32a0bc888323f0474d9dfb116467847cbe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "esselius",
-        "repo": "nixos-tests",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1722519197,
@@ -498,7 +478,6 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
-        "nixos-tests": "nixos-tests",
         "nixpkgs": "nixpkgs",
         "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-unstable": "nixpkgs-unstable",
