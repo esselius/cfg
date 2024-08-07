@@ -14,7 +14,7 @@ with sync_playwright() as p:
 
     try:
         print("Login page")
-        page.goto("http://monitoring:3000/login")
+        page.goto("http://monitoring:3000/login", wait_until='networkidle')
         page.reload()
         page.get_by_role("link", name="Sign in with Authentik").click()
 
