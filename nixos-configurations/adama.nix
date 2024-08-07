@@ -19,7 +19,17 @@
 
   context = "home";
 
-  networking.firewall.allowedTCPPorts = [ 3000 9000 ];
+  networking.firewall.allowedTCPPorts = [
+    3000  # Grafana
+    3030  # Loki
+    9000  # Authentik
+    9001  # Prometheus
+    9100  # Node Exporter
+    9121  # Redis Exporter
+    9187  # Postgres Exporter
+    9300  # Authentik Metrics
+    28183 # Promtail
+  ];
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
 

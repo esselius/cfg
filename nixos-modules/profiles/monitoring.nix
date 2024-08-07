@@ -6,7 +6,7 @@ let
 in
 {
   options.profiles.monitoring = {
-    enable = mkEnableOption "Enable Grafana";
+    enable = mkEnableOption "Enable monitoring";
     domain = mkOption {
       type = types.str;
     };
@@ -44,6 +44,7 @@ in
           http_port = 3000;
           http_addr = "0.0.0.0";
         };
+
         "auth.generic_oauth" = {
           enabled = true;
           name = cfg.oauth.name;
@@ -58,9 +59,16 @@ in
           role_attribute_path = "contains(groups[*], 'Grafana Admin') && 'GrafanaAdmin' || 'Viewer'";
         };
       };
+
       provision = {
         enable = true;
         datasources.settings.datasources = [
+          {
+            name = "Loki";
+            type = "loki";
+            access = "proxy";
+            url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
+          }
           {
             name = "Prometheus";
             type = "prometheus";
@@ -72,10 +80,95 @@ in
       };
     };
 
-    services.nginx.virtualHosts."grafana.localho.st" = {
-      locations."/" = {
-        proxyWebsockets = true;
-        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}/";
+    services.prometheus = {
+      enable = true;
+      port = 9001;
+
+      exporters = {
+        node = {
+          enable = true;
+          enabledCollectors = [
+            "cgroups"
+            "systemd"
+          ];
+        };
+      };
+
+      scrapeConfigs = [
+        { job_name = "node"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ]; }]; }
+        { job_name = "loki"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" ]; }]; }
+        { job_name = "promtail"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" ]; }]; }
+      ];
+    };
+
+    services.promtail = {
+      enable = true;
+      configuration = {
+        server = {
+          http_listen_port = 28183;
+          grpc_listen_port = 0;
+        };
+
+        clients = [{ url = "http://localhost:3030/loki/api/v1/push"; }];
+
+        scrape_configs = [{
+          job_name = "journal";
+          journal = {
+            json = true;
+            max_age = "24h";
+            labels.job = "systemd-journal";
+          };
+        }];
+      };
+    };
+
+    services.loki = {
+      enable = true;
+      configuration = {
+        server.http_listen_port = 3030;
+        auth_enabled = false;
+
+        ingester = {
+          lifecycler = {
+            address = "127.0.0.1";
+            ring = {
+              kvstore.store = "inmemory";
+              replication_factor = 1;
+            };
+            final_sleep = "0s";
+          };
+          chunk_idle_period = "5m";
+          chunk_retain_period = "30s";
+        };
+
+        schema_config.configs = [{
+          from = "2024-04-01";
+          store = "tsdb";
+          object_store = "filesystem";
+          schema = "v13";
+          index = {
+            prefix = "index_";
+            period = "24h";
+          };
+        }];
+
+        storage_config = {
+          tsdb_shipper = {
+            active_index_directory = "/var/lib/loki/tsdb-index";
+            cache_location = "/var/lib/loki/tsdb-cache";
+            cache_ttl = "24h";
+          };
+          filesystem.directory = "/var/lib/loki/chunks";
+        };
+
+        compactor = {
+          working_directory = "/var/lib/loki";
+          compactor_ring = {
+            kvstore = {
+              store = "inmemory";
+            };
+          };
+        };
       };
     };
   };

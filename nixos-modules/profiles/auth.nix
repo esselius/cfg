@@ -33,6 +33,16 @@ in
       };
     };
 
-    services.prometheus.scrapeConfigs = [{ job_name = "authentik"; static_configs = [{ targets = [ cfg.listen_metrics ]; }]; }];
+    services.prometheus = {
+      exporters = {
+        redis.enable = true;
+        postgres = { enable = true; runAsLocalSuperUser = true; };
+      };
+      scrapeConfigs = [
+        { job_name = "authentik"; static_configs = [{ targets = [ "127.0.0.1:9300" ]; }]; }
+        { job_name = "redis"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.redis.port}" ]; }]; }
+        { job_name = "postgres"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.postgres.port}" ]; }]; }
+      ];
+    };
   };
 }
