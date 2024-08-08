@@ -33,9 +33,14 @@
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
 
+  profiles.smarthome = {
+    enable = true;
+  };
+
   profiles.auth = {
     enable = true;
   };
+
   services.authentik.environmentFile = config.age.secrets.authentik-env.path;
 
   services.authentik.blueprints = [{
