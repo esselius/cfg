@@ -27,5 +27,6 @@
     socat
     watch
     zstd
+    yq
   ];
 }

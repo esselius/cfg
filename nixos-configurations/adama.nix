@@ -20,8 +20,10 @@
   context = "home";
 
   networking.firewall.allowedTCPPorts = [
+    1883  # Mosquitto
     3000  # Grafana
     3030  # Loki
+    8099  # Zigbee2MQTT
     9000  # Authentik
     9001  # Prometheus
     9100  # Node Exporter
@@ -32,6 +34,12 @@
   ];
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
+  age.secrets.z2m = {
+    name = "z2m.yaml";
+    file = ../secrets/z2m.age;
+    owner = "zigbee2mqtt";
+    group = "zigbee2mqtt";
+  };
 
   profiles.smarthome = {
     enable = true;

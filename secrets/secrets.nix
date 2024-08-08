@@ -9,4 +9,5 @@ in
   "home-email.age".publicKeys = [ home-peteresselius ];
   "github-token.age".publicKeys = [ work-peteresselius home-peteresselius ];
   "authentik-env.age".publicKeys = [ home-peteresselius adama ];
+  "z2m.age".publicKeys = [ home-peteresselius adama ];
 }

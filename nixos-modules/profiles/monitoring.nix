@@ -77,6 +77,21 @@ in
             isDefault = true;
           }
         ];
+        dashboards.settings.providers = [{
+          name = "My Dashboards";
+          options.path = "/etc/grafana-dashboards";
+        }];
+      };
+    };
+
+    environment.etc = {
+      "grafana-dashboards/node_exporter.json" = {
+        source = builtins.fetchurl {
+          url = "https://grafana.com/api/dashboards/1860/revisions/37/download";
+          sha256 = "0qza4j8lywrj08bqbww52dgh2p2b9rkhq5p313g72i57lrlkacfl";
+        };
+        user = "grafana";
+        group = "grafana";
       };
     };
 
