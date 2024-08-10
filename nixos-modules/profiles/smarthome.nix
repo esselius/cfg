@@ -50,6 +50,7 @@ in
     services.node-red = {
       enable = true;
       withNpmAndGcc = true;
+      define."logging.console.level" = "warn";
     };
   };
 }
