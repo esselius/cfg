@@ -45,6 +45,8 @@ in
           http_addr = "0.0.0.0";
         };
 
+        log.level = "warn";
+
         "auth.generic_oauth" = {
           enabled = true;
           name = cfg.oauth.name;
@@ -140,7 +142,10 @@ in
     services.loki = {
       enable = true;
       configuration = {
-        server.http_listen_port = 3030;
+        server = {
+          http_listen_port = 3030;
+          log_level = "warn";
+        };
         auth_enabled = false;
 
         ingester = {

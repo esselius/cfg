@@ -20,6 +20,7 @@
   context = "home";
 
   networking.firewall.allowedTCPPorts = [
+    1880  # Node-RED
     1883  # Mosquitto
     3000  # Grafana
     3030  # Loki

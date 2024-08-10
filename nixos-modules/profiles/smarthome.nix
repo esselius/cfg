@@ -16,8 +16,13 @@ in
       enable = true;
       listeners = [{
         acl = [ "pattern readwrite #" ];
+        users.p1ib.password = "passw0rd";
+        users.z2m.password = "passw0rd";
+        users.hass.password = "passw0rd";
+        users.nr.password = "passw0rd";
       }];
     };
+
     services.zigbee2mqtt = {
       enable = true;
       package = zigbee2mqtt;
@@ -25,9 +30,9 @@ in
         frontend.port = 8099;
         homeassistant = true;
         mqtt = {
-          server = "mqtt://192.168.1.118:1883";
-          user = "addons";
-          password = "!" + config.age.secrets.z2m.path + " mqtt_password";
+          server = "mqtt://adama:1883";
+          user = "z2m";
+          password = "passw0rd";
         };
         serial.adapter = "ember";
         advanced = {
@@ -35,9 +40,16 @@ in
           ext_pan_id = [ 154 147 150 234 96 16 140 189 ];
           network_key = "!" + config.age.secrets.z2m.path +  " network_key";
           channel = 11;
+          last_seen = "ISO_8601";
+          log_level = "warning";
         };
         availability = true;
       };
+    };
+
+    services.node-red = {
+      enable = true;
+      withNpmAndGcc = true;
     };
   };
 }

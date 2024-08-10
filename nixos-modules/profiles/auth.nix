@@ -33,6 +33,12 @@ in
       };
     };
 
+    systemd.services.authentik.environment.AUTHENTIK_LOG_LEVEL = "warning";
+    systemd.services.authentik-worker.environment.AUTHENTIK_LOG_LEVEL = "warning";
+
+    services.redis.servers.authentik.logLevel = "warning";
+    services.postgresql.settings.log_checkpoints = false;
+
     services.prometheus = {
       exporters = {
         redis.enable = true;
