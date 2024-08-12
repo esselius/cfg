@@ -49,6 +49,10 @@ in
         sqlfluff
         stern
       ];
+
+      home.sessionPath = [
+        "$HOME/.krew/bin"
+      ];
     })
 
     (mkIf cfg.minio {
