@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -19,10 +19,12 @@
 
     registry.nixpkgs.flake = inputs.nixpkgs-darwin;
 
-    nixPath = [
+    nixPath = lib.mkForce [
       "nixpkgs=${inputs.nixpkgs-darwin}"
     ];
   };
 
   services.nix-daemon.enable = true;
+
+  system.stateVersion = 4;
 }
