@@ -4,6 +4,7 @@
   imports = [
     ezModules.context
     ezModules.agenix
+    ezModules.terminal
   ];
 
   home = {

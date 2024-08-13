@@ -14,6 +14,7 @@
       "visual-studio-code"
       "vlc"
       "vmware-fusion"
+      "wezterm"
     ];
   };
 }
