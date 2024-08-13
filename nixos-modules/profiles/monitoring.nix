@@ -45,6 +45,8 @@ in
           http_addr = "0.0.0.0";
         };
 
+        security.disable_initial_admin_creation = true;
+
         log.level = "warn";
 
         "auth.generic_oauth" = {

@@ -4,8 +4,7 @@ let
   cfg = config.profiles.smarthome;
   inherit (lib) mkIf mkEnableOption;
 
-  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
-  inherit (unstable-pkgs) zigbee2mqtt;
+  pkgs-unstable = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
 in
 {
   options.profiles.smarthome = {
@@ -25,7 +24,7 @@ in
 
     services.zigbee2mqtt = {
       enable = true;
-      package = zigbee2mqtt;
+      package = pkgs-unstable.zigbee2mqtt;
       settings = {
         frontend.port = 8099;
         homeassistant = true;
