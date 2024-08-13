@@ -1,6 +1,8 @@
+{ config, ... }:
+
 {
   programs.wezterm = {
-    enable = true;
+    enable = config.formfactor != "server";
     extraConfig = ''
       local config = wezterm.config_builder()
 

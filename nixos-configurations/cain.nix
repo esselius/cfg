@@ -11,6 +11,7 @@
   system.stateVersion = "24.05";
 
   context = "home";
+  formfactor = "laptop";
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

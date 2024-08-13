@@ -14,4 +14,5 @@
   };
 
   context = osConfig.context;
+  formfactor = osConfig.formfactor;
 }

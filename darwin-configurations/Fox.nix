@@ -10,4 +10,5 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   context = "home";
+  formfactor = "desktop";
 }
