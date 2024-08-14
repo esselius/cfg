@@ -22,6 +22,15 @@ in
       }];
     };
 
+    services.nginx.virtualHosts."zigbee2mqtt.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:${toString config.services.zigbee2mqtt.settings.frontend.port}";
+      };
+    };
+
     services.zigbee2mqtt = {
       enable = true;
       package = pkgs-unstable.zigbee2mqtt;
@@ -37,12 +46,21 @@ in
         advanced = {
           pan_id = 56089;
           ext_pan_id = [ 154 147 150 234 96 16 140 189 ];
-          network_key = "!" + config.age.secrets.z2m.path +  " network_key";
+          network_key = "!" + config.age.secrets.z2m.path + " network_key";
           channel = 11;
           last_seen = "ISO_8601";
           log_level = "warning";
         };
         availability = true;
+      };
+    };
+
+    services.nginx.virtualHosts."node-red.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:${toString config.services.node-red.port}";
       };
     };
 

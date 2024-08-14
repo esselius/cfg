@@ -10,4 +10,5 @@ in
   "github-token.age".publicKeys = [ work-peteresselius home-peteresselius ];
   "authentik-env.age".publicKeys = [ home-peteresselius adama ];
   "z2m.age".publicKeys = [ home-peteresselius adama ];
+  "step-ca.age".publicKeys = [ home-peteresselius adama ];
 }

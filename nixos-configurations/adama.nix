@@ -11,6 +11,8 @@
     ezModules.profiles
     ezModules.sshd
     ezModules.user-peteresselius
+    ezModules.ca
+    ezModules.nginx
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
@@ -18,20 +20,24 @@
   system.stateVersion = "24.05";
 
   context = "home";
+  formfactor = "server";
 
   networking.firewall.allowedTCPPorts = [
-    1880  # Node-RED
-    1883  # Mosquitto
-    3000  # Grafana
-    3030  # Loki
-    8099  # Zigbee2MQTT
-    9000  # Authentik
-    9001  # Prometheus
-    9100  # Node Exporter
-    9121  # Redis Exporter
-    9187  # Postgres Exporter
-    9300  # Authentik Metrics
-    28183 # Promtail
+    443  # Nginx
+    # 1880 # Node-RED
+    1883 # Mosquitto
+    # 3000 # Grafana
+    # 3030 # Loki
+    # 6052 # ESPHome
+    # 8099 # Zigbee2MQTT
+    8443 # Step CA
+    # 9000 # Authentik
+    # 9001 # Prometheus
+    # 9100 # Node Exporter
+    # 9121 # Redis Exporter
+    # 9187 # Postgres Exporter
+    # 9300 # Authentik Metrics
+    # 28183 # Promtail
   ];
 
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
@@ -48,6 +54,7 @@
 
   profiles.auth = {
     enable = true;
+    domain = "authentik.adama.lan";
   };
 
   services.authentik.environmentFile = config.age.secrets.authentik-env.path;
@@ -93,16 +100,18 @@
       }
     ];
   }];
+
   profiles.monitoring = {
     enable = true;
-    domain = "adama";
+    domain = "grafana.adama.lan";
+    root_url = "https://grafana.adama.lan/";
     oauth = {
       name = "Authentik";
       client_id_file = builtins.toFile "grafana-client-id" "grafana";
       client_secret_file = builtins.toFile "grafana-client-secret" "secret";
-      auth_url = "http://adama:9000/application/o/authorize/";
-      token_url = "http://adama:9000/application/o/token/";
-      api_url = "http://adama:9000/application/o/userinfo/";
+      auth_url = "https://authentik.adama.lan/application/o/authorize/";
+      token_url = "https://authentik.adama.lan/application/o/token/";
+      api_url = "https://authentik.adama.lan/application/o/userinfo/";
     };
   };
 }

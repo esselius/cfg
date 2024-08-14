@@ -23,6 +23,15 @@ in
   };
 
   config = mkIf cfg.enable {
+    services.nginx.virtualHosts."authentik.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:9000";
+      };
+    };
+
     services.authentik = {
       enable = true;
       settings = {

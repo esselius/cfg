@@ -29,5 +29,7 @@
     watch
     zstd
     yq
+    step-cli
+    step-ca
   ];
 }

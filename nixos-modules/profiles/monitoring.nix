@@ -36,6 +36,16 @@ in
     };
   };
   config = mkIf cfg.enable {
+    services.nginx.virtualHosts."grafana.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        recommendedProxySettings = true;
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
+      };
+    };
+
     services.grafana = {
       enable = true;
       settings = {
@@ -96,6 +106,15 @@ in
         };
         user = "grafana";
         group = "grafana";
+      };
+    };
+
+    services.nginx.virtualHosts."prometheus.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:${toString config.services.prometheus.port}";
       };
     };
 
