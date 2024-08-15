@@ -28,6 +28,29 @@ in
       locations."/" = {
         proxyWebsockets = true;
         proxyPass = "http://127.0.0.1:${toString config.services.zigbee2mqtt.settings.frontend.port}";
+        extraConfig = ''
+          auth_request     /outpost.goauthentik.io/auth/nginx;
+          error_page       401 = @goauthentik_proxy_signin;
+          auth_request_set $auth_cookie $upstream_http_set_cookie;
+          add_header       Set-Cookie $auth_cookie;
+        '';
+      };
+      locations."/outpost.goauthentik.io" = {
+        proxyPass = "http://127.0.0.1:9000/outpost.goauthentik.io";
+        extraConfig = ''
+          proxy_set_header        X-Original-URL $scheme://$http_host$request_uri;
+          add_header              Set-Cookie $auth_cookie;
+          auth_request_set        $auth_cookie $upstream_http_set_cookie;
+          proxy_pass_request_body off;
+          proxy_set_header        Content-Length "";
+        '';
+      };
+      locations."@goauthentik_proxy_signin" = {
+        return = "302 /outpost.goauthentik.io/start?rd=$request_uri";
+        extraConfig = ''
+          internal;
+          add_header Set-Cookie $auth_cookie;
+        '';
       };
     };
 
@@ -69,9 +92,10 @@ in
       withNpmAndGcc = true;
       configFile = ./nodered-settings.js;
     };
-    systemd.services.node-red.environment.NODE_PATH = let
-      pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect {}).package;
-    in
-    "${pkg.outPath}/lib/node_modules";
+    systemd.services.node-red.environment.NODE_PATH =
+      let
+        pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect { }).package;
+      in
+      "${pkg.outPath}/lib/node_modules";
   };
 }
