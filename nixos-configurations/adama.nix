@@ -23,7 +23,7 @@
   formfactor = "server";
 
   networking.firewall.allowedTCPPorts = [
-    443  # Nginx
+    443 # Nginx
     # 1880 # Node-RED
     1883 # Mosquitto
     # 3000 # Grafana
@@ -59,47 +59,89 @@
 
   services.authentik.environmentFile = config.age.secrets.authentik-env.path;
 
-  services.authentik.blueprints = [{
-    metadata.name = "grafana-oauth";
-    entries = [
-      {
-        model = "authentik_providers_oauth2.oauth2provider";
-        state = "present";
-        identifiers.name = "Grafana";
-        id = "provider";
-        attrs = {
-          authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
-          authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
-          client_type = "confidential";
-          client_id = "grafana";
-          client_secret = "secret";
-          access_code_validity = "minutes=1";
-          access_token_validity = "minutes=5";
-          refresh_token_validity = "days=30";
-          property_mappings = [
-            "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
-            "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
-            "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
-            "!Find [authentik_providers_oauth2.scopemapping, [scope_name, offline_access]]"
-          ];
-          sub_mode = "hashed_user_id";
-          include_claims_in_id_token = true;
-          issuer_mode = "per_provider";
-        };
-      }
-      {
-        model = "authentik_core.application";
-        state = "present";
-        identifiers.slug = "grafana";
-        id = "grafana";
-        attrs = {
-          name = "Grafana";
-          provider = "!KeyOf provider";
-          policy_engine_mode = "any";
-        };
-      }
-    ];
-  }];
+  services.authentik.blueprints = [
+    {
+      metadata.name = "grafana-oauth";
+      entries = [
+        {
+          model = "authentik_providers_oauth2.oauth2provider";
+          state = "present";
+          identifiers.name = "Grafana";
+          id = "provider";
+          attrs = {
+            authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
+            authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
+            client_type = "confidential";
+            client_id = "grafana";
+            client_secret = "secret";
+            access_code_validity = "minutes=1";
+            access_token_validity = "minutes=5";
+            refresh_token_validity = "days=30";
+            property_mappings = [
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, offline_access]]"
+            ];
+            sub_mode = "hashed_user_id";
+            include_claims_in_id_token = true;
+            issuer_mode = "per_provider";
+          };
+        }
+        {
+          model = "authentik_core.application";
+          state = "present";
+          identifiers.slug = "grafana";
+          id = "grafana";
+          attrs = {
+            name = "Grafana";
+            provider = "!KeyOf provider";
+            policy_engine_mode = "any";
+          };
+        }
+      ];
+    }
+    {
+      metadata.name = "nodered-oauth";
+      entries = [
+        {
+          model = "authentik_providers_oauth2.oauth2provider";
+          state = "present";
+          identifiers.name = "Node-RED";
+          id = "provider";
+          attrs = {
+            authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
+            authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
+            client_type = "confidential";
+            client_id = "node-red";
+            client_secret = "secret";
+            access_code_validity = "minutes=1";
+            access_token_validity = "minutes=5";
+            refresh_token_validity = "days=30";
+            property_mappings = [
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
+            ];
+            sub_mode = "hashed_user_id";
+            include_claims_in_id_token = true;
+            issuer_mode = "per_provider";
+          };
+        }
+        {
+          model = "authentik_core.application";
+          state = "present";
+          identifiers.slug = "node-red";
+          id = "node-red";
+          attrs = {
+            name = "Node-RED";
+            provider = "!KeyOf provider";
+            policy_engine_mode = "any";
+          };
+        }
+      ];
+    }
+  ];
 
   profiles.monitoring = {
     enable = true;

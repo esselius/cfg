@@ -67,7 +67,11 @@ in
     services.node-red = {
       enable = true;
       withNpmAndGcc = true;
-      define."logging.console.level" = "warn";
+      configFile = ./nodered-settings.js;
     };
+    systemd.services.node-red.environment.NODE_PATH = let
+      pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect {}).package;
+    in
+    "${pkg.outPath}/lib/node_modules";
   };
 }
