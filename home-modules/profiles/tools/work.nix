@@ -9,6 +9,7 @@ in
     asdf = lib.mkEnableOption "Install asdf";
     k8s = lib.mkEnableOption "Install k8s packages & set shell config";
     minio = lib.mkEnableOption "Install minio packages";
+    task = lib.mkEnableOption "Install task tab completion";
   };
 
   config = mkMerge [
@@ -59,6 +60,10 @@ in
       home.packages = with pkgs; [
         minio-client
       ];
+    })
+
+    (mkIf cfg.task {
+      xdg.configFile."fish/completions/task.fish".source = "${pkgs.go-task}/share/fish/vendor_completions.d/task.fish";
     })
   ];
 }

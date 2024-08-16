@@ -27,6 +27,7 @@ in
         asdf = true;
         k8s = true;
         minio = true;
+        task = true;
       };
 
       programs.fish.shellInit = ''
