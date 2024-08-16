@@ -36,8 +36,8 @@ in
       enable = true;
       settings = {
         listen = {
-          listen_http = cfg.listen_http;
-          listen_metrics = cfg.listen_metrics;
+          inherit (cfg) listen_http;
+          inherit (cfg) listen_metrics;
         };
       };
     };

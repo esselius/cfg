@@ -48,8 +48,8 @@ let
   };
 in
 {
-  args = args;
-  sources = sources;
+  inherit args;
+  inherit sources;
   tarball = nodeEnv.buildNodeSourceDist args;
   package = nodeEnv.buildNodePackage args;
   shell = nodeEnv.buildNodeShell args;

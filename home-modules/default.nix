@@ -13,6 +13,6 @@
     username = "peteresselius";
   };
 
-  context = osConfig.context;
-  formfactor = osConfig.formfactor;
+  inherit (osConfig) context;
+  inherit (osConfig) formfactor;
 }

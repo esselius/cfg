@@ -21,16 +21,17 @@
     cachix
     deadnix
     direnv
+    go-task
+    home-manager
     jq
     nixos-rebuild
     nixpkgs-fmt
     socat
-    watch
-    zstd
-    yq
-    step-cli
+    statix
     step-ca
-    go-task
-    home-manager
+    step-cli
+    watch
+    yq
+    zstd
   ];
 }

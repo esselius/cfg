@@ -34,3 +34,8 @@ tasks:
       vars:
         - host
     cmd: nixos-rebuild switch --flake .#{{.host}} --target-host {{.host}} --fast --use-remote-sudo
+
+  fmt:
+    cmds:
+      - statix fix
+      - nixpkgs-fmt .

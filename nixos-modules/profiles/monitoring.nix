@@ -61,13 +61,13 @@ in
 
         "auth.generic_oauth" = {
           enabled = true;
-          name = cfg.oauth.name;
+          inherit (cfg.oauth) name;
           client_id = "$__file{${cfg.oauth.client_id_file}}";
           client_secret = "$__file{${cfg.oauth.client_secret_file}}";
           scopes = "openid email profile offline_access";
-          auth_url = cfg.oauth.auth_url;
-          token_url = cfg.oauth.token_url;
-          api_url = cfg.oauth.api_url;
+          inherit (cfg.oauth) auth_url;
+          inherit (cfg.oauth) token_url;
+          inherit (cfg.oauth) api_url;
           tls_skip_verify_insecure = true;
           allow_assign_grafana_admin = true;
           role_attribute_path = "contains(groups[*], 'Grafana Admin') && 'GrafanaAdmin' || 'Viewer'";
