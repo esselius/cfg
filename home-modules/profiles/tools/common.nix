@@ -30,5 +30,7 @@
     yq
     step-cli
     step-ca
+    go-task
+    home-manager
   ];
 }

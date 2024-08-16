@@ -1,0 +1,36 @@
+version: "3"
+
+tasks:
+  update:
+    cmd: nix flake update
+
+  darwin:build:
+    requires:
+      vars:
+        - host
+    cmd: nix build .#darwinConfigurations.{{.host}}.config.system.build.toplevel --no-link -Lv
+
+  darwin:switch:
+    cmd: darwin-rebuild switch --flake .
+
+  home:build:
+    requires:
+      vars:
+        - user
+        - host
+    cmd: nix build .#homeConfigurations.{{.user}}@{{.host}}.config.home.activationPackage  --no-link -Lv
+
+  home:switch:
+    cmd: home-manager switch --flake .
+
+  nixos:build:
+    requires:
+      vars:
+        - host
+    cmd: nix build .#nixosConfigurations.{{.host}}.config.system.build.toplevel --no-link -Lv
+
+  nixos:switch:
+    requires:
+      vars:
+        - host
+    cmd: nixos-rebuild switch --flake .#{{.host}} --target-host {{.host}} --fast --use-remote-sudo
