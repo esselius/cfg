@@ -97,5 +97,34 @@ in
         pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect { }).package;
       in
       "${pkg.outPath}/lib/node_modules";
+    };
+
+    services.nginx.virtualHosts."home-assistant.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:8123";
+      };
+    };
+
+    services.home-assistant = {
+      enable = true;
+      package = pkgs-unstable.home-assistant;
+      extraComponents = [
+        "zha"
+        "google_translate"
+        "mqtt"
+        "cast"
+        "homekit"
+      ];
+      config = {
+        default_config = {};
+        http = {
+          use_x_forwarded_for = true;
+          trusted_proxies = ["127.0.0.1"];
+        };
+      };
+    };
   };
 }
