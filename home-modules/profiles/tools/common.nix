@@ -33,5 +33,6 @@
     watch
     yq
     zstd
+    nil
   ];
 }
