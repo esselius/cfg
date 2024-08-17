@@ -1,9 +1,10 @@
-{ inputs, lib, ... }:
+{ inputs, lib, pkgs, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
 
   nix = {
+    package = pkgs.nixVersions.nix_2_23;
     extraOptions = ''
       extra-experimental-features = nix-command flakes
       use-case-hack = false
