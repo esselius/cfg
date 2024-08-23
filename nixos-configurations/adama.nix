@@ -141,6 +141,46 @@
         }
       ];
     }
+    {
+      metadata.name = "pgadmin-oauth";
+      entries = [
+        {
+          model = "authentik_providers_oauth2.oauth2provider";
+          state = "present";
+          identifiers.name = "pgAdmin";
+          id = "provider";
+          attrs = {
+            authentication_flow = "!Find [authentik_flows.flow, [slug, default-authentication-flow]]";
+            authorization_flow = "!Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]";
+            client_type = "confidential";
+            client_id = "pgadmin";
+            client_secret = "secret";
+            access_code_validity = "minutes=1";
+            access_token_validity = "minutes=5";
+            refresh_token_validity = "days=30";
+            property_mappings = [
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, openid]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, email]]"
+              "!Find [authentik_providers_oauth2.scopemapping, [scope_name, profile]]"
+            ];
+            sub_mode = "hashed_user_id";
+            include_claims_in_id_token = true;
+            issuer_mode = "per_provider";
+          };
+        }
+        {
+          model = "authentik_core.application";
+          state = "present";
+          identifiers.slug = "pgadmin";
+          id = "pgadmin";
+          attrs = {
+            name = "pgAdmin";
+            provider = "!KeyOf provider";
+            policy_engine_mode = "any";
+          };
+        }
+      ];
+    }
   ];
 
   profiles.monitoring = {

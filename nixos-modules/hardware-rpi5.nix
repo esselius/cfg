@@ -10,4 +10,13 @@
     pin-inputs.enable = true;
     board = "bcm2712";
   };
+
+  hardware = {
+    bluetooth.enable = true;
+
+    raspberry-pi.config.all.base-dt-params.krnbt = {
+      enable = true;
+      value = "on";
+    };
+  };
 }

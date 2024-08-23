@@ -97,7 +97,6 @@ in
         pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect { }).package;
       in
       "${pkg.outPath}/lib/node_modules";
-    };
 
     services.nginx.virtualHosts."home-assistant.adama.lan" = {
       forceSSL = true;
@@ -117,14 +116,80 @@ in
         "mqtt"
         "cast"
         "homekit"
+        "homekit_controller"
+        "webostv"
+        "apple_tv"
+        "prometheus"
+        "caldav"
+        "plex"
+        "spotify"
+        "recorder"
+        "history"
+        "energy"
+        "logbook"
+        "oralb"
+        "zeroconf"
+        "switchbot"
+        "ibeacon"
+        "dlna_dmr"
+        "icloud"
       ];
       config = {
-        default_config = {};
+        default_config = { };
         http = {
           use_x_forwarded_for = true;
-          trusted_proxies = ["127.0.0.1"];
+          trusted_proxies = [ "127.0.0.1" ];
         };
+        recorder.db_url = "postgresql://@/hass";
       };
+      extraPackages = p: with p; [
+        # Recorder -> postgres
+        psycopg2
+        getmac
+      ];
+    };
+    networking.firewall.enable = false;
+    services.postgresql = {
+      ensureDatabases = [ "hass" ];
+      ensureUsers = [
+        {
+          name = "hass";
+          ensureDBOwnership = true;
+        }
+        {
+          name = "pgadmin";
+        }
+      ];
+    };
+
+    services.nginx.virtualHosts."pgadmin.adama.lan" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyWebsockets = true;
+        proxyPass = "http://127.0.0.1:${toString config.services.pgadmin.port}";
+      };
+    };
+
+    services.pgadmin = {
+      enable = true;
+      settings = {
+        AUTHENTICATION_SOURCES = [ "oauth2" ];
+        OAUTH2_CONFIG = [{
+          OAUTH2_NAME = "authentik";
+          OAUTH2_CLIENT_ID = "pgadmin";
+          OAUTH2_CLIENT_SECRET = "secret";
+          OAUTH2_TOKEN_URL = "https://authentik.adama.lan/application/o/token/";
+          OAUTH2_AUTHORIZATION_URL = "https://authentik.adama.lan/application/o/authorize/";
+          OAUTH2_USERINFO_ENDPOINT = "https://authentik.adama.lan/application/o/userinfo/";
+          OAUTH2_SCOPE = "openid email profile";
+          OAUTH2_API_BASE_URL = "https://authentik.adama.lan/";
+          OAUTH2_SSL_CERT_VERIFICATION = false;
+          OAUTH2_SERVER_METADATA_URL = "https://authentik.adama.lan/application/o/pgadmin/.well-known/openid-configuration";
+        }];
+      };
+      initialEmail = "pepp@me.com";
+      initialPasswordFile = builtins.toFile "pgadmin-pass" "password";
     };
   };
 }
