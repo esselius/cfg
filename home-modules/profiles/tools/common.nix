@@ -33,6 +33,6 @@
     watch
     yq
     zstd
-    nil
+    nixd
   ];
 }
