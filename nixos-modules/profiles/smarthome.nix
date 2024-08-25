@@ -141,6 +141,7 @@ in
           trusted_proxies = [ "127.0.0.1" ];
         };
         recorder.db_url = "postgresql://@/hass";
+        prometheus.requires_auth = false;
       };
       extraPackages = p: with p; [
         # Recorder -> postgres
@@ -148,6 +149,13 @@ in
         getmac
       ];
     };
+    services.prometheus.scrapeConfigs = [{
+      job_name = "home-assistant";
+      metrics_path = "/api/prometheus";
+      static_configs = [{
+        targets = [ "127.0.0.1:${toString config.services.home-assistant.config.http.server_port}" ];
+      }];
+    }];
     networking.firewall.enable = false;
     services.postgresql = {
       ensureDatabases = [ "hass" ];
