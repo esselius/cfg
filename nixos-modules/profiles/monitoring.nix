@@ -46,6 +46,13 @@ in
       };
     };
 
+    services.postgresql = {
+      ensureDatabases = [ "grafana" ];
+      ensureUsers = [{
+        name = "grafana";
+        ensureDBOwnership = true;
+      }];
+    };
     services.grafana = {
       enable = true;
       settings = {
@@ -53,6 +60,12 @@ in
           inherit (cfg) domain root_url;
           http_port = 3000;
           http_addr = "0.0.0.0";
+        };
+
+        database = {
+          type = "postgres";
+          host = "/var/run/postgresql";
+          user = "grafana";
         };
 
         security.disable_initial_admin_creation = true;
@@ -95,8 +108,21 @@ in
           name = "My Dashboards";
           options.path = "/etc/grafana-dashboards";
         }];
+        alerting.contactPoints.settings.contactPoints = [{
+          orgId = 1;
+          name = "Telegram";
+          receivers = [{
+            uid = "1";
+            type = "telegram";
+            settings = {
+              bottoken = "$BOTTOKEN";
+              chatid = "\${CHATID}\n";
+            };
+          }];
+        }];
       };
     };
+    systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets.grafana-env.path;
 
     environment.etc = {
       "grafana-dashboards/node_exporter.json" = {

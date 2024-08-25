@@ -11,4 +11,5 @@ in
   "authentik-env.age".publicKeys = [ home-peteresselius adama ];
   "z2m.age".publicKeys = [ home-peteresselius adama ];
   "step-ca.age".publicKeys = [ home-peteresselius adama ];
+  "grafana-env.age".publicKeys = [ home-peteresselius adama ];
 }

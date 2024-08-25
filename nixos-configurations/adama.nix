@@ -40,6 +40,7 @@
     # 28183 # Promtail
   ];
 
+  age.secrets.grafana-env.file = ../secrets/grafana-env.age;
   age.secrets.authentik-env.file = ../secrets/authentik-env.age;
   age.secrets.z2m = {
     name = "z2m.yaml";

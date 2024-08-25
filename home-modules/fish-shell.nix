@@ -18,6 +18,6 @@
   };
 
   home.sessionVariables = {
-    EDITOR = "code";
+    EDITOR = "code --wait";
   };
 }
