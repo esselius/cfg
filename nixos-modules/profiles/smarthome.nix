@@ -185,6 +185,7 @@ in
         AUTHENTICATION_SOURCES = [ "oauth2" ];
         OAUTH2_CONFIG = [{
           OAUTH2_NAME = "authentik";
+          OAUTH2_DISPLAY_NAME = "Authentik";
           OAUTH2_CLIENT_ID = "pgadmin";
           OAUTH2_CLIENT_SECRET = "secret";
           OAUTH2_TOKEN_URL = "https://authentik.adama.lan/application/o/token/";
