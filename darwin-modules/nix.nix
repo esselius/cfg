@@ -18,10 +18,14 @@
       interval = { Hour = 3; Minute = 15; Weekday = 6; };
     };
 
-    registry.nixpkgs.flake = inputs.nixpkgs-darwin;
+    registry = {
+      nixpkgs.flake = inputs.nixpkgs-darwin;
+      nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
+    };
 
     nixPath = lib.mkForce [
       "nixpkgs=${inputs.nixpkgs-darwin}"
+      "nixpkgs-unstable=${inputs.nixpkgs-unstable}"
     ];
   };
 
