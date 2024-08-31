@@ -1,10 +1,15 @@
-{ config, lib, ... }:
+{ config, lib, inputs, pkgs, ... }:
 
 let
   cfg = config.profiles.monitoring;
   inherit (lib) types mkOption mkIf mkEnableOption;
+
+  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
 in
 {
+  imports = [
+    "${inputs.nixpkgs-unstable.outPath}/nixos/modules/services/monitoring/alloy.nix"
+  ];
   options.profiles.monitoring = {
     enable = mkEnableOption "Enable monitoring";
     domain = mkOption {
@@ -146,7 +151,7 @@ in
 
     services.prometheus = {
       enable = true;
-      port = 9001;
+      port = 9090;
 
       exporters = {
         node = {
@@ -161,29 +166,15 @@ in
       scrapeConfigs = [
         { job_name = "node"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ]; }]; }
         { job_name = "loki"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" ]; }]; }
-        { job_name = "promtail"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.promtail.configuration.server.http_listen_port}" ]; }]; }
+        { job_name = "alloy"; static_configs = [{ targets = [ "127.0.0.1:12345" ]; }]; }
+        # { job_name = "tempo"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.tempo.settings.server.http_listen_port}" ]; }]; }
       ];
-    };
 
-    services.promtail = {
-      enable = true;
-      configuration = {
-        server = {
-          http_listen_port = 28183;
-          grpc_listen_port = 0;
-        };
-
-        clients = [{ url = "http://localhost:3030/loki/api/v1/push"; }];
-
-        scrape_configs = [{
-          job_name = "journal";
-          journal = {
-            json = true;
-            max_age = "24h";
-            labels.job = "systemd-journal";
-          };
-        }];
-      };
+      extraFlags = [
+        "--web.enable-remote-write-receiver"
+        "--enable-feature=exemplar-storage"
+        "--enable-feature=native-histograms"
+      ];
     };
 
     services.loki = {
@@ -238,5 +229,80 @@ in
         };
       };
     };
+
+    services.alloy = {
+      enable = true;
+      package = unstable-pkgs.grafana-alloy;
+    };
+
+    environment.etc = {
+      "alloy/config.alloy" = {
+        text = ''
+          loki.relabel "journal" {
+            forward_to = []
+
+            rule {
+              source_labels = ["__journal__systemd_unit"]
+              target_label  = "unit"
+            }
+          }
+
+          loki.source.journal "read"  {
+            forward_to    = [loki.write.endpoint.receiver]
+            relabel_rules = loki.relabel.journal.rules
+            labels        = {component = "loki.source.journal"}
+          }
+
+          loki.write "endpoint" {
+            endpoint {
+              url = "http://127.0.0.1:3030/loki/api/v1/push"
+            }
+          }
+        '';
+        user = "alloy";
+        group = "alloy";
+      };
+    };
+
+    # services.tempo = {
+    #   enable = true;
+    #   settings = {
+    #     server = {
+    #       http_listen_port = 3200;
+    #       grpc_listen_port = 9096;
+    #     };
+    #     distributor.receivers = {
+    #       otlp = {
+    #         protocols = {
+    #           grpc = { };
+    #           http = { };
+    #         };
+    #       };
+    #     };
+    #     metrics_generator = {
+    #       storage = {
+    #         path = "/var/lib/tempo/generator/wal";
+    #         remote_write = [{
+    #           url = "http://127.0.0.1:${toString config.services.prometheus.port}/api/v1/write";
+    #         }];
+    #       };
+    #       traces_storage.path = "/var/lib/tempo/generator/traces";
+    #     };
+    #     storage.trace = {
+    #       backend = "local";
+    #       wal.path = "/var/lib/tempo/wal";
+    #       local.path = "/var/lib/tempo/blocks";
+    #     };
+    #     overrides.metrics_generator_processors = [ "service-graphs" "span-metrics" ];
+    #     # overrides.metrics_generator = {
+    #     #   processors = [
+    #     #     "service-graphs"
+    #     #     "span-metrics"
+    #     #     "local-blocks"
+    #     #   ];
+    #     #   generate_native_histograms = "both";
+    #     # };
+    #   };
+    # };
   };
 }
