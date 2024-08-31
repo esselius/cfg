@@ -27,13 +27,13 @@ tasks:
     requires:
       vars:
         - host
-    cmd: nix build .#nixosConfigurations.{{.host}}.config.system.build.toplevel --no-link -Lv
+    cmd: nix build .#nixosConfigurations.{{.host}}.config.system.build.toplevel --no-link -Lv {{.CLI_ARGS}}
 
   nixos:switch:
     requires:
       vars:
         - host
-    cmd: nixos-rebuild switch --flake .#{{.host}} --target-host {{.host}} --fast --use-remote-sudo
+    cmd: nixos-rebuild switch --flake .#{{.host}} --target-host {{.host}} --fast --use-remote-sudo {{.CLI_ARGS}}
 
   fmt:
     cmds:
