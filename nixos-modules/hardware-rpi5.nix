@@ -12,7 +12,10 @@
   };
 
   hardware = {
-    bluetooth.enable = true;
+    bluetooth = {
+      enable = true;
+      settings.General.Experimental = true;
+    };
 
     raspberry-pi.config.all.base-dt-params.krnbt = {
       enable = true;
