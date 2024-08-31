@@ -167,7 +167,6 @@ in
         { job_name = "node"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ]; }]; }
         { job_name = "loki"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" ]; }]; }
         { job_name = "alloy"; static_configs = [{ targets = [ "127.0.0.1:12345" ]; }]; }
-        # { job_name = "tempo"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.tempo.settings.server.http_listen_port}" ]; }]; }
       ];
 
       extraFlags = [
@@ -263,46 +262,5 @@ in
         group = "alloy";
       };
     };
-
-    # services.tempo = {
-    #   enable = true;
-    #   settings = {
-    #     server = {
-    #       http_listen_port = 3200;
-    #       grpc_listen_port = 9096;
-    #     };
-    #     distributor.receivers = {
-    #       otlp = {
-    #         protocols = {
-    #           grpc = { };
-    #           http = { };
-    #         };
-    #       };
-    #     };
-    #     metrics_generator = {
-    #       storage = {
-    #         path = "/var/lib/tempo/generator/wal";
-    #         remote_write = [{
-    #           url = "http://127.0.0.1:${toString config.services.prometheus.port}/api/v1/write";
-    #         }];
-    #       };
-    #       traces_storage.path = "/var/lib/tempo/generator/traces";
-    #     };
-    #     storage.trace = {
-    #       backend = "local";
-    #       wal.path = "/var/lib/tempo/wal";
-    #       local.path = "/var/lib/tempo/blocks";
-    #     };
-    #     overrides.metrics_generator_processors = [ "service-graphs" "span-metrics" ];
-    #     # overrides.metrics_generator = {
-    #     #   processors = [
-    #     #     "service-graphs"
-    #     #     "span-metrics"
-    #     #     "local-blocks"
-    #     #   ];
-    #     #   generate_native_histograms = "both";
-    #     # };
-    #   };
-    # };
   };
 }
