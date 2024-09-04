@@ -10,6 +10,7 @@ in
     k8s = lib.mkEnableOption "Install k8s packages & set shell config";
     minio = lib.mkEnableOption "Install minio packages";
     task = lib.mkEnableOption "Install task tab completion";
+    trino = lib.mkEnableOption "Install trino packages";
   };
 
   config = mkMerge [
@@ -64,6 +65,12 @@ in
 
     (mkIf cfg.task {
       xdg.configFile."fish/completions/task.fish".source = "${pkgs.go-task}/share/fish/vendor_completions.d/task.fish";
+    })
+
+    (mkIf cfg.trino {
+      home.packages = with pkgs; [
+        trino-cli
+      ];
     })
   ];
 }

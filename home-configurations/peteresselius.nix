@@ -28,6 +28,7 @@ in
         k8s = true;
         minio = true;
         task = true;
+        trino = true;
       };
 
       programs.fish.shellInit = ''
