@@ -3,8 +3,6 @@
 let
   cfg = config.profiles.monitoring;
   inherit (lib) types mkOption mkIf mkEnableOption;
-
-  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
 in
 {
   imports = [
@@ -231,7 +229,6 @@ in
 
     services.alloy = {
       enable = true;
-      package = unstable-pkgs.grafana-alloy;
     };
 
     environment.etc = {

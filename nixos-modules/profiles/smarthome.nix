@@ -3,8 +3,6 @@
 let
   cfg = config.profiles.smarthome;
   inherit (lib) mkIf mkEnableOption;
-
-  pkgs-unstable = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
 in
 {
   options.profiles.smarthome = {
@@ -56,7 +54,6 @@ in
 
     services.zigbee2mqtt = {
       enable = true;
-      package = pkgs-unstable.zigbee2mqtt;
       settings = {
         frontend.port = 8099;
         homeassistant = true;
@@ -93,10 +90,7 @@ in
       configFile = ./nodered-settings.js;
     };
     systemd.services.node-red.environment.NODE_PATH =
-      let
-        pkg = (pkgs.callPackage ../../pkgs/passport-openidconnect { }).package;
-      in
-      "${pkg.outPath}/lib/node_modules";
+      "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
 
     services.nginx.virtualHosts."home-assistant.adama.lan" = {
       forceSSL = true;
@@ -109,7 +103,6 @@ in
 
     services.home-assistant = {
       enable = true;
-      package = pkgs-unstable.home-assistant;
       extraComponents = [
         "zha"
         "google_translate"
