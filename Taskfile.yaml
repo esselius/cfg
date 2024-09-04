@@ -2,7 +2,13 @@ version: "3"
 
 tasks:
   update:
-    cmd: nix flake update
+    cmds:
+      - nix flake update
+      - task: nixos-rebuild
+        vars:
+          command: build
+          host: adama
+      - cachix push esselius ./result
 
   darwin:build:
     requires:
@@ -11,7 +17,7 @@ tasks:
     cmd: nix build .#darwinConfigurations.{{.host}}.config.system.build.toplevel --no-link -Lv
 
   darwin:switch:
-    cmd: darwin-rebuild switch --flake .
+    cmd: darwin-rebuild switch --flake . {{.CLI_ARGS}}
 
   home:build:
     requires:
@@ -23,6 +29,13 @@ tasks:
   home:switch:
     cmd: home-manager switch --flake .
 
+  nixos-rebuild:
+    requires:
+      vars:
+        - command
+        - host
+    cmd: nixos-rebuild {{.command}} --flake .#{{.host}} {{.args}}
+
   nixos:build:
     requires:
       vars:
@@ -33,7 +46,11 @@ tasks:
     requires:
       vars:
         - host
-    cmd: nixos-rebuild switch --flake .#{{.host}} --target-host {{.host}} --fast --use-remote-sudo {{.CLI_ARGS}}
+    cmd:
+      task: nixos-rebuild
+      vars:
+        command: switch
+        args: --fast --use-remote-sudo --target-host {{.host}} {{.CLI_ARGS}}
 
   fmt:
     cmds:
