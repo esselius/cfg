@@ -70,6 +70,7 @@ in
           channel = 11;
           last_seen = "ISO_8601";
           log_level = "warning";
+          legacy_availability_payload = false;
         };
         availability = true;
       };

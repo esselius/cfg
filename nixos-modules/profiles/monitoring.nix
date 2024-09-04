@@ -165,6 +165,7 @@ in
         { job_name = "node"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ]; }]; }
         { job_name = "loki"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}" ]; }]; }
         { job_name = "alloy"; static_configs = [{ targets = [ "127.0.0.1:12345" ]; }]; }
+        { job_name = "mqtt"; static_configs = [{ targets = [ "127.0.0.1:9031" ]; }]; }
       ];
 
       extraFlags = [

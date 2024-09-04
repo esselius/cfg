@@ -13,6 +13,7 @@
     ezModules.user-peteresselius
     ezModules.ca
     ezModules.nginx
+    ezModules.prometheus-mqtt-exporter
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
