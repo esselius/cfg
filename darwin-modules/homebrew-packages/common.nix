@@ -15,6 +15,7 @@
       "vlc"
       "vmware-fusion"
       "wezterm"
+      "logseq"
     ];
   };
 }
