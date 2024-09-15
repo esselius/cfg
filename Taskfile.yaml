@@ -52,6 +52,14 @@ tasks:
         command: switch
         args: --fast --use-remote-sudo --target-host {{.host}} {{.CLI_ARGS}}
 
+  nixos:sd:
+    requires:
+      vars:
+        - host
+    cmds:
+      - nix build .#nixosConfigurations.{{.host}}.config.system.build.sdImage
+      - unzstd result/sd-image/nixos-sd-image-*-linux.img.zst -o sd.img
+
   fmt:
     cmds:
       - statix fix

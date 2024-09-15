@@ -17,11 +17,10 @@ $ nix  --extra-experimental-features 'flakes nix-command' run nix-darwin -- swit
 Generate SD card image
 
 ```shell
-$ nix build .#nixosConfigurations.adama.config.system.build.sdImage
-$ unzstd result/sd-image/nixos-sd-image-24.05.20240706.49ee0e9-aarch64-linux.img.zst -o x.img
+$ task nixos:sd host=adama
 ```
 
-Flash SD card or USB stick with `x.img` using [Raspberry Pi Imager](https://www.raspberrypi.com/software/), put in RPi and start attached to network.
+Flash SD card or USB stick with `sd.img` using [Raspberry Pi Imager](https://www.raspberrypi.com/software/), put in RPi and start attached to network.
 
 Grab new ssh host key.
 
