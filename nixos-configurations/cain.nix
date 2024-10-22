@@ -4,6 +4,7 @@
   imports = [
     ezModules.user-peteresselius
     ezModules.sshd
+    ezModules.nix-gc
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";

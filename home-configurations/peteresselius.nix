@@ -18,6 +18,12 @@ in
       programs.fish.shellInit = ''
         set -x EMAIL (sh -c 'cat ${config.age.secrets.email.path}')
       '';
+
+      home = {
+        stateVersion = "24.05";
+        homeDirectory = if pkgs.stdenv.isDarwin then "/Users/peteresselius" else "/home/peteresselius";
+        username = "peteresselius";
+      };
     }
 
     (mkIf (config.context == "home") { })
@@ -36,10 +42,4 @@ in
       '';
     })
   ];
-
-  home = {
-    stateVersion = "24.05";
-    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/peteresselius" else "/home/peteresselius";
-    username = "peteresselius";
-  };
 }

@@ -14,6 +14,7 @@
     ezModules.ca
     ezModules.nginx
     ezModules.prometheus-mqtt-exporter
+    ezModules.nix-gc
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

@@ -8,12 +8,6 @@
 
     settings.trusted-users = [ "root" "@wheel" ];
 
-    gc = {
-      automatic = true;
-      dates = "daily";
-      options = "--delete-older-than 7d";
-    };
-
     registry.nixpkgs.flake = inputs.nixpkgs;
 
     nixPath = [
