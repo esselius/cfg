@@ -8,12 +8,17 @@
 
     vimAlias = true;
 
+    globals.mapleader = " ";
+
     opts = {
       number = true;
       shiftwidth = 2;
+      undofile = true;
     };
 
     plugins = {
+      auto-save.enable = true;
+
       airline.enable = true;
 
       bufferline.enable = true;
@@ -22,12 +27,26 @@
 
       treesitter.enable = true;
 
+      gitblame.enable = true;
+
+      indent-o-matic.enable = true;
+
+      which-key.enable = true;
+
+      neo-tree.enable = true;
+
       lsp = {
         enable = true;
 
         servers = {
           nixd.enable = true;
         };
+      };
+
+      lsp-status.enable = true;
+
+      lsp-format = {
+        enable = true;
       };
 
       cmp = {
@@ -40,6 +59,7 @@
         ];
       };
     };
-    colorschemes.vscode.enable = true;
+
+    colorschemes.catppuccin.enable = true;
   };
 }

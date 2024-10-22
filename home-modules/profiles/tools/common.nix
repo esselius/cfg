@@ -38,5 +38,6 @@
     tree
     attic-server
     attic-client
+    nmap
   ];
 }
