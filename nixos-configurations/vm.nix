@@ -13,4 +13,11 @@
     ezModules.sshd
     ezModules.user-peteresselius
   ];
+
+  programs.nix-ld.enable = true;
+  nix.settings.extra-sandbox-paths = [ "/lib" ];
+  boot.binfmt.emulatedSystems = ["x86_64-linux"];
+  nix.settings.sandbox = "relaxed";
+
+  virtualisation.docker.enable = true;
 }

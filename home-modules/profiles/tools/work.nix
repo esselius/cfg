@@ -11,6 +11,7 @@ in
     minio = lib.mkEnableOption "Install minio packages";
     task = lib.mkEnableOption "Install task tab completion";
     trino = lib.mkEnableOption "Install trino packages";
+    google-cloud = lib.mkEnableOption "Install google cloud packages";
   };
 
   config = mkMerge [
@@ -70,6 +71,12 @@ in
     (mkIf cfg.trino {
       home.packages = with pkgs; [
         trino-cli
+      ];
+    })
+
+    (mkIf cfg.google-cloud {
+      home.packages = with pkgs; [
+        google-cloud-sdk
       ];
     })
   ];

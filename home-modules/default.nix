@@ -6,6 +6,7 @@
     ezModules.agenix
     ezModules.terminal
     ezModules.nix
+    ezModules.neovim
   ];
 
   inherit (osConfig) context;

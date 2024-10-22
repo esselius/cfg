@@ -35,6 +35,7 @@ in
         minio = true;
         task = true;
         trino = true;
+        google-cloud = true;
       };
 
       programs.fish.shellInit = ''
