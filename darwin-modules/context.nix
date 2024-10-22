@@ -10,7 +10,7 @@ in
       type = enum [ "home" "work" ];
     };
     formfactor = mkOption {
-      type = enum [ "desktop" "laptop" "server" ];
+      type = enum [ "desktop" "laptop" "server" "vm" ];
     };
   };
 }
