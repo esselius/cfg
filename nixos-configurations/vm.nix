@@ -9,7 +9,6 @@
   formfactor = "vm";
 
   imports = [
-    "${modulesPath}/virtualisation/vmware-guest.nix"
     ezModules.hardware-vm
     ezModules.user-peteresselius
   ];
