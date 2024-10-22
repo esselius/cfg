@@ -46,3 +46,9 @@ Deploy refreshed secrets.
 ```shell
 $ nixos-rebuild switch --flake . --target-host 192.168.1.195 --fast --use-remote-sudo
 ```
+
+VM install
+
+```
+$ nixos-install --flake github:esselius/cfg#vm
+```
