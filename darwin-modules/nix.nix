@@ -10,7 +10,17 @@
       use-case-hack = false
     '';
 
-    settings.trusted-users = [ "@admin" ];
+    settings = {
+      trusted-users = [ "@admin" ];
+      substituters = [
+        "https://esselius.cachix.org"
+        "https://nix-community.cachix.org"
+      ];
+      trusted-public-keys = [
+        "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
 
     gc = {
       automatic = true;

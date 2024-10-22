@@ -5,6 +5,7 @@
     ezModules.context
     ezModules.agenix
     ezModules.terminal
+    ezModules.nix
   ];
 
   home = {

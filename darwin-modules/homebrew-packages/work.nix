@@ -12,10 +12,15 @@
       "intune-company-portal"
       "microsoft-teams"
       "tunnelblick"
+      "postman"
+      "dbvisualizer"
+      "activitywatch"
+      "wireshark"
     ];
 
     brews = lib.mkIf (config.context == "work") [
       "azure-cli"
+      "protobuf"
     ];
   };
 }

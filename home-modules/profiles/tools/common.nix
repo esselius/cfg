@@ -34,5 +34,9 @@
     yq
     zstd
     nixd
+    duckdb
+    tree
+    attic-server
+    attic-client
   ];
 }
