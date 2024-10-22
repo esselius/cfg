@@ -10,6 +10,7 @@
 
   imports = [
     ezModules.hardware-vm
+    ezModules.sshd
     ezModules.user-peteresselius
   ];
 }
