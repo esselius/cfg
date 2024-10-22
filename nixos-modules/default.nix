@@ -7,7 +7,4 @@
     ezModules.nix
     ../overlays.nix
   ];
-
-  security.sudo.wheelNeedsPassword = false;
-  users.mutableUsers = false;
 }

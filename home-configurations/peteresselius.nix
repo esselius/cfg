@@ -1,4 +1,4 @@
-{ ezModules, config, lib, ... }:
+{ pkgs, ezModules, config, lib, ... }:
 
 let
   inherit (lib) mkMerge mkIf;
@@ -36,4 +36,10 @@ in
       '';
     })
   ];
+
+  home = {
+    stateVersion = "24.05";
+    homeDirectory = if pkgs.stdenv.isDarwin then "/Users/peteresselius" else "/home/peteresselius";
+    username = "peteresselius";
+  };
 }

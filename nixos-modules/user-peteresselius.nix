@@ -14,4 +14,7 @@
   };
 
   programs.fish.enable = true;
+
+  security.sudo.wheelNeedsPassword = false;
+  users.mutableUsers = false;
 }
