@@ -22,6 +22,11 @@
       ];
     };
 
+    optimise = {
+      automatic = true;
+      interval = [{ Weekday = 7; Hour = 4; Minute = 15; }];
+    };
+
     gc = {
       automatic = true;
       options = "--delete-older-than 7d";

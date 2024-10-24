@@ -10,6 +10,11 @@
 
     registry.nixpkgs.flake = inputs.nixpkgs;
 
+    optimise = {
+      automatic = true;
+      dates = [ "03:45" ];
+    };
+
     nixPath = [
       "nixpkgs=${inputs.nixpkgs}"
     ];

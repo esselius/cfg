@@ -8,6 +8,7 @@ in
 
   programs.nixvim = {
     enable = true;
+    defaultEditor = true;
 
     nixpkgs.pkgs = unstable-pkgs;
 
@@ -43,7 +44,6 @@ in
       neo-tree.enable = true;
 
       noice.enable = true;
-      lazy.enable = true;
 
       lsp = {
         enable = true;

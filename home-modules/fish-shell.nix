@@ -16,8 +16,4 @@
       nix-direnv.enable = true;
     };
   };
-
-  home.sessionVariables = {
-    EDITOR = "code --wait";
-  };
 }
