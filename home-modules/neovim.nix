@@ -37,6 +37,8 @@ in
 
       gitblame.enable = true;
 
+      gitgutter.enable = true;
+
       indent-o-matic.enable = true;
 
       which-key.enable = true;
@@ -75,6 +77,10 @@ in
       };
     };
 
-    colorschemes.catppuccin.enable = true;
+    colorschemes.gruvbox.enable = true;
+  };
+
+  programs.fish.shellAbbrs = {
+    vim = "nvim";
   };
 }

@@ -12,6 +12,7 @@
     ezModules.hardware-vm
     ezModules.sshd
     ezModules.user-peteresselius
+    ezModules.sysdig
   ];
 
   programs.nix-ld.enable = true;
@@ -20,4 +21,6 @@
   nix.settings.sandbox = "relaxed";
 
   virtualisation.docker.enable = true;
+
+  nixpkgs.config.allowUnsupportedSystem = true;
 }

@@ -39,5 +39,8 @@
     attic-server
     attic-client
     nmap
+    postgresql
+    killall
+    file
   ];
 }
