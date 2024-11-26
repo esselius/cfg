@@ -1,4 +1,4 @@
-{ modulesPath, ezModules, ... }:
+{ ezModules, pkgs, lib, ... }:
 
 {
   nixpkgs.hostPlatform = "aarch64-linux";
@@ -18,4 +18,8 @@
   virtualisation.docker.enable = true;
 
   nixpkgs.config.allowUnsupportedSystem = true;
+
+  boot.kernel.sysctl."fs.inotify.max_user_instances" = 256;
+
+  programs.nix-ld.enable = true;
 }

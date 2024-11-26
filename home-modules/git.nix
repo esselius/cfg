@@ -47,7 +47,8 @@
       ghq = {
         root = "~/src";
       };
-      url."git@github.com:".insteadOf = "https://github.com";
+      url."git@github.com:pagero".insteadOf = "https://github.com/pagero";
+      url."git@github.com:esselius".insteadOf = "https://github.com/esselius";
     };
   };
 

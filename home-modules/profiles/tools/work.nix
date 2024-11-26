@@ -51,6 +51,7 @@ in
         minio-client
         sqlfluff
         stern
+        kubectl
       ];
 
       home.sessionPath = [

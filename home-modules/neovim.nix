@@ -22,7 +22,11 @@ in
       undofile = true;
     };
 
+
+    editorconfig.enable = true;
+
     plugins = {
+      clangd-extensions.enable = true;
       web-devicons.enable = true;
 
       auto-save.enable = true;
@@ -52,11 +56,16 @@ in
 
         servers = {
           nixd.enable = true;
-          metals.enable = true;
+          metals = {
+            enable = true;
+            filetypes = [ "sc" "scala" ];
+          };
           dockerls.enable = true;
           tilt_ls.enable = true;
           protols = { enable = true; package = null; };
           pylsp.enable = true;
+          gopls.enable = true;
+          clangd.enable = true;
         };
       };
 
@@ -74,8 +83,52 @@ in
           { name = "path"; }
           { name = "buffer"; }
         ];
+        settings = {
+          mapping = {
+            "<C-i>" = ''cmp.mapping(cmp.mapping.complete(), { "i", "c" })'';
+            "<C-e>" = "cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close(), })";
+            "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+            "<CR>" = "cmp.mapping.confirm({ select = true })";
+            "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+            "<C-Space>" = "cmp.mapping.complete()";
+          };
+        };
       };
     };
+
+    extraPlugins = with pkgs.vimPlugins; [
+      nvim-metals
+      plenary-nvim
+      (pkgs.vimUtils.buildVimPlugin {
+        name = "dbtpal.nvim";
+        src = pkgs.fetchFromGitHub {
+          owner = "PedramNavid";
+          repo = "dbtpal";
+          rev = "c526f65";
+          hash = "sha256-qQZrfTUIhmYaXwNFnTudnapK41g7xww5VPfggLyrrew=";
+        };
+      })
+    ];
+
+    extraConfigLua = ''
+      local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "scala", "sbt", "java" },
+        callback = function()
+          require("metals").initialize_or_attach({})
+        end,
+        group = nvim_metals_group,
+      })
+      require("dbtpal").setup({
+          path_to_dbt = "dbt",
+          path_to_dbt_project = "src/dbt",
+          path_to_dbt_profiles_dir = vim.fn.getcwd(),
+          extended_path_search = true,
+          protect_compiled_files = true,
+          custom_dbt_syntax_enabled = true,
+      })
+      require("telescope").load_extension("dbtpal")
+    '';
 
     colorschemes.gruvbox.enable = true;
   };

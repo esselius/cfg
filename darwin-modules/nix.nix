@@ -4,7 +4,7 @@
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-    package = pkgs.nixVersions.nix_2_23;
+    # package = pkgs.nixVersions.nix_2_23;
     extraOptions = ''
       extra-experimental-features = nix-command flakes
       use-case-hack = false
@@ -20,6 +20,8 @@
         "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
+      plugin-files = "${pkgs.nix-plugins}/lib/nix/plugins";
+      extra-builtins-file = "${../extra-builtins.nix}";
     };
 
     optimise = {

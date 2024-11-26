@@ -1,5 +1,8 @@
+{ pkgs, ... }:
+
 {
   nix = {
+    # package = pkgs.nixVersions.nix_2_23;
     settings = {
       substituters = [
         "https://cache.nixos.org"

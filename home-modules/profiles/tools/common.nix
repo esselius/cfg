@@ -42,5 +42,9 @@
     postgresql
     killall
     file
+    unzip
+    devenv
+    arion
+    docker-client
   ];
 }
