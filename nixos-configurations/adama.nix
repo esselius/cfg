@@ -4,11 +4,8 @@
   _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
 
   imports = [
-    inputs.authentik-nix.nixosModules.default
-
     ezModules.authentik-blueprints
     ezModules.hardware-rpi5
-    ezModules.profiles
     ezModules.sshd
     ezModules.user-peteresselius
     ezModules.ca
@@ -199,4 +196,11 @@
       api_url = "https://authentik.adama.lan/application/o/userinfo/";
     };
   };
+  services.prometheus = {
+    scrapeConfigs = [
+      { job_name = "starbuck-node-exporter"; static_configs = [{ targets = [ "starbuck:9100" ]; }]; }
+      { job_name = "openwrt"; static_configs = [{ targets = [ "192.168.1.1:9100" "192.168.1.2:9100" ]; }]; }
+    ];
+  };
+
 }

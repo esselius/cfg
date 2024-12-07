@@ -1,10 +1,13 @@
-{ config, lib, ... }:
+{ inputs, config, lib, ... }:
 
 let
   cfg = config.profiles.auth;
   inherit (lib) types mkOption mkEnableOption mkIf;
 in
 {
+  imports = [
+    inputs.authentik-nix.nixosModules.default
+  ];
   options = {
     profiles.auth = {
       enable = mkEnableOption "auth";

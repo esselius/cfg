@@ -102,6 +102,7 @@ in
       };
     };
 
+    # TODO Run hass after postgres has started
     services.home-assistant = {
       enable = true;
       extraComponents = [

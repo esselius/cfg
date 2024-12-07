@@ -4,10 +4,10 @@
     maxJobs = 4;
     ephemeral = true;
     config = {
-      imports = [
-        ../nixos-modules/user-peteresselius.nix
-        ../nixos-modules/sysdig.nix
-      ];
+#      imports = [
+#        ../nixos-modules/user-peteresselius.nix
+#        ../nixos-modules/sysdig.nix
+#      ];
       virtualisation = {
         darwin-builder = {
           diskSize = 100 * 1024;

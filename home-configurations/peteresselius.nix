@@ -9,7 +9,7 @@ in
     ezModules.git
     ezModules.ssh
     ezModules.profiles
-    inputs.cfg-work.homeModules.sbt
+#    inputs.cfg-work.homeModules.sbt
   ];
 
   config = mkMerge [

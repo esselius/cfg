@@ -9,7 +9,7 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
 
-    cfg-work.url = "github:esselius/cfg-work";
+#    cfg-work.url = "github:esselius/cfg-work";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.0";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -57,6 +57,7 @@
         darwin.hosts.Petere-MBP.userHomeModules = [ "peteresselius" ];
         nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
         nixos.hosts.vm.userHomeModules = [ "peteresselius" ];
+        nixos.hosts.starbuck.userHomeModules = [ "peteresselius" ];
       };
     };
 }

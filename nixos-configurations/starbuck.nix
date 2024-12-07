@@ -14,4 +14,11 @@
 
   context = "home";
   formfactor = "server";
+
+  networking.firewall.allowedTCPPorts = [
+    9100
+  ];
+
+  profiles.storage.enable = true;
+  profiles.telemetry.enable = true;
 }

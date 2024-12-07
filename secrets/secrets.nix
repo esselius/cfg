@@ -3,6 +3,7 @@ let
   work-peteresselius = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJmUlguPPHN+XxAvF9OEmF8mnn7mXSWez5PjkG04ECL2";
 
   adama = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
+  starbuck = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG3RGZaR4WeCYqQUwHi3YtDxrWDa1T/1+4fNqCfdqZ7C";
 in
 {
   "work-email.age".publicKeys = [ work-peteresselius ];
