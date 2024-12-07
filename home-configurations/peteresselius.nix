@@ -30,8 +30,12 @@ in
     (mkIf (config.context == "home") { })
 
     (mkIf (config.context == "work") {
+      programs.mise = {
+        enable = true;
+        enableFishIntegration = true;
+      };
       profiles.tools = {
-        asdf = true;
+        # asdf = true;
         k8s = true;
         minio = true;
         task = true;

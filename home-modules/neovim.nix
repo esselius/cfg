@@ -58,7 +58,7 @@ in
           nixd.enable = true;
           metals = {
             enable = true;
-            filetypes = [ "sc" "scala" ];
+            filetypes = [ "sc" "scala" "java" ];
           };
           dockerls.enable = true;
           tilt_ls.enable = true;
@@ -66,6 +66,10 @@ in
           pylsp.enable = true;
           gopls.enable = true;
           clangd.enable = true;
+          regols = {
+            enable = true;
+            filetypes = ["rego"];
+          };
         };
       };
 
@@ -83,16 +87,6 @@ in
           { name = "path"; }
           { name = "buffer"; }
         ];
-        settings = {
-          mapping = {
-            "<C-i>" = ''cmp.mapping(cmp.mapping.complete(), { "i", "c" })'';
-            "<C-e>" = "cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close(), })";
-            "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
-            "<CR>" = "cmp.mapping.confirm({ select = true })";
-            "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
-            "<C-Space>" = "cmp.mapping.complete()";
-          };
-        };
       };
     };
 
@@ -113,7 +107,7 @@ in
     extraConfigLua = ''
       local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "scala", "sbt", "java" },
+        pattern = { "scala", "sbt" },
         callback = function()
           require("metals").initialize_or_attach({})
         end,
