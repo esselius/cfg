@@ -9,6 +9,7 @@
     uboot.enable = false;
     pin-inputs.enable = true;
     board = "bcm2712";
+    libcamera-overlay.enable = false;
   };
 
   hardware = {

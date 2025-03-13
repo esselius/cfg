@@ -5,9 +5,9 @@ let
   inherit (lib) types mkOption mkIf mkEnableOption;
 in
 {
-  imports = [
-    "${inputs.nixpkgs-unstable.outPath}/nixos/modules/services/monitoring/alloy.nix"
-  ];
+  # imports = [
+  #   "${inputs.nixpkgs-unstable.outPath}/nixos/modules/services/monitoring/alloy.nix"
+  # ];
   options.profiles.monitoring = {
     enable = mkEnableOption "Enable monitoring";
     domain = mkOption {
@@ -215,37 +215,37 @@ in
       };
     };
 
-    services.alloy = {
-      enable = true;
-    };
+    # services.alloy = {
+    #   enable = true;
+    # };
 
-    environment.etc = {
-      "alloy/config.alloy" = {
-        text = ''
-          loki.relabel "journal" {
-            forward_to = []
-
-            rule {
-              source_labels = ["__journal__systemd_unit"]
-              target_label  = "unit"
-            }
-          }
-
-          loki.source.journal "read"  {
-            forward_to    = [loki.write.endpoint.receiver]
-            relabel_rules = loki.relabel.journal.rules
-            labels        = {component = "loki.source.journal"}
-          }
-
-          loki.write "endpoint" {
-            endpoint {
-              url = "http://127.0.0.1:3030/loki/api/v1/push"
-            }
-          }
-        '';
-        user = "alloy";
-        group = "alloy";
-      };
-    };
+    # environment.etc = {
+    #   "alloy/config.alloy" = {
+    #     text = ''
+    #       loki.relabel "journal" {
+    #         forward_to = []
+    #
+    #         rule {
+    #           source_labels = ["__journal__systemd_unit"]
+    #           target_label  = "unit"
+    #         }
+    #       }
+    #
+    #       loki.source.journal "read"  {
+    #         forward_to    = [loki.write.endpoint.receiver]
+    #         relabel_rules = loki.relabel.journal.rules
+    #         labels        = {component = "loki.source.journal"}
+    #       }
+    #
+    #       loki.write "endpoint" {
+    #         endpoint {
+    #           url = "http://127.0.0.1:3030/loki/api/v1/push"
+    #         }
+    #       }
+    #     '';
+    #     user = "alloy";
+    #     group = "alloy";
+    #   };
+    # };
   };
 }

@@ -105,6 +105,9 @@ in
     # TODO Run hass after postgres has started
     services.home-assistant = {
       enable = true;
+      customComponents = [
+        pkgs.audi_connect_ha
+      ];
       extraComponents = [
         "zha"
         "google_translate"

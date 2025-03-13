@@ -10,6 +10,7 @@ in
       nodePackages = prev.nodePackages // {
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
+      audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix {};
 
       darwin = prev.darwin.overrideScope (_: _: {
         inherit (unstable-pkgs.darwin) linux-builder;
@@ -17,7 +18,7 @@ in
 
       inherit (unstable-pkgs) home-assistant;
       inherit (unstable-pkgs) zigbee2mqtt;
-      inherit (unstable-pkgs) grafana-alloy;
+      # inherit (unstable-pkgs) grafana-alloy;
     })
   ];
 }
