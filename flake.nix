@@ -59,9 +59,5 @@
         nixos.hosts.vm.userHomeModules = [ "peteresselius" ];
         nixos.hosts.starbuck.userHomeModules = [ "peteresselius" ];
       };
-
-      perSystem = { pkgs, ... }: {
-        packages.audi_connect_ha = pkgs.callPackage ./pkgs/audi_connect_ha.nix {};
-      };
     };
 }
