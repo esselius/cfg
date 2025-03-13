@@ -5,21 +5,21 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
 
 #    cfg-work.url = "github:esselius/cfg-work";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.0";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.url = "github:nix-community/authentik-nix/version/2024.6.1";
+    authentik-nix.url = "github:nix-community/authentik-nix/version/2024.8.3";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.flake-parts.follows = "flake-parts";
 
-    nix-darwin.url = "github:lnl7/nix-darwin";
+    nix-darwin.url = "github:lnl7/nix-darwin/nix-darwin-24.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
