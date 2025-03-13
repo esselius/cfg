@@ -10,7 +10,6 @@
     ezModules.user-peteresselius
     ezModules.ca
     ezModules.nginx
-    ezModules.prometheus-mqtt-exporter
     ezModules.nix-gc
   ];
 
@@ -184,7 +183,7 @@
   ];
 
   profiles.monitoring = {
-    enable = true;
+    enable = false;
     domain = "grafana.adama.lan";
     root_url = "https://grafana.adama.lan/";
     oauth = {
@@ -204,7 +203,7 @@
   };
 
   services.cockpit = {
-    enable = true;
+    enable = false;
     openFirewall = true;
     port = 8085;
   };

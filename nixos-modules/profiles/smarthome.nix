@@ -156,6 +156,7 @@ in
     }];
     networking.firewall.enable = false;
     services.postgresql = {
+      enable = true;
       ensureDatabases = [ "hass" ];
       ensureUsers = [
         {
@@ -178,7 +179,7 @@ in
     };
 
     services.pgadmin = {
-      enable = true;
+      enable = false;
       settings = {
         AUTHENTICATION_SOURCES = [ "oauth2" ];
         OAUTH2_CONFIG = [{

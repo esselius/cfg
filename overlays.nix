@@ -5,8 +5,6 @@ in
 {
   nixpkgs.overlays = [
     (final: prev: {
-      prometheus-mqtt-exporter = unstable-pkgs.callPackage ./pkgs/prometheus-mqtt-exporter.nix { };
-
       nodePackages = prev.nodePackages // {
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
