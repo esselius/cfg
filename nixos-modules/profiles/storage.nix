@@ -9,7 +9,7 @@ in
   config = lib.mkIf cfg.enable {
     services.garage = {
       enable = true;
-      package = pkgs.garage_1_0_1;
+      package = pkgs.garage_1_1_0;
       settings = {
         metadata_dir = "/var/lib/garage/meta";
         data_dir = "/var/lib/garage/data";
