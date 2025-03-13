@@ -16,7 +16,7 @@
         cores = 8;
       };
 
-      nixpkgs.config.allowUnsupportedSystem = true;
+      # nixpkgs.config.allowUnsupportedSystem = true;
     };
   };
 }
