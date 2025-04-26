@@ -2,7 +2,6 @@
 
 {
   imports = [
-    ezModules.hardware-rpi5
     ezModules.sshd
     ezModules.user-peteresselius
     ezModules.nix-gc
@@ -15,10 +14,16 @@
   context = "home";
   formfactor = "server";
 
+  profiles.telemetry.enable = true;
+
   networking.firewall.allowedTCPPorts = [
-    9100
+    9090
   ];
 
-  profiles.storage.enable = true;
-  profiles.telemetry.enable = true;
+  hardware-rpi5 = {
+    enable = true;
+    enableNVMe = true;
+    enablePCIeGen3 = true;
+    enableMaxUSBCurrent = true;
+  };
 }

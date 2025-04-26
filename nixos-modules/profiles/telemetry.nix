@@ -16,6 +16,7 @@ in
       exporters = {
         node = {
           enable = true;
+          openFirewall = true;
           enabledCollectors = [
             "cgroups"
             "systemd"

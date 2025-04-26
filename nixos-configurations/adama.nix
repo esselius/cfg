@@ -5,7 +5,6 @@
 
   imports = [
     ezModules.authentik-blueprints
-    ezModules.hardware-rpi5
     ezModules.sshd
     ezModules.user-peteresselius
     ezModules.ca
@@ -19,6 +18,10 @@
 
   context = "home";
   formfactor = "server";
+
+  hardware-rpi5 = {
+    enable = true;
+  };
 
   networking.firewall.allowedTCPPorts = [
     443 # Nginx
@@ -183,7 +186,7 @@
   ];
 
   profiles.monitoring = {
-    enable = false;
+    enable = true;
     domain = "grafana.adama.lan";
     root_url = "https://grafana.adama.lan/";
     oauth = {
@@ -196,8 +199,9 @@
     };
   };
   services.prometheus = {
+    enable = true;
     scrapeConfigs = [
-      { job_name = "starbuck-node-exporter"; static_configs = [{ targets = [ "starbuck:9100" ]; }]; }
+      { job_name = "starbuck"; static_configs = [{ targets = [ "starbuck:9090" ]; }]; }
       { job_name = "openwrt"; static_configs = [{ targets = [ "192.168.1.1:9100" "192.168.1.2:9100" ]; }]; }
     ];
   };
