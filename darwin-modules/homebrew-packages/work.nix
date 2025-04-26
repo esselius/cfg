@@ -6,15 +6,11 @@
       "cyberduck"
       "datagrip"
       "docker"
-      "goland"
       "google-cloud-sdk"
       "intellij-idea"
-      "intune-company-portal"
       "microsoft-teams"
-      "tunnelblick"
+      "microsoft-office"
       "postman"
-      "dbvisualizer"
-      "activitywatch"
       "wireshark"
     ];
 

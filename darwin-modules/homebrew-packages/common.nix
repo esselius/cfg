@@ -13,9 +13,7 @@
       "telegram"
       "visual-studio-code"
       "vlc"
-      "vmware-fusion"
       "wezterm"
-      "logseq"
     ];
   };
 }

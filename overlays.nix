@@ -16,7 +16,6 @@ in
 
       inherit (unstable-pkgs) home-assistant;
       inherit (unstable-pkgs) zigbee2mqtt;
-      # inherit (unstable-pkgs) grafana-alloy;
     })
   ];
 }

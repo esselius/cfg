@@ -13,6 +13,8 @@
 
       config.window_decorations = 'RESIZE'
 
+      config.font = wezterm.font("JetBrains Mono")
+
       return config
     '';
   };

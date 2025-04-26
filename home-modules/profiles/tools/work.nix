@@ -1,10 +1,11 @@
-{ lib, pkgs, config, ... }:
+{ inputs, lib, pkgs, config, ... }:
 
 let
   cfg = config.profiles.tools;
   inherit (lib) mkMerge mkIf;
 in
 {
+  imports = [ inputs.krewfile.homeManagerModules.krewfile ];
   options.profiles.tools = {
     asdf = lib.mkEnableOption "Install asdf";
     k8s = lib.mkEnableOption "Install k8s packages & set shell config";
@@ -47,16 +48,16 @@ in
 
       home.packages = with pkgs; [
         k9s
-        krew
         minio-client
         sqlfluff
         stern
         kubectl
       ];
 
-      home.sessionPath = [
-        "$HOME/.krew/bin"
-      ];
+      programs.krewfile = {
+        enable = true;
+        plugins = [ "oidc-login" ];
+      };
     })
 
     (mkIf cfg.minio {

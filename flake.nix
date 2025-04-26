@@ -30,6 +30,8 @@
       inputs.nix-darwin.follows = "nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+    krewfile.url = "github:brumhard/krewfile";
+    krewfile.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     ez-configs = {
@@ -76,7 +78,6 @@
           starbuck.userHomeModules = [ "peteresselius" ];
         };
       };
-
       dev.enable = true;
     };
 }
