@@ -5,11 +5,14 @@
   };
 
   inputs = {
+    dev.url = "github:esselius/dev";
+    dev.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
 
-#    cfg-work.url = "github:esselius/cfg-work";
+    #    cfg-work.url = "github:esselius/cfg-work";
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.url = "github:nix-community/authentik-nix/version/2025.2.1";
@@ -43,6 +46,7 @@
   outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
+        inputs.dev.flakeModule
         inputs.ez-configs.flakeModule
       ];
 
@@ -58,5 +62,7 @@
         nixos.hosts.vm.userHomeModules = [ "peteresselius" ];
         nixos.hosts.starbuck.userHomeModules = [ "peteresselius" ];
       };
+
+      dev.enable = true;
     };
 }

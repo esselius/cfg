@@ -5,6 +5,7 @@
     ezModules.sshd
     ezModules.user-peteresselius
     ezModules.nix-gc
+    ezModules.hardware-rpi5
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

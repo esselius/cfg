@@ -1,4 +1,4 @@
-{ ezModules, osConfig, pkgs, ... }:
+{ ezModules, osConfig, ... }:
 
 {
   imports = [

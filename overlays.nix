@@ -4,11 +4,11 @@ let
 in
 {
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       nodePackages = prev.nodePackages // {
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
-      audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix {};
+      audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix { };
 
       darwin = prev.darwin.overrideScope (_: _: {
         inherit (unstable-pkgs.darwin) linux-builder;

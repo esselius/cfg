@@ -1,4 +1,4 @@
-{ ezModules, pkgs, lib, ... }:
+{ ezModules, ... }:
 
 {
   nixpkgs.hostPlatform = "aarch64-linux";

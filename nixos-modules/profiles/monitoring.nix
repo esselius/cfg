@@ -1,4 +1,4 @@
-{ ezModules, config, lib, inputs, ... }:
+{ config, lib, ... }:
 
 let
   cfg = config.profiles.monitoring;

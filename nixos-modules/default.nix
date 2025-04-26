@@ -7,6 +7,5 @@
     ezModules.nix
     ezModules.profiles
     ../overlays.nix
-    ezModules.hardware-rpi5
   ];
 }

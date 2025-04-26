@@ -10,6 +10,7 @@
     ezModules.ca
     ezModules.nginx
     ezModules.nix-gc
+    ezModules.hardware-rpi5
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

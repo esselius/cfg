@@ -1,4 +1,4 @@
-{ inputs, pkgs, ezModules, config, lib, ... }:
+{ pkgs, ezModules, config, lib, ... }:
 
 let
   inherit (lib) mkMerge mkIf;
@@ -9,7 +9,7 @@ in
     ezModules.git
     ezModules.ssh
     ezModules.profiles
-#    inputs.cfg-work.homeModules.sbt
+    #    inputs.cfg-work.homeModules.sbt
   ];
 
   config = mkMerge [
