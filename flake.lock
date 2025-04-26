@@ -125,11 +125,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1745691058,
-        "narHash": "sha256-v3nWMskrn8j4Gl5ZZId9I2mFqpG+LsbTxD02+KUs2ts=",
+        "lastModified": 1745703339,
+        "narHash": "sha256-jkujUijDWL1uygyBMJuP2P2APlp2qNAtlZ+3UiLXEn8=",
         "owner": "esselius",
         "repo": "dev",
-        "rev": "6be8750f34e325db85d6d9d2bf44830ae549a03a",
+        "rev": "204f49b8759784ee41dbb881a04fb70af3177085",
         "type": "github"
       },
       "original": {
