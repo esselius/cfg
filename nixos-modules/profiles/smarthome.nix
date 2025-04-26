@@ -9,6 +9,9 @@ in
     enable = mkEnableOption "Enable monitoring";
   };
   config = mkIf cfg.enable {
+    systemd.services.node-red.environment.NODE_PATH =
+      "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
+    networking.firewall.enable = false;
     services = {
       mosquitto = {
         enable = true;
@@ -52,8 +55,6 @@ in
         withNpmAndGcc = true;
         configFile = ./nodered-settings.js;
       };
-      systemd.services.node-red.environment.NODE_PATH =
-        "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
 
       # TODO Run hass after postgres has started
       home-assistant = {
@@ -107,7 +108,6 @@ in
           targets = [ "127.0.0.1:${toString config.services.home-assistant.config.http.server_port}" ];
         }];
       }];
-      networking.firewall.enable = false;
       postgresql = {
         enable = true;
         ensureDatabases = [ "hass" ];
