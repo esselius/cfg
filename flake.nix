@@ -10,10 +10,9 @@
     nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-24.11-darwin";
 
 #    cfg-work.url = "github:esselius/cfg-work";
-
-    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.0";
+    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.url = "github:nix-community/authentik-nix/version/2024.8.3";
+    authentik-nix.url = "github:nix-community/authentik-nix/version/2025.2.1";
     authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix.inputs.flake-parts.follows = "flake-parts";
 
