@@ -15,27 +15,37 @@
     #    cfg-work.url = "github:esselius/cfg-work";
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.url = "github:nix-community/authentik-nix/version/2025.2.1";
-    authentik-nix.inputs.nixpkgs.follows = "nixpkgs";
-    authentik-nix.inputs.flake-parts.follows = "flake-parts";
+    authentik-nix = {
+      url = "github:nix-community/authentik-nix/version/2025.2.1";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
     nix-darwin.url = "github:lnl7/nix-darwin/nix-darwin-24.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager/release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-    nix-homebrew.inputs.nix-darwin.follows = "nix-darwin";
-    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-darwin";
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+      inputs.nix-darwin.follows = "nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    ez-configs.url = "github:ehllie/ez-configs";
-    ez-configs.inputs.nixpkgs.follows = "nixpkgs";
-    ez-configs.inputs.flake-parts.follows = "flake-parts";
+    ez-configs = {
+      url = "github:ehllie/ez-configs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
 
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
-    agenix.inputs.home-manager.follows = "home-manager";
-    agenix.inputs.darwin.follows = "nix-darwin";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        darwin.follows = "nix-darwin";
+      };
+    };
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
@@ -56,11 +66,15 @@
         root = ./.;
         globalArgs = { inherit inputs; };
 
-        darwin.hosts.Fox.userHomeModules = [ "peteresselius" ];
-        darwin.hosts.Petere-MBP.userHomeModules = [ "peteresselius" ];
-        nixos.hosts.adama.userHomeModules = [ "peteresselius" ];
-        nixos.hosts.vm.userHomeModules = [ "peteresselius" ];
-        nixos.hosts.starbuck.userHomeModules = [ "peteresselius" ];
+        darwin.hosts = {
+          Fox.userHomeModules = [ "peteresselius" ];
+          Petere-MBP.userHomeModules = [ "peteresselius" ];
+        };
+        nixos.hosts = {
+          adama.userHomeModules = [ "peteresselius" ];
+          vm.userHomeModules = [ "peteresselius" ];
+          starbuck.userHomeModules = [ "peteresselius" ];
+        };
       };
 
       dev.enable = true;

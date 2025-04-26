@@ -12,10 +12,12 @@
     starship = {
       enable = true;
       enableFishIntegration = true;
-      settings.gcloud.disabled = true;
-      settings.scala.disabled = true;
-      settings.python.disabled = true;
-      settings.git_status.disabled = true;
+      settings = {
+        gcloud.disabled = true;
+        scala.disabled = true;
+        python.disabled = true;
+        git_status.disabled = true;
+      };
     };
 
     direnv = {

@@ -40,90 +40,92 @@ in
   };
   config = mkIf cfg.enable {
     profiles.telemetry.enable = true;
-    services.nginx.virtualHosts."grafana.adama.lan" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        recommendedProxySettings = true;
-        proxyWebsockets = true;
-        proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
-      };
-    };
-
-    services.postgresql = {
-      ensureDatabases = [ "grafana" ];
-      ensureUsers = [{
-        name = "grafana";
-        ensureDBOwnership = true;
-      }];
-    };
-    services.grafana = {
-      enable = true;
-      settings = {
-        server = {
-          inherit (cfg) domain root_url;
-          http_port = 3000;
-          http_addr = "0.0.0.0";
-        };
-
-        database = {
-          type = "postgres";
-          host = "/var/run/postgresql";
-          user = "grafana";
-        };
-
-        security.disable_initial_admin_creation = true;
-
-        log.level = "warn";
-
-        "auth.generic_oauth" = {
-          enabled = true;
-          inherit (cfg.oauth) name;
-          client_id = "$__file{${cfg.oauth.client_id_file}}";
-          client_secret = "$__file{${cfg.oauth.client_secret_file}}";
-          scopes = "openid email profile offline_access";
-          inherit (cfg.oauth) auth_url;
-          inherit (cfg.oauth) token_url;
-          inherit (cfg.oauth) api_url;
-          tls_skip_verify_insecure = true;
-          allow_assign_grafana_admin = true;
-          role_attribute_path = "contains(groups[*], 'Grafana Admin') && 'GrafanaAdmin' || 'Viewer'";
+    services = {
+      nginx.virtualHosts."grafana.adama.lan" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          recommendedProxySettings = true;
+          proxyWebsockets = true;
+          proxyPass = "http://127.0.0.1:${toString config.services.grafana.settings.server.http_port}";
         };
       };
 
-      provision = {
+      postgresql = {
+        ensureDatabases = [ "grafana" ];
+        ensureUsers = [{
+          name = "grafana";
+          ensureDBOwnership = true;
+        }];
+      };
+      grafana = {
         enable = true;
-        datasources.settings.datasources = [
-          {
-            name = "Loki";
-            type = "loki";
-            access = "proxy";
-            url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
-          }
-          {
-            name = "Prometheus";
-            type = "prometheus";
-            access = "proxy";
-            url = "http://127.0.0.1:${toString config.services.prometheus.port}";
-            isDefault = true;
-          }
-        ];
-        dashboards.settings.providers = [{
-          name = "My Dashboards";
-          options.path = "/etc/grafana-dashboards";
-        }];
-        alerting.contactPoints.settings.contactPoints = [{
-          orgId = 1;
-          name = "Telegram";
-          receivers = [{
-            uid = "1";
-            type = "telegram";
-            settings = {
-              bottoken = "$BOTTOKEN";
-              chatid = "\${CHATID}\n";
-            };
+        settings = {
+          server = {
+            inherit (cfg) domain root_url;
+            http_port = 3000;
+            http_addr = "0.0.0.0";
+          };
+
+          database = {
+            type = "postgres";
+            host = "/var/run/postgresql";
+            user = "grafana";
+          };
+
+          security.disable_initial_admin_creation = true;
+
+          log.level = "warn";
+
+          "auth.generic_oauth" = {
+            enabled = true;
+            inherit (cfg.oauth) name;
+            client_id = "$__file{${cfg.oauth.client_id_file}}";
+            client_secret = "$__file{${cfg.oauth.client_secret_file}}";
+            scopes = "openid email profile offline_access";
+            inherit (cfg.oauth) auth_url;
+            inherit (cfg.oauth) token_url;
+            inherit (cfg.oauth) api_url;
+            tls_skip_verify_insecure = true;
+            allow_assign_grafana_admin = true;
+            role_attribute_path = "contains(groups[*], 'Grafana Admin') && 'GrafanaAdmin' || 'Viewer'";
+          };
+        };
+
+        provision = {
+          enable = true;
+          datasources.settings.datasources = [
+            {
+              name = "Loki";
+              type = "loki";
+              access = "proxy";
+              url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
+            }
+            {
+              name = "Prometheus";
+              type = "prometheus";
+              access = "proxy";
+              url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+              isDefault = true;
+            }
+          ];
+          dashboards.settings.providers = [{
+            name = "My Dashboards";
+            options.path = "/etc/grafana-dashboards";
           }];
-        }];
+          alerting.contactPoints.settings.contactPoints = [{
+            orgId = 1;
+            name = "Telegram";
+            receivers = [{
+              uid = "1";
+              type = "telegram";
+              settings = {
+                bottoken = "$BOTTOKEN";
+                chatid = "\${CHATID}\n";
+              };
+            }];
+          }];
+        };
       };
     };
     systemd.services.grafana.serviceConfig.EnvironmentFile = config.age.secrets.grafana-env.path;

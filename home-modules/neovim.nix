@@ -68,7 +68,7 @@ in
           clangd.enable = true;
           regols = {
             enable = true;
-            filetypes = ["rego"];
+            filetypes = [ "rego" ];
           };
         };
       };

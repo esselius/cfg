@@ -26,41 +26,43 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.nginx.virtualHosts."authentik.adama.lan" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/" = {
-        proxyWebsockets = true;
-        proxyPass = "http://127.0.0.1:9000";
-      };
-    };
-
-    services.authentik = {
-      enable = true;
-      settings = {
-        listen = {
-          inherit (cfg) listen_http;
-          inherit (cfg) listen_metrics;
-        };
-      };
-    };
-
     systemd.services.authentik.environment.AUTHENTIK_LOG_LEVEL = "warning";
     systemd.services.authentik-worker.environment.AUTHENTIK_LOG_LEVEL = "warning";
 
-    services.redis.servers.authentik.logLevel = "warning";
-    services.postgresql.settings.log_checkpoints = false;
-
-    services.prometheus = {
-      exporters = {
-        redis.enable = true;
-        postgres = { enable = true; runAsLocalSuperUser = true; };
+    services = {
+      nginx.virtualHosts."authentik.adama.lan" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyWebsockets = true;
+          proxyPass = "http://127.0.0.1:9000";
+        };
       };
-      scrapeConfigs = [
-        { job_name = "authentik"; static_configs = [{ targets = [ "127.0.0.1:9300" ]; }]; }
-        { job_name = "redis"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.redis.port}" ]; }]; }
-        { job_name = "postgres"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.postgres.port}" ]; }]; }
-      ];
+
+      authentik = {
+        enable = true;
+        settings = {
+          listen = {
+            inherit (cfg) listen_http;
+            inherit (cfg) listen_metrics;
+          };
+        };
+      };
+
+      redis.servers.authentik.logLevel = "warning";
+      postgresql.settings.log_checkpoints = false;
+
+      prometheus = {
+        exporters = {
+          redis.enable = true;
+          postgres = { enable = true; runAsLocalSuperUser = true; };
+        };
+        scrapeConfigs = [
+          { job_name = "authentik"; static_configs = [{ targets = [ "127.0.0.1:9300" ]; }]; }
+          { job_name = "redis"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.redis.port}" ]; }]; }
+          { job_name = "postgres"; static_configs = [{ targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.postgres.port}" ]; }]; }
+        ];
+      };
     };
   };
 }
