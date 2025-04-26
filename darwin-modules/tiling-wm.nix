@@ -56,4 +56,45 @@
       '';
     };
   };
+
+  system = {
+    defaults = {
+      NSGlobalDomain = {
+        "com.apple.trackpad.forceClick" = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = false;
+        InitialKeyRepeat = 15;
+        KeyRepeat = 2;
+        AppleShowAllExtensions = true;
+        AppleShowAllFiles = true;
+        AppleShowScrollBars = "Always";
+        ApplePressAndHoldEnabled = false;
+        _HIHideMenuBar = true;
+      };
+      LaunchServices.LSQuarantine = false;
+      ActivityMonitor.ShowCategory = 100;
+      trackpad = {
+        ActuationStrength = 0;
+        Clicking = false;
+        TrackpadThreeFingerTapGesture = 0;
+      };
+      universalaccess = {
+        closeViewScrollWheelToggle = true;
+        reduceMotion = true;
+        reduceTransparency = false;
+      };
+      finder = {
+        ShowPathbar = true;
+        ShowStatusBar = true;
+      };
+      dock = {
+        autohide = true;
+      };
+    };
+    keyboard = {
+      enableKeyMapping = true;
+      nonUS.remapTilde = true;
+      remapCapsLockToEscape = true;
+    };
+  };
 }
