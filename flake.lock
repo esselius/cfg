@@ -77,15 +77,15 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1745745529,
-        "narHash": "sha256-x2hZSCPX4L9PfALJQ0bMQA13ZLZyAZhiM1gUH+HvSU4=",
-        "owner": "oddlama",
+        "lastModified": 1745785644,
+        "narHash": "sha256-l6ZmjOBl4KOjJ+KQEjR3GQdMP9Q+NlM+13BQ/N7vkOI=",
+        "owner": "esselius",
         "repo": "agenix-rekey",
-        "rev": "9f57da199bb2f42b6aec564f2b628b57fc018044",
+        "rev": "c0c40d63d21d647f79fe1de571dd09a5d0501060",
         "type": "github"
       },
       "original": {
-        "owner": "oddlama",
+        "owner": "esselius",
         "repo": "agenix-rekey",
         "type": "github"
       }
@@ -166,11 +166,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1745754864,
-        "narHash": "sha256-89a0Q5ImxJUKcXo5FcXTXWK1RvyTQiSiXHfVYR9D0hY=",
+        "lastModified": 1745785682,
+        "narHash": "sha256-BA9B/PKChiUVemf8Bp36kWYsDAFvnqluXKEylYpAYe8=",
         "owner": "esselius",
         "repo": "dev",
-        "rev": "d7eabb5552eeb38a35c061befaeb9d405bcd90a8",
+        "rev": "d2aed273078a7672945a935cec914b4af0e98cac",
         "type": "github"
       },
       "original": {
