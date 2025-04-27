@@ -23,8 +23,12 @@
 
     nix-darwin.url = "github:lnl7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager-nixos.url = "github:nix-community/home-manager/release-24.11";
+    home-manager-nixos.inputs.nixpkgs.follows = "nixpkgs-nixos";
+
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
       inputs.nix-darwin.follows = "nix-darwin";
@@ -58,25 +62,58 @@
 
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
-      flake.darwinConfigurations.Fox = inputs.nix-darwin.lib.darwinSystem {
-        modules = [
-          ./darwin-modules/default.nix
-          ./darwin-modules/tiling-wm.nix
-          ./darwin-modules/homebrew-packages
-          ./darwin-modules/linux-builder.nix
-          inputs.nix-homebrew.darwinModules.nix-homebrew
-          {
-            nixpkgs.hostPlatform = "aarch64-darwin";
+      flake = {
+        darwinConfigurations.Fox = inputs.nix-darwin.lib.darwinSystem {
+          modules = [
+            ./darwin-modules/default.nix
+            ./darwin-modules/tiling-wm.nix
+            ./darwin-modules/homebrew-packages
+            ./darwin-modules/linux-builder.nix
+            inputs.nix-homebrew.darwinModules.nix-homebrew
+            {
+              nixpkgs.hostPlatform = "aarch64-darwin";
 
-            context = "home";
-            formfactor = "desktop";
-            mainUser = "peteresselius";
+              context = "home";
+              formfactor = "desktop";
+              mainUser = "peteresselius";
 
-            system.stateVersion = 4;
-            nixpkgs-path = inputs.nixpkgs;
-          }
-        ];
-        specialArgs = { inherit inputs; };
+              system.stateVersion = 4;
+              nixpkgs-path = inputs.nixpkgs;
+            }
+            inputs.home-manager-darwin.darwinModules.home-manager
+            ({ config, ... }: {
+              home-manager.users.${config.mainUser} = {
+                imports = [
+                  ./home-configurations/peteresselius.nix
+                  ./home-modules/default.nix
+                ];
+              };
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            })
+          ];
+          specialArgs = { inherit inputs; };
+        };
+
+        darwinModules = {
+          context = ./darwin-modules/context.nix;
+          nix = ./darwin-modules/nix.nix;
+          security = ./darwin-modules/security.nix;
+          user = ./darwin-modules/user.nix;
+          tiling-wm = ./darwin-modules/tiling-wm.nix;
+          homebrew-packages = ./darwin-modules/homebrew-packages;
+        };
+
+        homeModules = {
+          default = ./home-modules/default.nix;
+          fish-shell = ./home-modules/fish-shell.nix;
+          git = ./home-modules/git.nix;
+          ssh = ./home-modules/ssh.nix;
+          profiles = ./home-modules/profiles;
+          context = ./home-modules/context.nix;
+          terminal = ./home-modules/terminal.nix;
+          nix = ./home-modules/nix.nix;
+          neovim = ./home-modules/neovim.nix;
+        };
       };
 
       dev.enable = true;

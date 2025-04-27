@@ -1,15 +1,15 @@
-{ inputs, ezModules, config, ... }:
+{ inputs, config, ... }:
 
 {
   imports = [
-    ezModules.context
-    ezModules.terminal
-    ezModules.nix
-    ezModules.neovim
-    ezModules.fish-shell
-    ezModules.git
-    ezModules.ssh
-    ezModules.profiles
+    ../home-modules/context.nix
+    ../home-modules/terminal.nix
+    ../home-modules/nix.nix
+    ../home-modules/neovim.nix
+    ../home-modules/fish-shell.nix
+    ../home-modules/git.nix
+    ../home-modules/ssh.nix
+    ../home-modules/profiles
     inputs.agenix.homeManagerModules.default
     inputs.krewfile.homeManagerModules.krewfile
     inputs.nix-index-database.hmModules.nix-index
