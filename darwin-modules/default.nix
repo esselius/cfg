@@ -1,11 +1,9 @@
-{ ezModules, ... }:
-
 {
   imports = [
-    ezModules.context
-    ezModules.nix
-    ezModules.security
-    ezModules.user
+    ./context.nix
+    ./nix.nix
+    ./security.nix
+    ./user.nix
     ../overlays.nix
   ];
 }

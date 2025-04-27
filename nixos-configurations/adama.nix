@@ -19,6 +19,7 @@
 
   context = "home";
   formfactor = "server";
+  mainUser = "peteresselius";
 
   hardware-rpi5 = {
     enable = true;

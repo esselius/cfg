@@ -14,6 +14,7 @@
 
   context = "home";
   formfactor = "server";
+  mainUser = "peteresselius";
 
   profiles.telemetry.enable = true;
 

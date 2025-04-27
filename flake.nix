@@ -8,11 +8,11 @@
     dev.url = "github:esselius/dev";
     dev.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin.follows = "nixpkgs-unstable";
+    nixpkgs-nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
 
-    #    cfg-work.url = "github:esselius/cfg-work";
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
     authentik-nix = {
@@ -34,11 +34,6 @@
     krewfile.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
-    ez-configs = {
-      url = "github:ehllie/ez-configs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-    };
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -59,24 +54,31 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.dev.flakeModule
-        inputs.ez-configs.flakeModule
       ];
 
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
-      ezConfigs = {
-        root = ./.;
-        globalArgs = { inherit inputs; };
+      flake.darwinConfigurations.Fox = inputs.nix-darwin.lib.darwinSystem {
+        modules = [
+          ./darwin-modules/default.nix
+          ./darwin-modules/tiling-wm.nix
+          ./darwin-modules/homebrew-packages
+          ./darwin-modules/linux-builder.nix
+          inputs.nix-homebrew.darwinModules.nix-homebrew
+          {
+            nixpkgs.hostPlatform = "aarch64-darwin";
 
-        darwin.hosts = {
-          Fox.userHomeModules = [ "peteresselius" ];
-        };
-        nixos.hosts = {
-          adama.userHomeModules = [ "peteresselius" ];
-          vm.userHomeModules = [ "peteresselius" ];
-          starbuck.userHomeModules = [ "peteresselius" ];
-        };
+            context = "home";
+            formfactor = "desktop";
+            mainUser = "peteresselius";
+
+            system.stateVersion = 4;
+            nixpkgs-path = inputs.nixpkgs;
+          }
+        ];
+        specialArgs = { inherit inputs; };
       };
+
       dev.enable = true;
     };
 }

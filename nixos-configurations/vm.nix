@@ -7,6 +7,7 @@
 
   context = "work";
   formfactor = "vm";
+  mainUser = "peteresselius";
 
   imports = [
     ezModules.hardware-vm

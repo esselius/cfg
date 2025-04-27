@@ -13,6 +13,7 @@
 
   context = "home";
   formfactor = "laptop";
+  mainUser = "peteresselius";
 
   time.timeZone = "Europe/Stockholm";
 
