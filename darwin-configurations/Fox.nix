@@ -14,4 +14,6 @@
   context = "home";
   formfactor = "desktop";
   mainUser = "peteresselius";
+
+  system.stateVersion = 4;
 }

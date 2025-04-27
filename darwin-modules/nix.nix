@@ -38,6 +38,4 @@
       "nixpkgs=${config.nixpkgs-path}"
     ];
   };
-
-  system.stateVersion = 5;
 }
