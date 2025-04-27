@@ -2,7 +2,7 @@
 
 let
   inherit (lib) mkOption;
-  inherit (lib.types) enum;
+  inherit (lib.types) enum str path;
 in
 {
   options = {
@@ -11,6 +11,12 @@ in
     };
     formfactor = mkOption {
       type = enum [ "desktop" "laptop" "server" "vm" ];
+    };
+    mainUser = mkOption {
+      type = str;
+    };
+    nixpkgs-path = mkOption {
+      type = path;
     };
   };
 }

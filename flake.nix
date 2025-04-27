@@ -10,7 +10,7 @@
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-darwin.follows = "nixpkgs-unstable";
 
     #    cfg-work.url = "github:esselius/cfg-work";
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
@@ -24,7 +24,7 @@
     nix-darwin.url = "github:lnl7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
       inputs.nix-darwin.follows = "nix-darwin";
@@ -70,7 +70,6 @@
 
         darwin.hosts = {
           Fox.userHomeModules = [ "peteresselius" ];
-          Petere-MBP.userHomeModules = [ "peteresselius" ];
         };
         nixos.hosts = {
           adama.userHomeModules = [ "peteresselius" ];

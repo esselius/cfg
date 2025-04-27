@@ -1,14 +1,13 @@
-{ inputs, ... }:
+{ config, ... }:
 
 {
   nix-homebrew = {
     enable = true;
-    user = "peteresselius";
+    user = config.mainUser;
   };
   homebrew.enable = true;
 
   imports = [
-    inputs.nix-homebrew.darwinModules.nix-homebrew
     ./common.nix
     ./home.nix
     ./work.nix

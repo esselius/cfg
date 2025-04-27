@@ -1,11 +1,10 @@
-{ inputs, lib, pkgs, config, ... }:
+{ lib, pkgs, config, ... }:
 
 let
   cfg = config.profiles.tools;
   inherit (lib) mkMerge mkIf;
 in
 {
-  imports = [ inputs.krewfile.homeManagerModules.krewfile ];
   options.profiles.tools = {
     asdf = lib.mkEnableOption "Install asdf";
     k8s = lib.mkEnableOption "Install k8s packages & set shell config";

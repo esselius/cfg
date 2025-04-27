@@ -1,16 +1,9 @@
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
-in
 {
-  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
-
   programs.nixvim = {
     enable = true;
     defaultEditor = true;
-
-    nixpkgs.pkgs = unstable-pkgs;
 
     vimAlias = true;
 
@@ -92,16 +85,6 @@ in
 
     extraPlugins = with pkgs.vimPlugins; [
       nvim-metals
-      plenary-nvim
-      (pkgs.vimUtils.buildVimPlugin {
-        name = "dbtpal.nvim";
-        src = pkgs.fetchFromGitHub {
-          owner = "PedramNavid";
-          repo = "dbtpal";
-          rev = "c526f65";
-          hash = "sha256-qQZrfTUIhmYaXwNFnTudnapK41g7xww5VPfggLyrrew=";
-        };
-      })
     ];
 
     extraConfigLua = ''
@@ -113,15 +96,7 @@ in
         end,
         group = nvim_metals_group,
       })
-      require("dbtpal").setup({
-          path_to_dbt = "dbt",
-          path_to_dbt_project = "src/dbt",
-          path_to_dbt_profiles_dir = vim.fn.getcwd(),
-          extended_path_search = true,
-          protect_compiled_files = true,
-          custom_dbt_syntax_enabled = true,
-      })
-      require("telescope").load_extension("dbtpal")
+      require("telescope")
     '';
 
     colorschemes.gruvbox.enable = true;

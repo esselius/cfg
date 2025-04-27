@@ -77,11 +77,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1742656338,
-        "narHash": "sha256-Vkg5dyXKwoAfEVlKPxbCbdTCF9sXmTySZBSL28Kcdmo=",
+        "lastModified": 1745745529,
+        "narHash": "sha256-x2hZSCPX4L9PfALJQ0bMQA13ZLZyAZhiM1gUH+HvSU4=",
         "owner": "oddlama",
         "repo": "agenix-rekey",
-        "rev": "b677dbe0d675c68a19dedbc771aff22de76b11ea",
+        "rev": "9f57da199bb2f42b6aec564f2b628b57fc018044",
         "type": "github"
       },
       "original": {
@@ -166,11 +166,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1745746004,
-        "narHash": "sha256-JXvd08COn+ncYiaMRunTkQ5RWAMK6FFD3J4pTNBR1WU=",
+        "lastModified": 1745754864,
+        "narHash": "sha256-89a0Q5ImxJUKcXo5FcXTXWK1RvyTQiSiXHfVYR9D0hY=",
         "owner": "esselius",
         "repo": "dev",
-        "rev": "cbec8d0ad669a98a30615d9eda2b024ec41c0be0",
+        "rev": "d7eabb5552eeb38a35c061befaeb9d405bcd90a8",
         "type": "github"
       },
       "original": {
@@ -420,7 +420,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-unstable"
         ]
       },
       "locked": {
@@ -648,22 +648,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-darwin": {
-      "locked": {
-        "lastModified": 1745377448,
-        "narHash": "sha256-jhZDfXVKdD7TSEGgzFJQvEEZ2K65UMiqW5YJ2aIqxMA=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "507b63021ada5fee621b6ca371c4fca9ca46f52c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "lastModified": 1743296961,
@@ -814,7 +798,9 @@
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-darwin": "nixpkgs-darwin",
+        "nixpkgs-darwin": [
+          "nixpkgs-unstable"
+        ],
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "raspberry-pi-nix": "raspberry-pi-nix"

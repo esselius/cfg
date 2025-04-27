@@ -1,14 +1,11 @@
-{ ezModules, osConfig, ... }:
+{ osConfig, pkgs, ... }:
 
 {
-  imports = [
-    ezModules.context
-    ezModules.agenix
-    ezModules.terminal
-    ezModules.nix
-    ezModules.neovim
-  ];
+  inherit (osConfig) context formfactor mainUser;
 
-  inherit (osConfig) context;
-  inherit (osConfig) formfactor;
+  home = {
+    stateVersion = "24.05";
+    homeDirectory = (if pkgs.stdenv.isDarwin then "/Users/" else "/home/") + osConfig.mainUser;
+    username = osConfig.mainUser;
+  };
 }

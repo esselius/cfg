@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -34,16 +34,10 @@
       interval = { Hour = 3; Minute = 15; Weekday = 6; };
     };
 
-    registry = {
-      nixpkgs.flake = inputs.nixpkgs-darwin;
-      nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
-    };
-
     nixPath = lib.mkForce [
-      "nixpkgs=${inputs.nixpkgs-darwin}"
-      "nixpkgs-unstable=${inputs.nixpkgs-unstable}"
+      "nixpkgs=${config.nixpkgs-path}"
     ];
   };
 
-  system.stateVersion = 4;
+  system.stateVersion = 5;
 }

@@ -15,5 +15,8 @@
       "vlc"
       "wezterm"
     ];
+    brews = [
+      "age-plugin-se"
+    ];
   };
 }
