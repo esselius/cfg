@@ -1,11 +1,9 @@
-{ ezModules, ... }:
-
 {
   imports = [
-    ezModules.sshd
-    ezModules.user-peteresselius
-    ezModules.nix-gc
-    ezModules.hardware-rpi5
+    ../nixos-modules/sshd.nix
+    ../nixos-modules/user-peteresselius.nix
+    ../nixos-modules/nix-gc.nix
+    ../nixos-modules/hardware-rpi5.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

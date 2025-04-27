@@ -149,6 +149,31 @@
           ];
           specialArgs = { inherit inputs; };
         };
+        nixosConfigurations.starbuck = inputs.nixpkgs-nixos.lib.nixosSystem {
+          modules = [
+            ./nixos-configurations/starbuck.nix
+            ./nixos-modules/default.nix
+            inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+            inputs.authentik-nix.nixosModules.default
+            {
+              nixpkgs-path = inputs.nixpkgs-nixos;
+              nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+            }
+            inputs.home-manager-nixos.nixosModules.home-manager
+            ({ config, ... }: {
+              home-manager.users.${config.mainUser} = {
+                imports = [
+                  ./home-configurations/peteresselius.nix
+                  ./home-modules/default.nix
+                  inputs.agenix.homeManagerModules.default
+                  inputs.krewfile.homeManagerModules.krewfile
+                  inputs.nix-index-database.hmModules.nix-index
+                  inputs.nixvim.homeManagerModules.nixvim
+                ];
+              };
+            })
+          ];
+        };
       };
 
 
