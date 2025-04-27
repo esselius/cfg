@@ -1,13 +1,9 @@
-{ inputs, lib, config, ... }:
+{ lib, config, ... }:
 
 let
   cfg = config.hardware-rpi5;
 in
 {
-  imports = [
-    inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-  ];
-
   options.hardware-rpi5 = {
     enable = lib.mkEnableOption "Enable extra Raspberry Pi 5 hardware features";
     enableNVMe = lib.mkEnableOption "Enable NVMe support";

@@ -18,5 +18,8 @@ in
     nixpkgs-path = mkOption {
       type = path;
     };
+    nixpkgs-unstable-path = mkOption {
+      type = path;
+    };
   };
 }

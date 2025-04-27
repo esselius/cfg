@@ -1,4 +1,4 @@
-{ inputs, config, ... }:
+{ config, ... }:
 
 {
   imports = [
@@ -10,10 +10,6 @@
     ../home-modules/git.nix
     ../home-modules/ssh.nix
     ../home-modules/profiles
-    inputs.agenix.homeManagerModules.default
-    inputs.krewfile.homeManagerModules.krewfile
-    inputs.nix-index-database.hmModules.nix-index
-    inputs.nixvim.homeManagerModules.nixvim
   ];
 
   config = {

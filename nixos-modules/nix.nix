@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ config, ... }:
 
 {
   nix = {
@@ -8,16 +8,14 @@
 
     settings.trusted-users = [ "root" "@wheel" ];
 
-    registry.nixpkgs.flake = inputs.nixpkgs;
-
     optimise = {
       automatic = true;
       dates = [ "03:45" ];
     };
 
     nixPath = [
-      "nixpkgs=${inputs.nixpkgs}"
-      "nixpkgs-unstable=${inputs.nixpkgs-unstable}"
+      "nixpkgs=${config.nixpkgs-path}"
+      "nixpkgs-unstable=${config.nixpkgs-unstable-path}"
     ];
   };
 }

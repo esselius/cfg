@@ -79,6 +79,7 @@
 
               system.stateVersion = 4;
               nixpkgs-path = inputs.nixpkgs;
+              nixpkgs-unstable-path = inputs.nixpkgs-unstable;
             }
             inputs.home-manager.darwinModules.home-manager
             ({ config, ... }: {
@@ -86,6 +87,10 @@
                 imports = [
                   ./home-configurations/peteresselius.nix
                   ./home-modules/default.nix
+                  inputs.agenix.homeManagerModules.default
+                  inputs.krewfile.homeManagerModules.krewfile
+                  inputs.nix-index-database.hmModules.nix-index
+                  inputs.nixvim.homeManagerModules.nixvim
                 ];
               };
               home-manager.extraSpecialArgs = { inherit inputs; };
@@ -114,7 +119,38 @@
           nix = ./home-modules/nix.nix;
           neovim = ./home-modules/neovim.nix;
         };
+
+        nixosConfigurations.adama = inputs.nixpkgs-nixos.lib.nixosSystem {
+          modules = [
+            ./nixos-configurations/adama.nix
+            ./nixos-modules/default.nix
+            inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+            inputs.agenix.nixosModules.default
+            inputs.authentik-nix.nixosModules.default
+            {
+              _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
+              nixpkgs-path = inputs.nixpkgs-nixos;
+              nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+            }
+            inputs.home-manager-nixos.nixosModules.home-manager
+            ({ config, ... }: {
+              home-manager.users.${config.mainUser} = {
+                imports = [
+                  ./home-configurations/peteresselius.nix
+                  ./home-modules/default.nix
+                  inputs.agenix.homeManagerModules.default
+                  inputs.krewfile.homeManagerModules.krewfile
+                  inputs.nix-index-database.hmModules.nix-index
+                  inputs.nixvim.homeManagerModules.nixvim
+                ];
+              };
+              home-manager.extraSpecialArgs = { inherit inputs; };
+            })
+          ];
+          specialArgs = { inherit inputs; };
+        };
       };
+
 
       dev.enable = true;
     };

@@ -1,16 +1,14 @@
-{ inputs, ezModules, config, ... }:
+{ config, ... }:
 
 {
-  _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
-
   imports = [
-    ezModules.authentik-blueprints
-    ezModules.sshd
-    ezModules.user-peteresselius
-    ezModules.ca
-    ezModules.nginx
-    ezModules.nix-gc
-    ezModules.hardware-rpi5
+    ../nixos-modules/authentik-blueprints.nix
+    ../nixos-modules/sshd.nix
+    ../nixos-modules/user-peteresselius.nix
+    ../nixos-modules/ca.nix
+    ../nixos-modules/nginx.nix
+    ../nixos-modules/nix-gc.nix
+    ../nixos-modules/hardware-rpi5.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";

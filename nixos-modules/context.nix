@@ -2,7 +2,7 @@
 
 let
   inherit (lib) mkOption;
-  inherit (lib.types) enum str;
+  inherit (lib.types) enum str path;
 in
 {
   options = {
@@ -14,6 +14,12 @@ in
     };
     mainUser = mkOption {
       type = str;
+    };
+    nixpkgs-path = mkOption {
+      type = path;
+    };
+    nixpkgs-unstable-path = mkOption {
+      type = path;
     };
   };
 }
