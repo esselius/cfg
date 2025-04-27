@@ -80,7 +80,7 @@
               system.stateVersion = 4;
               nixpkgs-path = inputs.nixpkgs;
             }
-            inputs.home-manager-darwin.darwinModules.home-manager
+            inputs.home-manager.darwinModules.home-manager
             ({ config, ... }: {
               home-manager.users.${config.mainUser} = {
                 imports = [
