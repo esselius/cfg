@@ -5,8 +5,12 @@
   };
 
   inputs = {
-    dev.url = "github:esselius/dev";
-    dev.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    dev = {
+      url = "github:esselius/dev";
+      inputs.agenix-rekey.url = "github:esselius/agenix-rekey/fixes";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    agenix-rekey.follows = "dev/agenix-rekey";
 
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -14,7 +18,7 @@
     nixpkgs-nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
-    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs";
+    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos";
     authentik-nix = {
       url = "github:nix-community/authentik-nix/version/2025.2.1";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -126,11 +130,22 @@
             ./nixos-modules/default.nix
             inputs.raspberry-pi-nix.nixosModules.raspberry-pi
             inputs.agenix.nixosModules.default
+            inputs.agenix-rekey.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             {
               _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
               nixpkgs-path = inputs.nixpkgs-nixos;
               nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+
+              age.rekey = {
+                hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
+                masterIdentities = [{
+                  identity = "/Users/peteresselius/.age-plugin-se.key";
+                  pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
+                }];
+                storageMode = "local";
+                localStorageDir = ./. + "/secrets/rekeyed/adama";
+              };
             }
             inputs.home-manager-nixos.nixosModules.home-manager
             ({ config, ... }: {
@@ -154,10 +169,21 @@
             ./nixos-configurations/starbuck.nix
             ./nixos-modules/default.nix
             inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+            inputs.agenix.nixosModules.default
+            inputs.agenix-rekey.nixosModules.default
             inputs.authentik-nix.nixosModules.default
             {
               nixpkgs-path = inputs.nixpkgs-nixos;
               nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+              age.rekey = {
+                hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
+                masterIdentities = [{
+                  identity = "/Users/peteresselius/.age-plugin-se.key";
+                  pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
+                }];
+                storageMode = "local";
+                localStorageDir = ./. + "/secrets/rekeyed/starbuck";
+              };
             }
             inputs.home-manager-nixos.nixosModules.home-manager
             ({ config, ... }: {

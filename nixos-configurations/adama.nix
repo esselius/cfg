@@ -42,11 +42,11 @@
   ];
 
   age.secrets = {
-    grafana-env.file = ../secrets/grafana-env.age;
-    authentik-env.file = ../secrets/authentik-env.age;
+    grafana-env.rekeyFile = ../secrets/grafana-env.age;
+    authentik-env.rekeyFile = ../secrets/authentik-env.age;
     z2m = {
       name = "z2m.yaml";
-      file = ../secrets/z2m.age;
+      rekeyFile = ../secrets/z2m.age;
       owner = "zigbee2mqtt";
       group = "zigbee2mqtt";
     };

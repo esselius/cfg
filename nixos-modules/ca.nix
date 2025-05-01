@@ -1,7 +1,7 @@
 { config, ... }:
 
 {
-  age.secrets.step-ca.file = ../secrets/step-ca.age;
+  age.secrets.step-ca.rekeyFile = ../secrets/step-ca.age;
 
   services.step-ca = {
     enable = true;

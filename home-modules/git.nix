@@ -1,10 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.git = {
     enable = true;
 
     userName = "Peter Esselius";
+    userEmail = lib.mkDefault "pepp@me.com";
 
     aliases = {
       l = "log --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s %C(yellow)(%C(cyan)%ar%C(yellow), %C(blue)%an%C(yellow))%C(reset)\"";
