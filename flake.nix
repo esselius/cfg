@@ -139,10 +139,10 @@
 
               age.rekey = {
                 hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
-                masterIdentities = [{
-                  identity = "/Users/peteresselius/.age-plugin-se.key";
-                  pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                }];
+                masterIdentities = [
+                  { identity = "/Users/peteresselius/.age-plugin-se.key"; pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet"; }
+                  { identity = "/Users/pepp/.age-plugin-se.key"; pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372"; }
+                ];
                 storageMode = "local";
                 localStorageDir = ./. + "/secrets/rekeyed/adama";
               };
@@ -177,10 +177,10 @@
               nixpkgs-unstable-path = inputs.nixpkgs-unstable;
               age.rekey = {
                 hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
-                masterIdentities = [{
-                  identity = "/Users/peteresselius/.age-plugin-se.key";
-                  pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                }];
+                masterIdentities = [
+                  { identity = "/Users/peteresselius/.age-plugin-se.key"; pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet"; }
+                  { identity = "/Users/pepp/.age-plugin-se.key"; pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372"; }
+                ];
                 storageMode = "local";
                 localStorageDir = ./. + "/secrets/rekeyed/starbuck";
               };

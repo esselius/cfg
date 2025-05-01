@@ -12,6 +12,7 @@
       "microsoft-office"
       "postman"
       "wireshark"
+      "utm"
     ];
 
     brews = lib.mkIf (config.context == "work") [
