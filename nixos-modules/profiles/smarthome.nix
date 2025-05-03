@@ -61,6 +61,7 @@ in
         enable = true;
         customComponents = [
           pkgs.audi_connect_ha
+          pkgs.easee_hass
         ];
         extraComponents = [
           "zha"

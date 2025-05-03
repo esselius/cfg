@@ -17,7 +17,7 @@
     nixpkgs-darwin.follows = "nixpkgs-unstable";
     nixpkgs-nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
 
-    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix/v0.4.1";
+    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos";
     authentik-nix = {
       url = "github:nix-community/authentik-nix/version/2025.2.1";
@@ -145,6 +145,17 @@
                 ];
                 storageMode = "local";
                 localStorageDir = ./. + "/secrets/rekeyed/adama";
+              };
+
+              fileSystems = {
+                "/" = {
+                  device = "/dev/disk/by-label/NIXOS_SD";
+                  fsType = "ext4";
+                };
+                "/boot/firmware" = {
+                  device = "/dev/disk/by-label/FIRMWARE";
+                  fsType = "vfat";
+                };
               };
             }
             inputs.home-manager-nixos.nixosModules.home-manager

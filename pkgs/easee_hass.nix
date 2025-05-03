@@ -1,0 +1,26 @@
+{ fetchFromGitHub
+, buildHomeAssistantComponent
+, home-assistant
+, python313Packages
+,
+}:
+
+buildHomeAssistantComponent rec {
+  owner = "nordicopen";
+  domain = "easee";
+  version = "0.9.67";
+
+  src = fetchFromGitHub {
+    inherit owner;
+    repo = "easee_hass";
+    tag = "v${version}";
+    hash = "sha256-psRr3cJ/sK/Z0dgB27GbW0qAHH2vJt+TdxqDB+Zhkc0=";
+  };
+
+  dependencies = [
+    (python313Packages.callPackage ./pyeasee.nix { })
+  ];
+  nativeBuildInputs = [
+    home-assistant.python.pkgs.bump2version
+  ];
+}

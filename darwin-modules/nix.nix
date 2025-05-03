@@ -10,7 +10,7 @@
     '';
 
     settings = {
-      trusted-users = [ "@staff" ];
+      trusted-users = [ config.mainUser ];
       substituters = [
         "https://esselius.cachix.org"
         "https://nix-community.cachix.org"

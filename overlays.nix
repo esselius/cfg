@@ -9,6 +9,7 @@ in
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
       audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix { };
+      easee_hass = unstable-pkgs.callPackage ./pkgs/easee_hass.nix { };
 
       darwin = prev.darwin.overrideScope (_: _: {
         inherit (unstable-pkgs.darwin) linux-builder;
