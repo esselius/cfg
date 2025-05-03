@@ -3,7 +3,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v16
+    - uses: docker/setup-qemu-action@v3
+    - uses: DeterminateSystems/nix-installer-action@v17
+      with:
+        extra-args: --extra-conf "extra-platforms = aarch64-linux"
     - name: Check flake
       run: nix -Lv flake check
     timeout-minutes: 60
