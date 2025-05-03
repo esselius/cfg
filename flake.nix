@@ -200,6 +200,16 @@
                 storageMode = "local";
                 localStorageDir = ./. + "/secrets/rekeyed/starbuck";
               };
+              fileSystems = {
+                "/" = {
+                  device = "/dev/disk/by-label/NIXOS_SD";
+                  fsType = "ext4";
+                };
+                "/boot/firmware" = {
+                  device = "/dev/disk/by-label/FIRMWARE";
+                  fsType = "vfat";
+                };
+              };
             }
             inputs.home-manager-nixos.nixosModules.home-manager
             ({ config, ... }: {
