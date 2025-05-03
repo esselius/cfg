@@ -2,7 +2,7 @@
 
 let
   inherit (lib) mkOption;
-  inherit (lib.types) enum str path;
+  inherit (lib.types) enum str path anything;
 in
 {
   options = {
@@ -20,6 +20,10 @@ in
     };
     nixpkgs-unstable-path = mkOption {
       type = path;
+    };
+    pyproject-nix-lib = mkOption {
+      type = anything;
+      default = null;
     };
   };
 }

@@ -56,6 +56,9 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     nixvim = { url = "github:nix-community/nixvim"; inputs.nixpkgs.follows = "nixpkgs-unstable"; };
+
+    pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
+    pyproject-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -157,6 +160,8 @@
                   fsType = "vfat";
                 };
               };
+
+              pyproject-nix-lib = inputs.pyproject-nix.lib;
             }
             inputs.home-manager-nixos.nixosModules.home-manager
             ({ config, ... }: {
