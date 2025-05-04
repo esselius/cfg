@@ -12,6 +12,8 @@ in
     systemd.services.node-red.environment.NODE_PATH =
       "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
     networking.firewall.enable = false;
+
+    systemd.services.zigbee2mqtt.environment.Z2M_WATCHDOG = "default";
     services = {
       mosquitto = {
         enable = true;
