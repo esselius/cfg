@@ -7,7 +7,6 @@
   inputs = {
     dev = {
       url = "github:esselius/dev";
-      inputs.agenix-rekey.url = "github:esselius/agenix-rekey/fixes";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     agenix-rekey.follows = "dev/agenix-rekey";
@@ -35,8 +34,6 @@
 
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
-      inputs.nix-darwin.follows = "nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     krewfile.url = "github:brumhard/krewfile";
     krewfile.inputs.nixpkgs.follows = "nixpkgs";
@@ -85,6 +82,7 @@
               mainUser = "peteresselius";
 
               system.stateVersion = 4;
+              system.primaryUser = "peteresselius";
               nixpkgs-path = inputs.nixpkgs;
               nixpkgs-unstable-path = inputs.nixpkgs-unstable;
             }
