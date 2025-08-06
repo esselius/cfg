@@ -14,6 +14,7 @@
       "visual-studio-code"
       "vlc"
       "wezterm"
+      "container"
     ];
     brews = [
       "age-plugin-se"

@@ -14,7 +14,7 @@
 
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-darwin.follows = "nixpkgs-unstable";
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
@@ -25,7 +25,7 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    nix-darwin.url = "github:lnl7/nix-darwin";
+    nix-darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
     home-manager.url = "github:nix-community/home-manager";

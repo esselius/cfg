@@ -63,6 +63,7 @@
         "com.apple.trackpad.forceClick" = false;
         NSAutomaticQuoteSubstitutionEnabled = false;
         NSAutomaticSpellingCorrectionEnabled = false;
+        # NSAutomaticTextCompletionEnabled = false;
         InitialKeyRepeat = 15;
         KeyRepeat = 2;
         AppleShowAllExtensions = true;
