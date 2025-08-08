@@ -63,7 +63,7 @@
     pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
     pyproject-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    microvm.url = "github:microvm-nix/microvm.nix";
+    microvm.url = "github:esselius/microvm.nix/darwin-v2";
     microvm.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -120,6 +120,10 @@
             )
           ];
           specialArgs = { inherit inputs; };
+        };
+
+        nixosModules = {
+          microvm-host = inputs.microvm.nixosModules.host;
         };
 
         darwinModules = {
