@@ -129,6 +129,7 @@
           user = ./darwin-modules/user.nix;
           tiling-wm = ./darwin-modules/tiling-wm.nix;
           homebrew-packages = ./darwin-modules/homebrew-packages;
+          linux-builder = ./darwin-modules/linux-builder.nix;
         };
 
         homeModules = {
@@ -219,6 +220,7 @@
                 ];
                 microvm = {
                   # storeDiskType = "squashfs";
+                  vmHostPackages = inputs.nixpkgs-darwin.legacyPackages.aarch64-darwin.pkgs;
                   forwardPorts = [
                     {
                       host.port = 2222;
