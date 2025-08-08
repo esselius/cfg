@@ -210,6 +210,7 @@
             system = "aarch64-linux";
             modules = [
               inputs.microvm.nixosModules.microvm
+              inputs.microvm.nixosModules.host
               {
                 system.stateVersion = "25.05";
                 imports = [
