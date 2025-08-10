@@ -154,17 +154,31 @@
           vm = "nixos";
         };
 
+        perTag = tag: {
+          modules =
+            {
+              work-homebrew = [
+                ./darwin-modules/homebrew-packages/work.nix
+              ];
+              home-homebrew = [
+                ./darwin-modules/homebrew-packages/home.nix
+              ];
+            }.${tag};
+
+          specialArgs = { };
+        };
+
         hosts =
           let
             darwinCommon = [
               ./darwin-modules/tiling-wm.nix
               ./darwin-modules/linux-builder.nix
               ./darwin-modules/security.nix
+              ./darwin-modules/homebrew-packages/common.nix
 
               # TODO Convert to easy-hosts
               ./darwin-modules/context.nix
               ./darwin-modules/user.nix
-              ./darwin-modules/homebrew-packages
 
               ./overlays.nix
 
@@ -177,14 +191,11 @@
               class = "darwin";
               nixpkgs = inputs.nixpkgs-darwin-25-05;
               nix-darwin = inputs.nix-darwin-25-05;
+              tags = [ "home-homebrew" ];
               modules = darwinCommon ++ [
                 ./darwin-modules/nix.nix
 
                 {
-                  context = "home";
-                  formfactor = "desktop";
-                  mainUser = "peteresselius";
-
                   system.stateVersion = 4;
                   system.primaryUser = "peteresselius";
 
@@ -199,14 +210,11 @@
               class = "darwin";
               nixpkgs = inputs.nixpkgs-darwin-25-05;
               nix-darwin = inputs.nix-darwin-25-05;
+              tags = [ "work-homebrew" ];
               modules = darwinCommon ++ [
                 {
                   nix.enable = false; # Determinate Nix
                   system.stateVersion = 5;
-
-                  context = "work";
-                  formfactor = "laptop";
-                  mainUser = "pepp";
 
                   nixpkgs-unstable-path = inputs.nixpkgs-unstable;
 

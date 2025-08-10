@@ -1,8 +1,6 @@
-{ lib, config, ... }:
-
 {
   homebrew = {
-    casks = lib.mkIf (config.context == "work") [
+    casks = [
       "cyberduck"
       "datagrip"
       "intellij-idea"
@@ -12,7 +10,7 @@
       "utm"
     ];
 
-    brews = lib.mkIf (config.context == "work") [
+    brews = [
       "azure-cli"
       "protobuf"
     ];
