@@ -32,13 +32,13 @@
     "agenix": {
       "inputs": {
         "darwin": [
-          "nix-darwin"
+          "nix-darwin-25-05"
         ],
         "home-manager": [
-          "home-manager"
+          "home-manager-darwin-25-05"
         ],
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-darwin-25-05"
         ],
         "systems": "systems"
       },
@@ -197,6 +197,21 @@
       "original": {
         "owner": "numtide",
         "repo": "devshell",
+        "type": "github"
+      }
+    },
+    "easy-hosts": {
+      "locked": {
+        "lastModified": 1754752042,
+        "narHash": "sha256-qybYqajY/LEbrLw69s5diPALJorZz3NihHqymXp1hlo=",
+        "owner": "tgirlcloud",
+        "repo": "easy-hosts",
+        "rev": "bce9c247ffde39fb681cb42c04ee3936d290e0d6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tgirlcloud",
+        "repo": "easy-hosts",
         "type": "github"
       }
     },
@@ -412,22 +427,23 @@
         "type": "github"
       }
     },
-    "home-manager": {
+    "home-manager-darwin-25-05": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-darwin-25-05"
         ]
       },
       "locked": {
-        "lastModified": 1754457347,
-        "narHash": "sha256-QN9yZ1L5EmR16NNM+hNNzMjARk+FPjUeSE/ds4Kms0E=",
+        "lastModified": 1753592768,
+        "narHash": "sha256-oV695RvbAE4+R9pcsT9shmp6zE/+IZe6evHWX63f2Qg=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "ad5d2b4aa770fdc74c80fd682fee0b00a8ad7991",
+        "rev": "fc3add429f21450359369af74c2375cb34a2d204",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "release-25.05",
         "repo": "home-manager",
         "type": "github"
       }
@@ -506,7 +522,7 @@
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-darwin-25-05"
         ]
       },
       "locked": {
@@ -561,9 +577,11 @@
       "inputs": {
         "flake-utils": "flake-utils_3",
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-nixos-25-05"
         ],
-        "spectrum": "spectrum"
+        "spectrum": [
+          "dev"
+        ]
       },
       "locked": {
         "lastModified": 1754685828,
@@ -606,23 +624,23 @@
         "type": "github"
       }
     },
-    "nix-darwin": {
+    "nix-darwin-25-05": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs-darwin"
+          "nixpkgs-darwin-25-05"
         ]
       },
       "locked": {
-        "lastModified": 1749744770,
-        "narHash": "sha256-MEM9XXHgBF/Cyv1RES1t6gqAX7/tvayBC1r/KPyK1ls=",
-        "owner": "lnl7",
+        "lastModified": 1754842083,
+        "narHash": "sha256-SxmWVcj+2UXoyf5NF94rJYhp0k5EJZDDp2lwSmmZLAw=",
+        "owner": "esselius",
         "repo": "nix-darwin",
-        "rev": "536f951efb1ccda9b968e3c9dee39fbeb6d3fdeb",
+        "rev": "b2d2fb7bf4dbe4dabdd57e72bcbecdaf76ac4456",
         "type": "github"
       },
       "original": {
-        "owner": "lnl7",
-        "ref": "nix-darwin-25.05",
+        "owner": "esselius",
+        "ref": "linux-builder-with-determinate-nix-25-05",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -687,13 +705,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-darwin": {
+    "nixpkgs-darwin-25-05": {
       "locked": {
-        "lastModified": 1754240291,
-        "narHash": "sha256-zjNsbAWuIaeJPHq7YFXkYqyMa7iAAEukQwYZfP/LXHw=",
+        "lastModified": 1754689972,
+        "narHash": "sha256-eogqv6FqZXHgqrbZzHnq43GalnRbLTkbBbFtEfm1RSc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3535321020f5617f3ca73065118984b1325331ab",
+        "rev": "fc756aa6f5d3e2e5666efcf865d190701fef150a",
         "type": "github"
       },
       "original": {
@@ -901,19 +919,20 @@
         ],
         "authentik-nix": "authentik-nix",
         "dev": "dev",
+        "easy-hosts": "easy-hosts",
         "flake-parts": "flake-parts_2",
-        "home-manager": "home-manager",
+        "home-manager-darwin-25-05": "home-manager-darwin-25-05",
         "home-manager-nixos-24-11": "home-manager-nixos-24-11",
         "home-manager-nixos-25-05": "home-manager-nixos-25-05",
         "krewfile": "krewfile",
         "microvm": "microvm",
-        "nix-darwin": "nix-darwin",
+        "nix-darwin-25-05": "nix-darwin-25-05",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
         "nixpkgs": [
           "nixpkgs-unstable"
         ],
-        "nixpkgs-darwin": "nixpkgs-darwin",
+        "nixpkgs-darwin-25-05": "nixpkgs-darwin-25-05",
         "nixpkgs-nixos-24-11": "nixpkgs-nixos-24-11",
         "nixpkgs-nixos-25-05": "nixpkgs-nixos-25-05",
         "nixpkgs-unstable": "nixpkgs-unstable",
@@ -1039,22 +1058,6 @@
         "ref": "v1.5.2",
         "repo": "rpicam-apps",
         "type": "github"
-      }
-    },
-    "spectrum": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1751265943,
-        "narHash": "sha256-XoHSo6GEElzRUOYAEg/jlh5c8TDsyDESFIux3nU/NMc=",
-        "ref": "refs/heads/main",
-        "rev": "37c8663fab86fdb202fece339ef7ac7177ffc201",
-        "revCount": 904,
-        "type": "git",
-        "url": "https://spectrum-os.org/git/spectrum"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://spectrum-os.org/git/spectrum"
       }
     },
     "systems": {

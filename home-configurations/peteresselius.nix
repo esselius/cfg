@@ -1,5 +1,3 @@
-{ config, ... }:
-
 {
   imports = [
     ../home-modules/context.nix
@@ -11,8 +9,4 @@
     ../home-modules/ssh.nix
     ../home-modules/profiles
   ];
-
-  config = {
-    context = "home";
-  };
 }

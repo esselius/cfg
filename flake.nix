@@ -13,7 +13,7 @@
 
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-nixos-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-nixos-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
 
@@ -25,30 +25,31 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
-    nix-darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+    # nix-darwin-25-05.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+    nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
+    nix-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
 
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
     home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
     home-manager-nixos-25-05.url = "github:nix-community/home-manager/release-25.05";
     home-manager-nixos-25-05.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
+    home-manager-darwin-25-05.url = "github:nix-community/home-manager/release-25.05";
+    home-manager-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
 
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
     };
     krewfile.url = "github:brumhard/krewfile";
-    krewfile.inputs.nixpkgs.follows = "nixpkgs";
+    krewfile.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     agenix = {
       url = "github:ryantm/agenix";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        darwin.follows = "nix-darwin";
+        nixpkgs.follows = "nixpkgs-darwin-25-05";
+        home-manager.follows = "home-manager-darwin-25-05";
+        darwin.follows = "nix-darwin-25-05";
       };
     };
 
@@ -63,8 +64,13 @@
     pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
     pyproject-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    microvm.url = "github:esselius/microvm.nix/darwin-v2";
-    microvm.inputs.nixpkgs.follows = "nixpkgs";
+    microvm = {
+      url = "github:esselius/microvm.nix/darwin-v2";
+      inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
+      inputs.spectrum.follows = "dev";
+    };
+
+    easy-hosts.url = "github:tgirlcloud/easy-hosts";
   };
 
   outputs =
@@ -72,288 +78,282 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.dev.flakeModule
+        inputs.easy-hosts.flakeModule
       ];
 
       systems = [
-        "x86_64-linux"
         "aarch64-linux"
         "aarch64-darwin"
-        "x86_64-darwin"
       ];
 
-      flake = {
-        darwinConfigurations.Fox = inputs.nix-darwin.lib.darwinSystem {
-          modules = [
-            ./darwin-modules/default.nix
-            ./darwin-modules/tiling-wm.nix
-            ./darwin-modules/homebrew-packages
-            ./darwin-modules/linux-builder.nix
-            inputs.nix-homebrew.darwinModules.nix-homebrew
+      flake.homeConfigurations =
+        let
+          common = [
+            ./home-modules/default.nix
+            ./home-modules/fish-shell.nix
+            ./home-modules/git.nix
+            ./home-modules/context.nix
+            ./home-modules/terminal.nix
+            ./home-modules/nix.nix
+            ./home-modules/neovim.nix
+            ./home-modules/profiles
+            ./home-modules/ssh.nix
+            ./home-modules/git.nix
+
+            inputs.agenix.homeManagerModules.default
+            inputs.nix-index-database.homeModules.nix-index
+            inputs.nixvim.homeModules.nixvim
+            inputs.krewfile.homeManagerModules.krewfile
+
             {
-              nixpkgs.hostPlatform = "aarch64-darwin";
-
-              context = "home";
-              formfactor = "desktop";
-              mainUser = "peteresselius";
-
-              system.stateVersion = 4;
-              system.primaryUser = "peteresselius";
-              nixpkgs-path = inputs.nixpkgs;
-              nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+              nix.enable = false; # TODO nix.package not being set after using standalone HM
             }
-            inputs.home-manager.darwinModules.home-manager
-            (
-              { config, ... }:
-              {
-                home-manager.users.${config.mainUser} = {
-                  imports = [
-                    ./home-configurations/peteresselius.nix
-                    ./home-modules/default.nix
-                    inputs.agenix.homeManagerModules.default
-                    inputs.krewfile.homeManagerModules.krewfile
-                    inputs.nix-index-database.hmModules.nix-index
-                    inputs.nixvim.homeManagerModules.nixvim
-                  ];
-                };
-                home-manager.extraSpecialArgs = { inherit inputs; };
-              }
-            )
           ];
-          specialArgs = { inherit inputs; };
-        };
-
-        nixosModules = {
-          microvm-host = inputs.microvm.nixosModules.host;
-        };
-
-        darwinModules = {
-          context = ./darwin-modules/context.nix;
-          nix = ./darwin-modules/nix.nix;
-          security = ./darwin-modules/security.nix;
-          user = ./darwin-modules/user.nix;
-          tiling-wm = ./darwin-modules/tiling-wm.nix;
-          homebrew-packages = ./darwin-modules/homebrew-packages;
-          linux-builder = ./darwin-modules/linux-builder.nix;
-        };
-
-        homeModules = {
-          default = ./home-modules/default.nix;
-          fish-shell = ./home-modules/fish-shell.nix;
-          git = ./home-modules/git.nix;
-          ssh = ./home-modules/ssh.nix;
-          profiles = ./home-modules/profiles;
-          context = ./home-modules/context.nix;
-          terminal = ./home-modules/terminal.nix;
-          nix = ./home-modules/nix.nix;
-          neovim = ./home-modules/neovim.nix;
-        };
-
-        nixosConfigurations = {
-          adama = inputs.nixpkgs-nixos-24-11.lib.nixosSystem {
-            modules = [
-              ./nixos-configurations/adama.nix
-              ./nixos-modules/default.nix
-              inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-              inputs.agenix.nixosModules.default
-              inputs.agenix-rekey.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
+        in
+        {
+          WorkUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
+            pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
+            modules = common ++ [
               {
-                _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
-                nixpkgs-path = inputs.nixpkgs-nixos-24-11;
-                nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+                formfactor = "laptop";
+                mainUser = "pepp";
+                home.stateVersion = "24.05";
 
-                age.rekey = {
-                  hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
-                  masterIdentities = [
-                    {
-                      identity = "/Users/peteresselius/.age-plugin-se.key";
-                      pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                    }
-                    {
-                      identity = "/Users/pepp/.age-plugin-se.key";
-                      pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
-                    }
-                  ];
-                  storageMode = "local";
-                  localStorageDir = ./. + "/secrets/rekeyed/adama";
+                programs.mise = {
+                  enable = true;
+                  enableFishIntegration = true;
                 };
 
-                fileSystems = {
-                  "/" = {
-                    device = "/dev/disk/by-label/NIXOS_SD";
-                    fsType = "ext4";
-                  };
-                  "/boot/firmware" = {
-                    device = "/dev/disk/by-label/FIRMWARE";
-                    fsType = "vfat";
-                  };
+                profiles.tools = {
+                  k8s = true;
+                  minio = true;
+                  task = true;
+                  trino = true;
+                  google-cloud = true;
                 };
-
-                pyproject-nix-lib = inputs.pyproject-nix.lib;
               }
-              inputs.home-manager-nixos-24-11.nixosModules.home-manager
-              (
-                { config, ... }:
+            ];
+          };
+
+          peteresselius = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
+            pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
+            modules = common ++ [
+              {
+                context = "home";
+                formfactor = "desktop";
+                mainUser = "peteresselius";
+                home.stateVersion = "24.05";
+              }
+            ];
+          };
+        };
+
+      easy-hosts = {
+        additionalClasses = {
+          rpi = "nixos";
+          vm = "nixos";
+        };
+
+        hosts =
+          let
+            darwinCommon = [
+              ./darwin-modules/tiling-wm.nix
+              ./darwin-modules/linux-builder.nix
+              ./darwin-modules/security.nix
+
+              # TODO Convert to easy-hosts
+              ./darwin-modules/context.nix
+              ./darwin-modules/user.nix
+              ./darwin-modules/homebrew-packages
+
+              ./overlays.nix
+
+              inputs.nix-homebrew.darwinModules.nix-homebrew
+            ];
+          in
+          {
+            Fox = {
+              arch = "aarch64";
+              class = "darwin";
+              nixpkgs = inputs.nixpkgs-darwin-25-05;
+              nix-darwin = inputs.nix-darwin-25-05;
+              modules = darwinCommon ++ [
+                ./darwin-modules/nix.nix
+
                 {
-                  home-manager.users.${config.mainUser} = {
-                    imports = [
-                      ./home-configurations/peteresselius.nix
-                      ./home-modules/default.nix
-                      inputs.agenix.homeManagerModules.default
-                      inputs.krewfile.homeManagerModules.krewfile
-                      inputs.nix-index-database.hmModules.nix-index
-                      inputs.nixvim.homeManagerModules.nixvim
-                    ];
-                  };
-                  home-manager.extraSpecialArgs = { inherit inputs; };
+                  context = "home";
+                  formfactor = "desktop";
+                  mainUser = "peteresselius";
+
+                  system.stateVersion = 4;
+                  system.primaryUser = "peteresselius";
+
+                  nixpkgs-path = inputs.nixpkgs;
+                  nixpkgs-unstable-path = inputs.nixpkgs-unstable;
                 }
-              )
-            ];
-            specialArgs = { inherit inputs; };
-          };
-          haos = inputs.nixpkgs-nixos-25-05.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = [
-              inputs.microvm.nixosModules.microvm
-              inputs.microvm.nixosModules.host
-              {
-                system.stateVersion = "25.05";
-                imports = [
-                  ./nixos-modules/sshd.nix
-                  ./nixos-modules/user-peteresselius.nix
-                ];
-                microvm = {
-                  # storeDiskType = "squashfs";
-                  vmHostPackages = inputs.nixpkgs-darwin.legacyPackages.aarch64-darwin.pkgs;
-                  forwardPorts = [
-                    {
-                      host.port = 2222;
-                      guest.port = 22;
-                    }
-                  ];
-                  interfaces = [
-                    {
-                      type = "user";
-                      id = "vm0";
-                      mac = "02:00:00:01:01:01";
-                    }
-                  ];
-                  shares = [
-                    {
-                      # use proto = "virtiofs" for MicroVMs that are started by systemd
-                      proto = "9p";
-                      tag = "ro-store";
-                      # a host's /nix/store will be picked up so that no
-                      # squashfs/erofs will be built for it.
-                      source = "/nix/store";
-                      mountPoint = "/nix/.ro-store";
-                    }
-                  ];
-                };
-              }
-            ];
-          };
-          starbuck = inputs.nixpkgs-nixos-24-11.lib.nixosSystem {
-            modules = [
-              ./nixos-configurations/starbuck.nix
-              ./nixos-modules/default.nix
-              inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-              inputs.agenix.nixosModules.default
-              inputs.agenix-rekey.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
-              inputs.microvm.nixosModules.host
-
-              {
-                microvm.vms.haos = {
-                  flake = self;
-                  updateFlake = "github:esselius/cfg";
-                  # nixpkgs = inputs.nixpkgs-nixos-25-05;
-                  # pkgs = null;
-                  # config = {
-                  #   system.stateVersion = "25.05";
-                  #   imports = [
-                  #     ./nixos-modules/sshd.nix
-                  #     ./nixos-modules/user-peteresselius.nix
-                  #   ];
-                  #   microvm = {
-                  #     # storeDiskType = "squashfs";
-                  #     forwardPorts = [
-                  #       {
-                  #         host.port = 2222;
-                  #         guest.port = 22;
-                  #       }
-                  #     ];
-                  #     interfaces = [
-                  #       {
-                  #         type = "user";
-                  #         id = "vm0";
-                  #         mac = "02:00:00:01:01:01";
-                  #       }
-                  #     ];
-                  #     shares = [
-                  #       {
-                  #         # use proto = "virtiofs" for MicroVMs that are started by systemd
-                  #         proto = "9p";
-                  #         tag = "ro-store";
-                  #         # a host's /nix/store will be picked up so that no
-                  #         # squashfs/erofs will be built for it.
-                  #         source = "/nix/store";
-                  #         mountPoint = "/nix/.ro-store";
-                  #       }
-                  #     ];
-                  #   };
-                  # };
-                };
-              }
-
-              {
-                nixpkgs-path = inputs.nixpkgs-nixos-24-11;
-                nixpkgs-unstable-path = inputs.nixpkgs-unstable;
-                age.rekey = {
-                  hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
-                  masterIdentities = [
-                    {
-                      identity = "/Users/peteresselius/.age-plugin-se.key";
-                      pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                    }
-                    {
-                      identity = "/Users/pepp/.age-plugin-se.key";
-                      pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
-                    }
-                  ];
-                  storageMode = "local";
-                  localStorageDir = ./. + "/secrets/rekeyed/starbuck";
-                };
-                fileSystems = {
-                  "/" = {
-                    device = "/dev/disk/by-label/NIXOS_SD";
-                    fsType = "ext4";
-                  };
-                  "/boot/firmware" = {
-                    device = "/dev/disk/by-label/FIRMWARE";
-                    fsType = "vfat";
-                  };
-                };
-              }
-              inputs.home-manager-nixos-24-11.nixosModules.home-manager
-              (
-                { config, ... }:
+              ];
+              specialArgs = { inherit inputs; };
+            };
+            WorkLaptop = {
+              arch = "aarch64";
+              class = "darwin";
+              nixpkgs = inputs.nixpkgs-darwin-25-05;
+              nix-darwin = inputs.nix-darwin-25-05;
+              modules = darwinCommon ++ [
                 {
-                  home-manager.users.${config.mainUser} = {
-                    imports = [
-                      ./home-configurations/peteresselius.nix
-                      ./home-modules/default.nix
-                      inputs.agenix.homeManagerModules.default
-                      inputs.krewfile.homeManagerModules.krewfile
-                      inputs.nix-index-database.homeModules.nix-index
-                      inputs.nixvim.homeModules.nixvim
+                  nix.enable = false; # Determinate Nix
+                  system.stateVersion = 5;
+
+                  context = "work";
+                  formfactor = "laptop";
+                  mainUser = "pepp";
+
+                  system.primaryUser = "pepp";
+                  homebrew.casks = [ "qgis" ];
+                }
+              ];
+            };
+            adama = {
+              arch = "aarch64";
+              class = "rpi";
+              deployable = true;
+              nixpkgs = inputs.nixpkgs-nixos-24-11;
+              modules = [
+                ./nixos-configurations/adama.nix
+                ./nixos-modules/default.nix
+                inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+                inputs.agenix.nixosModules.default
+                inputs.agenix-rekey.nixosModules.default
+                inputs.authentik-nix.nixosModules.default
+                {
+                  _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
+                  nixpkgs-path = inputs.nixpkgs-nixos-24-11;
+                  nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+
+                  age.rekey = {
+                    hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
+                    masterIdentities = [
+                      {
+                        identity = "/Users/peteresselius/.age-plugin-se.key";
+                        pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
+                      }
+                      {
+                        identity = "/Users/pepp/.age-plugin-se.key";
+                        pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
+                      }
                     ];
+                    storageMode = "local";
+                    localStorageDir = ./. + "/secrets/rekeyed/adama";
+                  };
+
+                  fileSystems = {
+                    "/" = {
+                      device = "/dev/disk/by-label/NIXOS_SD";
+                      fsType = "ext4";
+                    };
+                    "/boot/firmware" = {
+                      device = "/dev/disk/by-label/FIRMWARE";
+                      fsType = "vfat";
+                    };
+                  };
+
+                  pyproject-nix-lib = inputs.pyproject-nix.lib;
+                }
+                inputs.home-manager-nixos-24-11.nixosModules.home-manager
+                (
+                  { config, ... }:
+                  {
+                    home-manager.users.${config.mainUser} = {
+                      imports = [
+                        ./home-configurations/peteresselius.nix
+                        ./home-modules/default.nix
+                        inputs.agenix.homeManagerModules.default
+                        inputs.krewfile.homeModules.krewfile
+                        inputs.nix-index-database.hmModules.nix-index
+                        inputs.nixvim.homeModules.nixvim
+                        {
+                          home.stateVersion = "24.05";
+                        }
+                      ];
+                    };
+                    home-manager.extraSpecialArgs = { inherit inputs; };
+                  }
+                )
+              ];
+              specialArgs = { inherit inputs; };
+            };
+            starbuck = {
+              arch = "aarch64";
+              class = "rpi";
+              deployable = true;
+              nixpkgs = inputs.nixpkgs-nixos-24-11;
+              modules = [
+                ./nixos-configurations/starbuck.nix
+                ./nixos-modules/default.nix
+                inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+                inputs.agenix.nixosModules.default
+                inputs.agenix-rekey.nixosModules.default
+                inputs.authentik-nix.nixosModules.default
+                inputs.microvm.nixosModules.host
+
+                {
+                  microvm.vms.haos = {
+                    flake = self;
+                    updateFlake = "github:esselius/cfg";
                   };
                 }
-              )
-            ];
+
+                {
+                  nixpkgs-path = inputs.nixpkgs-nixos-24-11;
+                  nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+                  age.rekey = {
+                    hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
+                    masterIdentities = [
+                      {
+                        identity = "/Users/peteresselius/.age-plugin-se.key";
+                        pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
+                      }
+                      {
+                        identity = "/Users/pepp/.age-plugin-se.key";
+                        pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
+                      }
+                    ];
+                    storageMode = "local";
+                    localStorageDir = ./. + "/secrets/rekeyed/starbuck";
+                  };
+                  fileSystems = {
+                    "/" = {
+                      device = "/dev/disk/by-label/NIXOS_SD";
+                      fsType = "ext4";
+                    };
+                    "/boot/firmware" = {
+                      device = "/dev/disk/by-label/FIRMWARE";
+                      fsType = "vfat";
+                    };
+                  };
+                }
+                inputs.home-manager-nixos-24-11.nixosModules.home-manager
+                (
+                  { config, ... }:
+                  {
+                    home-manager.users.${config.mainUser} = {
+                      imports = [
+                        ./home-configurations/peteresselius.nix
+                        ./home-modules/default.nix
+                        inputs.agenix.homeModules.default
+                        inputs.krewfile.homeModules.krewfile
+                        inputs.nix-index-database.homeModules.nix-index
+                        inputs.nixvim.homeModules.nixvim
+                        {
+                          home.stateVersion = "24.05";
+                        }
+                      ];
+                    };
+                  }
+                )
+              ];
+            };
           };
-        };
       };
 
       dev.enable = true;
