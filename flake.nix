@@ -208,6 +208,8 @@
                   formfactor = "laptop";
                   mainUser = "pepp";
 
+                  nixpkgs-unstable-path = inputs.nixpkgs-unstable;
+
                   system.primaryUser = "pepp";
                   homebrew.casks = [ "qgis" ];
                 }
