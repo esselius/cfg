@@ -105,9 +105,12 @@
             inputs.nixvim.homeModules.nixvim
             inputs.krewfile.homeManagerModules.krewfile
 
-            {
-              nix.enable = false; # TODO nix.package not being set after using standalone HM
-            }
+            (
+              { pkgs, ... }:
+              {
+                nix.package = pkgs.nix; # Standalone home-manager requires an explicit nix package
+              }
+            )
           ];
         in
         {
@@ -135,7 +138,7 @@
             ];
           };
 
-          peteresselius = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
+          HomeUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
             modules = common ++ [
               {
@@ -172,7 +175,7 @@
         };
 
         hosts = {
-          Fox = {
+          HomeDesktop = {
             arch = "aarch64";
             class = "darwin";
             nixpkgs = inputs.nixpkgs-darwin-25-05;
@@ -189,6 +192,7 @@
             ];
             specialArgs = { inherit inputs; };
           };
+
           WorkLaptop = {
             arch = "aarch64";
             class = "darwin";
@@ -205,6 +209,7 @@
             ];
             specialArgs = { inherit inputs; };
           };
+
           adama = {
             arch = "aarch64";
             class = "rpi";
