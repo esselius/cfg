@@ -8,6 +8,7 @@
       "microsoft-office"
       "postman"
       "utm"
+      "qgis"
     ];
 
     brews = [

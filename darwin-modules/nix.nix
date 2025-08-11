@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+{ inputs, lib, pkgs, config, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -35,7 +35,7 @@
     };
 
     nixPath = lib.mkForce [
-      "nixpkgs=${config.nixpkgs-path}"
+      "nixpkgs=${inputs.nixpkgs}"
     ];
   };
 }

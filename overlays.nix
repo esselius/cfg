@@ -1,6 +1,6 @@
-{ pkgs, config, ... }:
+{ inputs, pkgs, config, ... }:
 let
-  unstable-pkgs = import config.nixpkgs-unstable-path { inherit (pkgs.stdenv) system; };
+  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
 in
 {
   nixpkgs.overlays = [
