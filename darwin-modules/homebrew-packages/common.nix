@@ -15,6 +15,7 @@
       "vlc"
       "wezterm"
       "container"
+      "font-open-sans"
     ];
     brews = [
       "age-plugin-se"
