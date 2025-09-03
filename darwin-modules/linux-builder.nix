@@ -1,11 +1,11 @@
 {
   nix.linux-builder = {
     enable = true;
-    systems = [ "x86_64-linux" "aarch64-linux" ];
+    systems = [ "aarch64-linux" ];
     maxJobs = 4;
     ephemeral = true;
     config = {
-      boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
+      # boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
       virtualisation = {
         darwin-builder = {
           diskSize = 100 * 1024;
