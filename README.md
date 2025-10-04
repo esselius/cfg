@@ -14,8 +14,8 @@ chmod +x nix-installer
 For macos defaults to work, you need to [grant full disk access to the terminal](https://www.alfredapp.com/help/troubleshooting/indexing/terminal-full-disk-access/).
 
 ```shell
-sudo mv /etc/nix/nix.conf{,.before-nix-darwin}
-nix  --extra-experimental-features 'flakes nix-command' run nix-darwin -- switch --flake .
+sudo nix run nix-darwin -- switch --flake .
+nix run home-manager -- switch --flake .
 ```
 
 ## Raspberry Pi bootstrap

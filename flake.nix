@@ -194,9 +194,8 @@
             nixpkgs = inputs.nixpkgs-darwin-25-05;
             nix-darwin = inputs.nix-darwin-25-05;
             modules = [
-              ./darwin-modules/nix.nix
-
               {
+                nix.enable = false; # Determinate Nix
                 system.primaryUser = "peteresselius";
                 system.stateVersion = 4;
               }
