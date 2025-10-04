@@ -14,7 +14,6 @@
       "visual-studio-code"
       "vlc"
       "wezterm"
-      "container"
       "font-open-sans"
     ];
     brews = [
