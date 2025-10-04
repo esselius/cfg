@@ -1,10 +1,10 @@
 { inputs
 , pkgs
-, config
 , ...
 }:
 let
   unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+  pyproject-nix-lib = inputs.pyproject-nix.lib;
 in
 {
   nixpkgs.overlays = [
@@ -13,9 +13,7 @@ in
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
       audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix { };
-      easee_hass = unstable-pkgs.callPackage ./pkgs/easee_hass.nix {
-        inherit (config) pyproject-nix-lib;
-      };
+      easee_hass = unstable-pkgs.callPackage ./pkgs/easee_hass.nix { inherit pyproject-nix-lib; };
 
       darwin = prev.darwin.overrideScope (
         _: _: {

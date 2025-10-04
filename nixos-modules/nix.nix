@@ -1,4 +1,4 @@
-{ config, ... }:
+{ inputs, ... }:
 
 {
   nix = {
@@ -14,8 +14,8 @@
     };
 
     nixPath = [
-      "nixpkgs=${config.nixpkgs-path}"
-      "nixpkgs-unstable=${config.nixpkgs-unstable-path}"
+      "nixpkgs=${inputs.nixpkgs}"
+      "nixpkgs-unstable=${inputs.nixpkgs-unstable}"
     ];
   };
 }

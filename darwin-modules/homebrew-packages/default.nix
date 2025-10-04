@@ -3,13 +3,11 @@
 {
   nix-homebrew = {
     enable = true;
-    user = config.mainUser;
+    user = config.system.primaryUser;
   };
   homebrew.enable = true;
 
   imports = [
     ./common.nix
-    ./home.nix
-    ./work.nix
   ];
 }

@@ -74,7 +74,7 @@
   };
 
   outputs =
-    inputs@{ self, flake-parts, ... }:
+    inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         inputs.dev.flakeModule
@@ -109,6 +109,9 @@
               { pkgs, ... }:
               {
                 nix.package = pkgs.nix; # Standalone home-manager requires an explicit nix package
+                nixpkgs.config = {
+                  allowUnfree = true;
+                };
               }
             )
           ];
@@ -164,12 +167,22 @@
                 ./darwin-modules/tiling-wm.nix
                 ./darwin-modules/linux-builder.nix
                 ./darwin-modules/security.nix
-                ./darwin-modules/homebrew-packages/common.nix
+                ./darwin-modules/homebrew-packages
                 ./darwin-modules/user.nix
 
                 ./overlays.nix
 
                 inputs.nix-homebrew.darwinModules.nix-homebrew
+              ];
+              rpi = [
+                ./nixos-modules/context.nix
+                ./nixos-modules/nix.nix
+                ./nixos-modules/profiles
+
+                ./overlays.nix
+
+                inputs.raspberry-pi-nix.nixosModules.raspberry-pi
+                inputs.authentik-nix.nixosModules.default
               ];
             }.${class};
         };
@@ -218,7 +231,6 @@
             modules = [
               ./nixos-configurations/adama.nix
               ./nixos-modules/default.nix
-              inputs.raspberry-pi-nix.nixosModules.raspberry-pi
               inputs.agenix.nixosModules.default
               inputs.agenix-rekey.nixosModules.default
               inputs.authentik-nix.nixosModules.default
@@ -253,32 +265,11 @@
                     fsType = "vfat";
                   };
                 };
-
-                pyproject-nix-lib = inputs.pyproject-nix.lib;
               }
-              inputs.home-manager-nixos-24-11.nixosModules.home-manager
-              (
-                { config, ... }:
-                {
-                  home-manager.users.${config.mainUser} = {
-                    imports = [
-                      ./home-configurations/peteresselius.nix
-                      ./home-modules/default.nix
-                      inputs.agenix.homeManagerModules.default
-                      inputs.krewfile.homeModules.krewfile
-                      inputs.nix-index-database.hmModules.nix-index
-                      inputs.nixvim.homeModules.nixvim
-                      {
-                        home.stateVersion = "24.05";
-                      }
-                    ];
-                  };
-                  home-manager.extraSpecialArgs = { inherit inputs; };
-                }
-              )
             ];
             specialArgs = { inherit inputs; };
           };
+
           starbuck = {
             arch = "aarch64";
             class = "rpi";
@@ -286,23 +277,11 @@
             nixpkgs = inputs.nixpkgs-nixos-24-11;
             modules = [
               ./nixos-configurations/starbuck.nix
-              ./nixos-modules/default.nix
-              inputs.raspberry-pi-nix.nixosModules.raspberry-pi
               inputs.agenix.nixosModules.default
               inputs.agenix-rekey.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
               inputs.microvm.nixosModules.host
 
               {
-                microvm.vms.haos = {
-                  flake = self;
-                  updateFlake = "github:esselius/cfg";
-                };
-              }
-
-              {
-                nixpkgs-path = inputs.nixpkgs-nixos-24-11;
-                nixpkgs-unstable-path = inputs.nixpkgs-unstable;
                 age.rekey = {
                   hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
                   masterIdentities = [
@@ -329,26 +308,8 @@
                   };
                 };
               }
-              inputs.home-manager-nixos-24-11.nixosModules.home-manager
-              (
-                { config, ... }:
-                {
-                  home-manager.users.${config.mainUser} = {
-                    imports = [
-                      ./home-configurations/peteresselius.nix
-                      ./home-modules/default.nix
-                      inputs.agenix.homeModules.default
-                      inputs.krewfile.homeModules.krewfile
-                      inputs.nix-index-database.homeModules.nix-index
-                      inputs.nixvim.homeModules.nixvim
-                      {
-                        home.stateVersion = "24.05";
-                      }
-                    ];
-                  };
-                }
-              )
             ];
+            specialArgs = { inherit inputs; };
           };
         };
       };

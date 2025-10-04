@@ -42,5 +42,6 @@
     unzip
     arion
     docker-client
+    nixfmt-rfc-style
   ];
 }

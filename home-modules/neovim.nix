@@ -14,11 +14,14 @@
       shiftwidth = 2;
       undofile = true;
     };
+    nixpkgs.pkgs = pkgs;
 
 
     editorconfig.enable = true;
 
     plugins = {
+      avante.enable = true;
+      copilot-vim.enable = true;
       clangd-extensions.enable = true;
       web-devicons.enable = true;
 
