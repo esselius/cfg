@@ -56,7 +56,6 @@
             enable = true;
             filetypes = [ "sc" "scala" "java" ];
           };
-          dockerls.enable = true;
           tilt_ls.enable = true;
           protols = { enable = true; package = null; };
           pylsp.enable = true;
