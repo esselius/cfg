@@ -68,8 +68,8 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      url = "github:nix-community/nixvim/nixos-25.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     };
 
     pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
