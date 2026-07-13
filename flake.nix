@@ -1,7 +1,13 @@
 {
   nixConfig = {
-    extra-substituters = "https://esselius.cachix.org";
-    extra-trusted-public-keys = "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA=";
+    extra-substituters = [
+      "https://esselius.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 
   inputs = {
@@ -14,14 +20,14 @@
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
-    nixpkgs-nixos-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
+    # nixpkgs-nixos-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-nixos-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
-    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
+    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     authentik-nix = {
-      url = "github:nix-community/authentik-nix/version/2025.2.1";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/authentik-nix/version/2026.2.2";
+      inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
       inputs.flake-parts.follows = "flake-parts";
     };
 
@@ -29,8 +35,8 @@
     nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
     nix-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
 
-    home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
-    home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
+    # home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
+    # home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
     home-manager-nixos-25-05.url = "github:nix-community/home-manager/release-25.05";
     home-manager-nixos-25-05.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     home-manager-darwin-25-05.url = "github:nix-community/home-manager/release-25.05";
@@ -64,11 +70,11 @@
     pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
     pyproject-nix.inputs.nixpkgs.follows = "nixpkgs";
 
-    microvm = {
-      url = "github:esselius/microvm.nix/darwin-v2";
-      inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
-      inputs.spectrum.follows = "dev";
-    };
+    # microvm = {
+    #   url = "github:esselius/microvm.nix/darwin-v2";
+    #   inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
+    #   inputs.spectrum.follows = "dev";
+    # };
 
     easy-hosts.url = "github:tgirlcloud/easy-hosts";
   };
@@ -226,7 +232,7 @@
             arch = "aarch64";
             class = "rpi";
             deployable = true;
-            nixpkgs = inputs.nixpkgs-nixos-24-11;
+            nixpkgs = inputs.nixpkgs-nixos-25-05;
             modules = [
               ./nixos-configurations/adama.nix
               ./nixos-modules/default.nix
@@ -235,7 +241,7 @@
               inputs.authentik-nix.nixosModules.default
               {
                 _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
-                nixpkgs-path = inputs.nixpkgs-nixos-24-11;
+                nixpkgs-path = inputs.nixpkgs-nixos-25-05;
                 nixpkgs-unstable-path = inputs.nixpkgs-unstable;
 
                 age.rekey = {
@@ -254,48 +260,6 @@
                   localStorageDir = ./. + "/secrets/rekeyed/adama";
                 };
 
-                fileSystems = {
-                  "/" = {
-                    device = "/dev/disk/by-label/NIXOS_SD";
-                    fsType = "ext4";
-                  };
-                  "/boot/firmware" = {
-                    device = "/dev/disk/by-label/FIRMWARE";
-                    fsType = "vfat";
-                  };
-                };
-              }
-            ];
-            specialArgs = { inherit inputs; };
-          };
-
-          starbuck = {
-            arch = "aarch64";
-            class = "rpi";
-            deployable = true;
-            nixpkgs = inputs.nixpkgs-nixos-24-11;
-            modules = [
-              ./nixos-configurations/starbuck.nix
-              inputs.agenix.nixosModules.default
-              inputs.agenix-rekey.nixosModules.default
-              inputs.microvm.nixosModules.host
-
-              {
-                age.rekey = {
-                  hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFi1DoYv7wvIkYvTrjUVEqZI00H6d5437IgprVdFMI1+";
-                  masterIdentities = [
-                    {
-                      identity = "/Users/peteresselius/.age-plugin-se.key";
-                      pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                    }
-                    {
-                      identity = "/Users/pepp/.age-plugin-se.key";
-                      pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
-                    }
-                  ];
-                  storageMode = "local";
-                  localStorageDir = ./. + "/secrets/rekeyed/starbuck";
-                };
                 fileSystems = {
                   "/" = {
                     device = "/dev/disk/by-label/NIXOS_SD";
