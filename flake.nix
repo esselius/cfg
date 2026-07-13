@@ -20,6 +20,7 @@
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
+    nixpkgs-darwin-26-05.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
     # nixpkgs-nixos-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-nixos-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
 
@@ -34,6 +35,8 @@
     # nix-darwin-25-05.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
     nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
     nix-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
+    nix-darwin-26-05.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
+    nix-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
 
     # home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
     # home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
@@ -41,21 +44,23 @@
     home-manager-nixos-25-05.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     home-manager-darwin-25-05.url = "github:nix-community/home-manager/release-25.05";
     home-manager-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
+    home-manager-darwin-26-05.url = "github:nix-community/home-manager/release-26.05";
+    home-manager-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
 
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
     };
     krewfile.url = "github:brumhard/krewfile";
-    krewfile.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
+    krewfile.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     agenix = {
       url = "github:ryantm/agenix";
       inputs = {
-        nixpkgs.follows = "nixpkgs-darwin-25-05";
-        home-manager.follows = "home-manager-darwin-25-05";
-        darwin.follows = "nix-darwin-25-05";
+        nixpkgs.follows = "nixpkgs-darwin-26-05";
+        home-manager.follows = "home-manager-darwin-26-05";
+        darwin.follows = "nix-darwin-26-05";
       };
     };
 
@@ -190,15 +195,16 @@
                 inputs.raspberry-pi-nix.nixosModules.raspberry-pi
                 inputs.authentik-nix.nixosModules.default
               ];
-            }.${class};
+            }
+            .${class};
         };
 
         hosts = {
           HomeDesktop = {
             arch = "aarch64";
             class = "darwin";
-            nixpkgs = inputs.nixpkgs-darwin-25-05;
-            nix-darwin = inputs.nix-darwin-25-05;
+            nixpkgs = inputs.nixpkgs-darwin-26-05;
+            nix-darwin = inputs.nix-darwin-26-05;
             modules = [
               {
                 nix.enable = false; # Determinate Nix
