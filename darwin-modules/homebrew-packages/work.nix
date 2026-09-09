@@ -9,6 +9,7 @@
       "postman"
       "utm"
       "qgis"
+      "tableau"
     ];
 
     brews = [

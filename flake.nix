@@ -111,6 +111,8 @@
             ./home-modules/ssh.nix
             ./home-modules/git.nix
 
+            ./overlays.nix
+
             inputs.agenix.homeManagerModules.default
             inputs.nix-index-database.homeModules.nix-index
             inputs.nixvim.homeModules.nixvim
@@ -130,6 +132,7 @@
         {
           WorkUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
+            extraSpecialArgs = { inherit inputs; };
             modules = common ++ [
               {
                 formfactor = "laptop";
@@ -154,6 +157,7 @@
 
           HomeUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
             pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
+            extraSpecialArgs = { inherit inputs; };
             modules = common ++ [
               {
                 context = "home";
@@ -195,8 +199,7 @@
                 inputs.raspberry-pi-nix.nixosModules.raspberry-pi
                 inputs.authentik-nix.nixosModules.default
               ];
-            }
-            .${class};
+            }.${class};
         };
 
         hosts = {
