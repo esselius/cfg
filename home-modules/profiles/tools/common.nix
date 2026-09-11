@@ -44,5 +44,6 @@
     docker-client
     nixfmt-rfc-style
     opencode
+    glow
   ];
 }
