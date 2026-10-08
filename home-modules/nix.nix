@@ -1,5 +1,9 @@
+{ inputs, ... }:
+
 {
+  nixpkgs.config.allowUnfree = true;
   nix = {
+    registry.nixpkgs.flake = inputs.nixpkgs-unstable;
     settings = {
       substituters = [
         "https://cache.nixos.org"

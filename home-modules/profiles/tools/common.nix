@@ -45,5 +45,10 @@
     nixfmt-rfc-style
     opencode
     glow
+    claude-code
+    uv
+    nodejs
+    btop
+    coreutils
   ];
 }

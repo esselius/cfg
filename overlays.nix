@@ -3,7 +3,10 @@
 , ...
 }:
 let
-  unstable-pkgs = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+  unstable-pkgs = import inputs.nixpkgs-unstable {
+    inherit (pkgs.stdenv) system;
+    config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [ "claude-code" ];
+  };
   pyproject-nix-lib = inputs.pyproject-nix.lib;
 in
 {
@@ -23,7 +26,7 @@ in
 
       inherit (unstable-pkgs) home-assistant;
       inherit (unstable-pkgs) zigbee2mqtt;
-      inherit (unstable-pkgs) opencode;
+      inherit (unstable-pkgs) opencode claude-code;
     })
   ];
 }
