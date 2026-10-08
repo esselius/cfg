@@ -223,8 +223,8 @@
           WorkLaptop = {
             arch = "aarch64";
             class = "darwin";
-            nixpkgs = inputs.nixpkgs-darwin-25-05;
-            nix-darwin = inputs.nix-darwin-25-05;
+            nixpkgs = inputs.nixpkgs-darwin-26-05;
+            nix-darwin = inputs.nix-darwin-26-05;
             modules = [
               {
                 nix.enable = false; # Determinate Nix

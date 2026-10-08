@@ -12,7 +12,6 @@
       "spotify"
       "telegram"
       "visual-studio-code"
-      "vlc"
       "wezterm"
       "font-open-sans"
     ];
