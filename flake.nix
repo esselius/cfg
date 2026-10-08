@@ -37,6 +37,7 @@
     nix-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     nix-darwin-26-05.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
     nix-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
 
     # home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
     # home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
@@ -226,10 +227,27 @@
             nixpkgs = inputs.nixpkgs-darwin-26-05;
             nix-darwin = inputs.nix-darwin-26-05;
             modules = [
+              inputs.determinate.darwinModules.default
               {
-                nix.enable = false; # Determinate Nix
                 system.primaryUser = "pepp";
                 system.stateVersion = 5;
+
+                determinateNix.customSettings = {
+                  trusted-users = [
+                    "root"
+                    "pepp"
+                  ];
+                  extra-substituters = [
+                    "https://esselius.cachix.org"
+                    "https://nix-community.cachix.org"
+                    "https://devenv.cachix.org"
+                  ];
+                  extra-trusted-public-keys = [
+                    "esselius.cachix.org-1:h6FQzpdflxdZfnnL0caV88xt5K5sNzgO0VIHQthTymA="
+                    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+                    "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+                  ];
+                };
               }
 
               ./darwin-modules/homebrew-packages/work.nix
