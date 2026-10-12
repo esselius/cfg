@@ -28,6 +28,8 @@ in
       192.168.50.43 home-assistant.adama.lan
       192.168.50.43 pgadmin.adama.lan
       192.168.50.43 zigbee2mqtt.adama.lan
+      192.168.50.43 grafana.adama.lan
+      192.168.50.43 prometheus.adama.lan
     '';
 
     services = {
