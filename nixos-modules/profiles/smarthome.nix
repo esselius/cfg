@@ -16,6 +16,10 @@ in
     systemd.services = {
       node-red.environment.NODE_PATH =
         "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
+      # Kanidm OIDC client secret for Node-RED's admin login (settings.js reads
+      # this path at startup).
+      node-red.environment.NODE_RED_OIDC_SECRET_FILE =
+        config.age.secrets.node-red-oidc-secret.path;
       zigbee2mqtt.environment.Z2M_WATCHDOG = "default";
       zigbee2mqtt.serviceConfig.SystemCallFilter = lib.mkForce [ ];
     };
@@ -23,13 +27,9 @@ in
     networking.firewall.enable = false;
 
     networking.extraHosts = ''
-      192.168.50.43 authentik.adama.lan
       192.168.50.43 node-red.adama.lan
       192.168.50.43 home-assistant.adama.lan
-      192.168.50.43 pgadmin.adama.lan
       192.168.50.43 zigbee2mqtt.adama.lan
-      192.168.50.43 grafana.adama.lan
-      192.168.50.43 prometheus.adama.lan
     '';
 
     services = {
@@ -74,6 +74,24 @@ in
         enable = true;
         withNpmAndGcc = true;
         configFile = ./nodered-settings.js;
+      };
+
+      # SSO for the zigbee2mqtt frontend (replaces the Authentik outpost).
+      # Runs as a reverse proxy in front of the z2m frontend.
+      oauth2-proxy = {
+        enable = true;
+        provider = "oidc";
+        oidcIssuerUrl = "https://idm.int.esselius.dev/oauth2/openid/oauth2-proxy";
+        clientID = "oauth2-proxy";
+        email.domains = [ "*" ];
+        redirectURL = "https://zigbee2mqtt.adama.lan/oauth2/callback";
+        upstream = [ "http://127.0.0.1:8099" ];
+        reverseProxy = true;
+        setXauthrequest = true;
+        # Kanidm enforces PKCE; send an S256 challenge.
+        extraConfig.code-challenge-method = "S256";
+        # Client + cookie secrets are supplied via the agenix EnvironmentFile.
+        keyFile = config.age.secrets.oauth2-proxy-env.path;
       };
 
       # TODO Run hass after postgres has started
@@ -125,17 +143,6 @@ in
             python-roborock
           ];
       };
-      prometheus.scrapeConfigs = [
-        {
-          job_name = "home-assistant";
-          metrics_path = "/api/prometheus";
-          static_configs = [
-            {
-              targets = [ "127.0.0.1:${toString config.services.home-assistant.config.http.server_port}" ];
-            }
-          ];
-        }
-      ];
       postgresql = {
         enable = true;
         ensureDatabases = [ "hass" ];
@@ -154,34 +161,14 @@ in
         "zigbee2mqtt.adama.lan" = {
           forceSSL = true;
           enableACME = true;
-          locations = {
-            "/" = {
-              proxyWebsockets = true;
-              proxyPass = "http://127.0.0.1:${toString config.services.zigbee2mqtt.settings.frontend.port}";
-              extraConfig = ''
-                auth_request     /outpost.goauthentik.io/auth/nginx;
-                error_page       401 = @goauthentik_proxy_signin;
-                auth_request_set $auth_cookie $upstream_http_set_cookie;
-                add_header       Set-Cookie $auth_cookie;
-              '';
-            };
-            "/outpost.goauthentik.io" = {
-              proxyPass = "http://127.0.0.1:9000/outpost.goauthentik.io";
-              extraConfig = ''
-                proxy_set_header        X-Original-URL $scheme://$http_host$request_uri;
-                add_header              Set-Cookie $auth_cookie;
-                auth_request_set        $auth_cookie $upstream_http_set_cookie;
-                proxy_pass_request_body off;
-                proxy_set_header        Content-Length "";
-              '';
-            };
-            "@goauthentik_proxy_signin" = {
-              return = "302 /outpost.goauthentik.io/start?rd=$request_uri";
-              extraConfig = ''
-                internal;
-                add_header Set-Cookie $auth_cookie;
-              '';
-            };
+          locations."/" = {
+            # Everything goes through oauth2-proxy, which serves /oauth2/* itself
+            # and reverse-proxies the rest to the z2m frontend. Don't set Host /
+            # X-Forwarded-* here - the module already includes the recommended
+            # proxy headers, and duplicating them makes Go (oauth2-proxy) reject
+            # the request with 400 (two Host headers).
+            proxyWebsockets = true;
+            proxyPass = "http://127.0.0.1:4180";
           };
         };
 
@@ -202,40 +189,8 @@ in
             proxyPass = "http://127.0.0.1:8123";
           };
         };
-
-        "pgadmin.adama.lan" = {
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://127.0.0.1:${toString config.services.pgadmin.port}";
-          };
-        };
       };
 
-      pgadmin = {
-        enable = false;
-        settings = {
-          AUTHENTICATION_SOURCES = [ "oauth2" ];
-          OAUTH2_CONFIG = [
-            {
-              OAUTH2_NAME = "authentik";
-              OAUTH2_DISPLAY_NAME = "Authentik";
-              OAUTH2_CLIENT_ID = "pgadmin";
-              OAUTH2_CLIENT_SECRET = "secret";
-              OAUTH2_TOKEN_URL = "https://authentik.adama.lan/application/o/token/";
-              OAUTH2_AUTHORIZATION_URL = "https://authentik.adama.lan/application/o/authorize/";
-              OAUTH2_USERINFO_ENDPOINT = "https://authentik.adama.lan/application/o/userinfo/";
-              OAUTH2_SCOPE = "openid email profile";
-              OAUTH2_API_BASE_URL = "https://authentik.adama.lan/";
-              OAUTH2_SSL_CERT_VERIFICATION = false;
-              OAUTH2_SERVER_METADATA_URL = "https://authentik.adama.lan/application/o/pgadmin/.well-known/openid-configuration";
-            }
-          ];
-        };
-        initialEmail = "pepp@me.com";
-        initialPasswordFile = builtins.toFile "pgadmin-pass" "password";
-      };
     };
   };
 }
