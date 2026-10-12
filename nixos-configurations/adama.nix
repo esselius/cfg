@@ -10,6 +10,7 @@
     ../nixos-modules/nix-gc.nix
     ../nixos-modules/hardware-rpi5.nix
     ../nixos-modules/wireguard.nix
+    ../nixos-modules/monitoring-agent.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
