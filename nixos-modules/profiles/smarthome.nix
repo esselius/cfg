@@ -33,20 +33,9 @@ in
     '';
 
     services = {
-      mosquitto = {
-        enable = true;
-        listeners = [
-          {
-            acl = [ "pattern readwrite #" ];
-            users = {
-              p1ib.password = "passw0rd";
-              z2m.password = "passw0rd";
-              hass.password = "passw0rd";
-              nr.password = "passw0rd";
-            };
-          }
-        ];
-      };
+      # MQTT now lives on the mosquitto workload (mosquitto.int.esselius.dev);
+      # adama runs no local broker. See github.com/esselius/nix-workloads.
+      mosquitto.enable = false;
 
       zigbee2mqtt = {
         enable = true;
@@ -54,9 +43,9 @@ in
           frontend.port = 8099;
           homeassistant = true;
           mqtt = {
-            server = "mqtt://adama:1883";
+            server = "mqtt://mosquitto.int.esselius.dev:1883";
             user = "z2m";
-            password = "passw0rd";
+            password = "!" + config.age.secrets.z2m.path + " mqtt_password";
           };
           serial.adapter = "ember";
           advanced = {
