@@ -23,8 +23,19 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.services.authentik.environment.AUTHENTIK_LOG_LEVEL = "warning";
-    systemd.services.authentik-worker.environment.AUTHENTIK_LOG_LEVEL = "warning";
+    systemd = {
+      services.authentik.environment.AUTHENTIK_LOG_LEVEL = "warning";
+      services.authentik-worker.environment.AUTHENTIK_LOG_LEVEL = "warning";
+
+      # The bumped authentik-nix requires `postgresql.target`, which nixpkgs-25.05
+      # does not define (it only ships postgresql.service). Provide a compatible
+      # target so authentik.service can be started.
+      targets.postgresql = {
+        description = "PostgreSQL";
+        wantedBy = [ "multi-user.target" ];
+        requires = [ "postgresql.service" ];
+      };
+    };
 
     services = {
       nginx.virtualHosts."authentik.adama.lan" = {

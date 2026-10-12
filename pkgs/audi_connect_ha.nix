@@ -17,6 +17,6 @@ buildHomeAssistantComponent rec {
   };
 
   dependencies = [
-    home-assistant.python.pkgs.beautifulsoup4
+    home-assistant.python3Packages.beautifulsoup4
   ];
 }

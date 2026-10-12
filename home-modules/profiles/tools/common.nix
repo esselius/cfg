@@ -17,7 +17,6 @@
   home.packages = with pkgs; [
     cachix
     deadnix
-    direnv
     go-task
     home-manager
     jq

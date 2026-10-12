@@ -27,7 +27,7 @@
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     authentik-nix = {
-      url = "github:nix-community/authentik-nix/version/2026.2.2";
+      url = "github:nix-community/authentik-nix/version/2026.2.4";
       inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
       inputs.flake-parts.follows = "flake-parts";
     };
@@ -97,6 +97,13 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
+
+      perSystem = _: {
+        # Only NixOS/darwin hosts are rekey targets. The stand-alone home
+        # configurations expose `age` (plain agenix) but do not use
+        # agenix-rekey, so keep agenix-rekey from auto-collecting them as nodes.
+        agenix-rekey.homeConfigurations = { };
+      };
 
       flake.homeConfigurations =
         let
@@ -278,10 +285,13 @@
                       identity = "/Users/peteresselius/.age-plugin-se.key";
                       pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
                     }
-                    {
-                      identity = "/Users/pepp/.age-plugin-se.key";
-                      pubkey = "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372";
-                    }
+                  ];
+                  # The work laptop's identity is machine-specific and absent
+                  # here; rage hard-fails on a missing -i file, so keep it out of
+                  # masterIdentities but retain its pubkey as an encryption
+                  # recipient so secrets stay decryptable on that machine too.
+                  extraEncryptionPubkeys = [
+                    "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372"
                   ];
                   storageMode = "local";
                   localStorageDir = ./. + "/secrets/rekeyed/adama";

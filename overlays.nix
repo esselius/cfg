@@ -15,7 +15,7 @@ in
       nodePackages = prev.nodePackages // {
         passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
       };
-      audi_connect_ha = prev.callPackage ./pkgs/audi_connect_ha.nix { };
+      audi_connect_ha = unstable-pkgs.callPackage ./pkgs/audi_connect_ha.nix { };
       easee_hass = unstable-pkgs.callPackage ./pkgs/easee_hass.nix { inherit pyproject-nix-lib; };
 
       darwin = prev.darwin.overrideScope (

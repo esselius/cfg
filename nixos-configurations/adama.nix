@@ -9,10 +9,12 @@
     ../nixos-modules/nginx.nix
     ../nixos-modules/nix-gc.nix
     ../nixos-modules/hardware-rpi5.nix
+    ../nixos-modules/wireguard.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
 
+  networking.hostName = "adama";
   system.stateVersion = "24.05";
 
   context = "home";
@@ -30,7 +32,7 @@
     # 3000 # Grafana
     # 3030 # Loki
     # 6052 # ESPHome
-    # 8099 # Zigbee2MQTT
+    8099 # Zigbee2MQTT
     8443 # Step CA
     # 9000 # Authentik
     # 9001 # Prometheus
@@ -44,12 +46,26 @@
   age.secrets = {
     grafana-env.rekeyFile = ../secrets/grafana-env.age;
     authentik-env.rekeyFile = ../secrets/authentik-env.age;
+    wg-private-key.rekeyFile = ../secrets/wg-private-key.adama.age;
     z2m = {
       name = "z2m.yaml";
       rekeyFile = ../secrets/z2m.age;
       owner = "zigbee2mqtt";
       group = "zigbee2mqtt";
     };
+  };
+
+  wireguard-vpn = {
+    enable = true;
+    # Split-tunnel node on the router's WireGuard server (not a full-tunnel
+    # client): only the VPN subnet and the Pis' incus VPN bridges route via wg0.
+    address = "10.6.0.5/32";
+    privateKeySecret = "wg-private-key";
+    serverPublicKey = "b+Xgh4RNJl20tlnb41DQDIda+jSgP0xfuSpW/NEJGXE=";
+    serverEndpoint = "195.58.123.102";
+    serverPort = 51820;
+    extraAllowedIPs = [ "10.43.0.0/24" ];
+    dns = [ "10.43.0.14" ];
   };
 
   profiles = {
@@ -207,10 +223,23 @@
     };
     prometheus = {
       enable = true;
-      scrapeConfigs = [
-        { job_name = "starbuck"; static_configs = [{ targets = [ "starbuck:9090" ]; }]; }
-        { job_name = "openwrt"; static_configs = [{ targets = [ "192.168.1.1:9100" "192.168.1.2:9100" ]; }]; }
-      ];
+      # scrapeConfigs = [
+      #   {
+      #     job_name = "starbuck";
+      #     static_configs = [ { targets = [ "starbuck:9090" ]; } ];
+      #   }
+      #   {
+      #     job_name = "openwrt";
+      #     static_configs = [
+      #       {
+      #         targets = [
+      #           "192.168.1.1:9100"
+      #           "192.168.1.2:9100"
+      #         ];
+      #       }
+      #     ];
+      #   }
+      # ];
     };
 
     cockpit = {

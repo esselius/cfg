@@ -1,7 +1,7 @@
 { fetchFromGitHub
 , buildHomeAssistantComponent
 , home-assistant
-, python313Packages
+, python314Packages
 , pyproject-nix-lib
 ,
 }:
@@ -19,10 +19,10 @@ buildHomeAssistantComponent rec {
   };
 
   dependencies = [
-    (python313Packages.callPackage ./pyeasee.nix { })
-    (python313Packages.callPackage ./pysignalr.nix { inherit pyproject-nix-lib; })
+    (python314Packages.callPackage ./pyeasee.nix { })
+    (python314Packages.callPackage ./pysignalr.nix { inherit pyproject-nix-lib; })
   ];
   nativeBuildInputs = [
-    home-assistant.python.pkgs.bump2version
+    home-assistant.python3Packages.bump2version
   ];
 }

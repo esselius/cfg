@@ -1,4 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ config
+, lib
+, pkgs
+, ...
+}:
 
 let
   cfg = config.profiles.smarthome;
@@ -9,23 +13,37 @@ in
     enable = mkEnableOption "Enable monitoring";
   };
   config = mkIf cfg.enable {
-    systemd.services.node-red.environment.NODE_PATH =
-      "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
+    systemd.services = {
+      node-red.environment.NODE_PATH =
+        "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
+      zigbee2mqtt.environment.Z2M_WATCHDOG = "default";
+      zigbee2mqtt.serviceConfig.SystemCallFilter = lib.mkForce [ ];
+    };
+
     networking.firewall.enable = false;
 
-    systemd.services.zigbee2mqtt.environment.Z2M_WATCHDOG = "default";
+    networking.extraHosts = ''
+      192.168.50.43 authentik.adama.lan
+      192.168.50.43 node-red.adama.lan
+      192.168.50.43 home-assistant.adama.lan
+      192.168.50.43 pgadmin.adama.lan
+      192.168.50.43 zigbee2mqtt.adama.lan
+    '';
+
     services = {
       mosquitto = {
         enable = true;
-        listeners = [{
-          acl = [ "pattern readwrite #" ];
-          users = {
-            p1ib.password = "passw0rd";
-            z2m.password = "passw0rd";
-            hass.password = "passw0rd";
-            nr.password = "passw0rd";
-          };
-        }];
+        listeners = [
+          {
+            acl = [ "pattern readwrite #" ];
+            users = {
+              p1ib.password = "passw0rd";
+              z2m.password = "passw0rd";
+              hass.password = "passw0rd";
+              nr.password = "passw0rd";
+            };
+          }
+        ];
       };
 
       zigbee2mqtt = {
@@ -41,7 +59,16 @@ in
           serial.adapter = "ember";
           advanced = {
             pan_id = 56089;
-            ext_pan_id = [ 154 147 150 234 96 16 140 189 ];
+            ext_pan_id = [
+              154
+              147
+              150
+              234
+              96
+              16
+              140
+              189
+            ];
             network_key = "!" + config.age.secrets.z2m.path + " network_key";
             channel = 11;
             last_seen = "ISO_8601";
@@ -98,19 +125,26 @@ in
           recorder.db_url = "postgresql://@/hass";
           prometheus.requires_auth = false;
         };
-        extraPackages = p: with p; [
-          # Recorder -> postgres
-          psycopg2
-          getmac
-        ];
+        extraPackages =
+          p: with p; [
+            # Recorder -> postgres
+            psycopg2
+            getmac
+            kegtron-ble
+            python-roborock
+          ];
       };
-      prometheus.scrapeConfigs = [{
-        job_name = "home-assistant";
-        metrics_path = "/api/prometheus";
-        static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.home-assistant.config.http.server_port}" ];
-        }];
-      }];
+      prometheus.scrapeConfigs = [
+        {
+          job_name = "home-assistant";
+          metrics_path = "/api/prometheus";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.services.home-assistant.config.http.server_port}" ];
+            }
+          ];
+        }
+      ];
       postgresql = {
         enable = true;
         ensureDatabases = [ "hass" ];
@@ -192,19 +226,21 @@ in
         enable = false;
         settings = {
           AUTHENTICATION_SOURCES = [ "oauth2" ];
-          OAUTH2_CONFIG = [{
-            OAUTH2_NAME = "authentik";
-            OAUTH2_DISPLAY_NAME = "Authentik";
-            OAUTH2_CLIENT_ID = "pgadmin";
-            OAUTH2_CLIENT_SECRET = "secret";
-            OAUTH2_TOKEN_URL = "https://authentik.adama.lan/application/o/token/";
-            OAUTH2_AUTHORIZATION_URL = "https://authentik.adama.lan/application/o/authorize/";
-            OAUTH2_USERINFO_ENDPOINT = "https://authentik.adama.lan/application/o/userinfo/";
-            OAUTH2_SCOPE = "openid email profile";
-            OAUTH2_API_BASE_URL = "https://authentik.adama.lan/";
-            OAUTH2_SSL_CERT_VERIFICATION = false;
-            OAUTH2_SERVER_METADATA_URL = "https://authentik.adama.lan/application/o/pgadmin/.well-known/openid-configuration";
-          }];
+          OAUTH2_CONFIG = [
+            {
+              OAUTH2_NAME = "authentik";
+              OAUTH2_DISPLAY_NAME = "Authentik";
+              OAUTH2_CLIENT_ID = "pgadmin";
+              OAUTH2_CLIENT_SECRET = "secret";
+              OAUTH2_TOKEN_URL = "https://authentik.adama.lan/application/o/token/";
+              OAUTH2_AUTHORIZATION_URL = "https://authentik.adama.lan/application/o/authorize/";
+              OAUTH2_USERINFO_ENDPOINT = "https://authentik.adama.lan/application/o/userinfo/";
+              OAUTH2_SCOPE = "openid email profile";
+              OAUTH2_API_BASE_URL = "https://authentik.adama.lan/";
+              OAUTH2_SSL_CERT_VERIFICATION = false;
+              OAUTH2_SERVER_METADATA_URL = "https://authentik.adama.lan/application/o/pgadmin/.well-known/openid-configuration";
+            }
+          ];
         };
         initialEmail = "pepp@me.com";
         initialPasswordFile = builtins.toFile "pgadmin-pass" "password";
