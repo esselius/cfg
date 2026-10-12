@@ -58,14 +58,31 @@
   wireguard-vpn = {
     enable = true;
     # Split-tunnel node on the router's WireGuard server (not a full-tunnel
-    # client): only the VPN subnet and the Pis' incus VPN bridges route via wg0.
+    # client): only the VPN subnet routes via wg0. The Pi (and its incus
+    # bridges) are reached directly over the LAN via extraPeers, so that
+    # traffic no longer hairpins through the router.
     address = "10.6.0.5/32";
     privateKeySecret = "wg-private-key";
     serverPublicKey = "b+Xgh4RNJl20tlnb41DQDIda+jSgP0xfuSpW/NEJGXE=";
     serverEndpoint = "195.58.123.102";
     serverPort = 51820;
-    extraAllowedIPs = [ "10.43.0.0/24" ];
+    listenPort = 51820;
     dns = [ "10.43.0.14" ];
+    # Direct host-to-host link to rpi5-8gb over the gigabit LAN. Its prefixes
+    # are more specific than (10.6.0.3/32) or disjoint from (10.42/10.43) the
+    # router peer's 10.6.0.0/24, so they win and skip the router.
+    extraPeers = [
+      {
+        publicKey = "NmlbH35CycjE1thGKwfU4pbYDCevMg+ui+jr9PiK9UM=";
+        endpoint = "192.168.50.80:51820";
+        allowedIPs = [
+          "10.6.0.3/32"
+          "10.42.0.0/24"
+          "10.43.0.0/24"
+        ];
+        persistentKeepalive = 25;
+      }
+    ];
   };
 
   profiles = {
