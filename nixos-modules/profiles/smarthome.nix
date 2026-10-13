@@ -14,12 +14,6 @@ in
   };
   config = mkIf cfg.enable {
     systemd.services = {
-      node-red.environment.NODE_PATH =
-        "${pkgs.nodePackages.passport-openidconnect}/lib/node_modules";
-      # Kanidm OIDC client secret for Node-RED's admin login (settings.js reads
-      # this path at startup).
-      node-red.environment.NODE_RED_OIDC_SECRET_FILE =
-        config.age.secrets.node-red-oidc-secret.path;
       zigbee2mqtt.environment.Z2M_WATCHDOG = "default";
       zigbee2mqtt.serviceConfig.SystemCallFilter = lib.mkForce [ ];
     };
@@ -27,7 +21,6 @@ in
     networking.firewall.enable = false;
 
     networking.extraHosts = ''
-      192.168.50.43 node-red.adama.lan
       192.168.50.43 home-assistant.adama.lan
       192.168.50.43 zigbee2mqtt.adama.lan
     '';
@@ -68,12 +61,6 @@ in
           };
           availability = true;
         };
-      };
-
-      node-red = {
-        enable = true;
-        withNpmAndGcc = true;
-        configFile = ./nodered-settings.js;
       };
 
       # SSO for the zigbee2mqtt frontend (replaces the Authentik outpost).
@@ -169,15 +156,6 @@ in
             # the request with 400 (two Host headers).
             proxyWebsockets = true;
             proxyPass = "http://127.0.0.1:4180";
-          };
-        };
-
-        "node-red.adama.lan" = {
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyWebsockets = true;
-            proxyPass = "http://127.0.0.1:${toString config.services.node-red.port}";
           };
         };
 

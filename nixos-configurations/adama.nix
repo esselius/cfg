@@ -51,11 +51,6 @@
       owner = "zigbee2mqtt";
       group = "zigbee2mqtt";
     };
-    node-red-oidc-secret = {
-      rekeyFile = ../secrets/node-red-oidc-secret.age;
-      owner = "node-red";
-      group = "node-red";
-    };
     oauth2-proxy-env = {
       rekeyFile = ../secrets/oauth2-proxy-env.age;
       owner = "oauth2-proxy";
