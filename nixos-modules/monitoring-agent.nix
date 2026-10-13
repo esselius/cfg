@@ -21,6 +21,15 @@ in
         target_label = "host"
         replacement  = "${hostName}"
       }
+
+      // The incus guests run this same node exporter, so both they and the
+      // physical hosts emit node_* series with job="integrations/unix". Mark
+      // this host's series so the physical-node dashboards can tell them apart
+      // from the guests (which are tagged node_type="container").
+      rule {
+        target_label = "node_type"
+        replacement  = "host"
+      }
     }
 
     prometheus.remote_write "default" {
