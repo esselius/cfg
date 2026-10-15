@@ -21,9 +21,6 @@
     nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-darwin-26-05.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
-    # nix-darwin-25-05.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
-    nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
-    nix-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     nix-darwin-26-05.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
     nix-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
@@ -91,7 +88,6 @@
             ./home-modules/neovim.nix
             ./home-modules/profiles
             ./home-modules/ssh.nix
-            ./home-modules/git.nix
 
             ./overlays.nix
 
