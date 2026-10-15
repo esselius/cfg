@@ -23,7 +23,7 @@ nix run home-manager -- switch --flake .
 Generate SD card image
 
 ```shell
-task nixos:sd host=adama
+task nixos:sd host=starbuck
 ```
 
 1. Flash SD card or USB stick with `sd.img`
@@ -46,7 +46,7 @@ agenix --rekey
 Copy user secret decryption key to home dir.
 
 ```shell
-scp ~/.ssh/id_ed25519 adama:.ssh/
+scp ~/.ssh/id_ed25519 starbuck:.ssh/
 ```
 
 Deploy refreshed secrets.

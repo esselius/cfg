@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         host:
-          - adama
           - starbuck
     runs-on: ubuntu-latest
     steps:

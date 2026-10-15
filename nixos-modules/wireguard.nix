@@ -123,9 +123,9 @@ in
           }
         ] ++ cfg.extraPeers;
 
-        # Wire DNS through resolvconf (adama uses openresolv, not resolved): the
-        # nameservers are added for the lifetime of wg0 with metric 0 so they win
-        # over the DHCP-provided resolvers.
+        # Wire DNS through resolvconf (these hosts use openresolv, not resolved):
+        # the nameservers are added for the lifetime of wg0 with metric 0 so they
+        # win over the DHCP-provided resolvers.
         postSetup = optionalString (cfg.dns != [ ]) ''
           printf '${concatMapStrings (s: "nameserver ${s}\n") cfg.dns}' | ${pkgs.openresolv}/bin/resolvconf -a wg0 -m 0
         '';

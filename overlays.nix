@@ -7,25 +7,16 @@ let
     inherit (pkgs.stdenv) system;
     config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [ "claude-code" ];
   };
-  pyproject-nix-lib = inputs.pyproject-nix.lib;
 in
 {
   nixpkgs.overlays = [
     (_final: prev: {
-      nodePackages = prev.nodePackages // {
-        passport-openidconnect = (prev.callPackage ./pkgs/passport-openidconnect { }).package;
-      };
-      audi_connect_ha = unstable-pkgs.callPackage ./pkgs/audi_connect_ha.nix { };
-      easee_hass = unstable-pkgs.callPackage ./pkgs/easee_hass.nix { inherit pyproject-nix-lib; };
-
       darwin = prev.darwin.overrideScope (
         _: _: {
           inherit (unstable-pkgs.darwin) linux-builder;
         }
       );
 
-      inherit (unstable-pkgs) home-assistant;
-      inherit (unstable-pkgs) zigbee2mqtt;
       inherit (unstable-pkgs) opencode claude-code;
     })
   ];

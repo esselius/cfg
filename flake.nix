@@ -26,11 +26,6 @@
 
     raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
     raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
-    authentik-nix = {
-      url = "github:nix-community/authentik-nix/version/2026.2.4";
-      inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
-      inputs.flake-parts.follows = "flake-parts";
-    };
 
     # nix-darwin-25-05.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
     nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
@@ -72,9 +67,6 @@
       url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     };
-
-    pyproject-nix.url = "github:pyproject-nix/pyproject.nix";
-    pyproject-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     # microvm = {
     #   url = "github:esselius/microvm.nix/darwin-v2";
@@ -205,7 +197,6 @@
                 ./overlays.nix
 
                 inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-                inputs.authentik-nix.nixosModules.default
               ];
             }.${class};
         };
@@ -258,56 +249,6 @@
               }
 
               ./darwin-modules/homebrew-packages/work.nix
-            ];
-            specialArgs = { inherit inputs; };
-          };
-
-          adama = {
-            arch = "aarch64";
-            class = "rpi";
-            deployable = true;
-            nixpkgs = inputs.nixpkgs-nixos-25-05;
-            modules = [
-              ./nixos-configurations/adama.nix
-              ./nixos-modules/default.nix
-              inputs.agenix.nixosModules.default
-              inputs.agenix-rekey.nixosModules.default
-              inputs.authentik-nix.nixosModules.default
-              {
-                _module.args.mkAuthentikScope = inputs.authentik-nix.lib.mkAuthentikScope;
-                nixpkgs-path = inputs.nixpkgs-nixos-25-05;
-                nixpkgs-unstable-path = inputs.nixpkgs-unstable;
-
-                age.rekey = {
-                  hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfILv+PA582KwZYcJRX2yCcQVBlh7T9uWUieLBFXHo/";
-                  masterIdentities = [
-                    {
-                      identity = "/Users/peteresselius/.age-plugin-se.key";
-                      pubkey = "age1se1qw3jfq82crjk5x36g7wr8pxscvlynwaxpqjt6wran7j23ped4gjsypanfet";
-                    }
-                  ];
-                  # The work laptop's identity is machine-specific and absent
-                  # here; rage hard-fails on a missing -i file, so keep it out of
-                  # masterIdentities but retain its pubkey as an encryption
-                  # recipient so secrets stay decryptable on that machine too.
-                  extraEncryptionPubkeys = [
-                    "age1se1qgqzwsmme3yatp3ezp4nfncxytdp4mawpguxm2ll08dpw29sp7dxs2ls372"
-                  ];
-                  storageMode = "local";
-                  localStorageDir = ./. + "/secrets/rekeyed/adama";
-                };
-
-                fileSystems = {
-                  "/" = {
-                    device = "/dev/disk/by-label/NIXOS_SD";
-                    fsType = "ext4";
-                  };
-                  "/boot/firmware" = {
-                    device = "/dev/disk/by-label/FIRMWARE";
-                    fsType = "vfat";
-                  };
-                };
-              }
             ];
             specialArgs = { inherit inputs; };
           };

@@ -7,7 +7,7 @@ tasks:
       - task: nixos-rebuild
         vars:
           command: build
-          host: adama
+          host: starbuck
       - cachix push esselius ./result
 
   darwin:build:
