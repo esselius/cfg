@@ -15,17 +15,11 @@
       url = "github:esselius/dev";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    agenix-rekey.follows = "dev/agenix-rekey";
 
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-darwin-26-05.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
-    # nixpkgs-nixos-24-11.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-nixos-25-05.url = "github:NixOS/nixpkgs/nixos-25.05";
-
-    raspberry-pi-nix.url = "github:tstat/raspberry-pi-nix";
-    raspberry-pi-nix.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
 
     # nix-darwin-25-05.url = "github:lnl7/nix-darwin/nix-darwin-25.05";
     nix-darwin-25-05.url = "github:esselius/nix-darwin/linux-builder-with-determinate-nix-25-05";
@@ -34,10 +28,6 @@
     nix-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
 
-    # home-manager-nixos-24-11.url = "github:nix-community/home-manager/release-24.11";
-    # home-manager-nixos-24-11.inputs.nixpkgs.follows = "nixpkgs-nixos-24-11";
-    home-manager-nixos-25-05.url = "github:nix-community/home-manager/release-25.05";
-    home-manager-nixos-25-05.inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     home-manager-darwin-25-05.url = "github:nix-community/home-manager/release-25.05";
     home-manager-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     home-manager-darwin-26-05.url = "github:nix-community/home-manager/release-26.05";
@@ -70,7 +60,6 @@
 
     # microvm = {
     #   url = "github:esselius/microvm.nix/darwin-v2";
-    #   inputs.nixpkgs.follows = "nixpkgs-nixos-25-05";
     #   inputs.spectrum.follows = "dev";
     # };
 
@@ -89,13 +78,6 @@
         "aarch64-linux"
         "aarch64-darwin"
       ];
-
-      perSystem = _: {
-        # Only NixOS/darwin hosts are rekey targets. The stand-alone home
-        # configurations expose `age` (plain agenix) but do not use
-        # agenix-rekey, so keep agenix-rekey from auto-collecting them as nodes.
-        agenix-rekey.homeConfigurations = { };
-      };
 
       flake.homeConfigurations =
         let
@@ -170,35 +152,18 @@
         };
 
       easy-hosts = {
-        additionalClasses = {
-          rpi = "nixos";
-          vm = "nixos";
-        };
+        perClass = _: {
+          modules = [
+            ./darwin-modules/tiling-wm.nix
+            ./darwin-modules/linux-builder.nix
+            ./darwin-modules/security.nix
+            ./darwin-modules/homebrew-packages
+            ./darwin-modules/user.nix
 
-        perClass = class: {
-          modules =
-            {
-              darwin = [
-                ./darwin-modules/tiling-wm.nix
-                ./darwin-modules/linux-builder.nix
-                ./darwin-modules/security.nix
-                ./darwin-modules/homebrew-packages
-                ./darwin-modules/user.nix
+            ./overlays.nix
 
-                ./overlays.nix
-
-                inputs.nix-homebrew.darwinModules.nix-homebrew
-              ];
-              rpi = [
-                ./nixos-modules/context.nix
-                ./nixos-modules/nix.nix
-                ./nixos-modules/profiles
-
-                ./overlays.nix
-
-                inputs.raspberry-pi-nix.nixosModules.raspberry-pi
-              ];
-            }.${class};
+            inputs.nix-homebrew.darwinModules.nix-homebrew
+          ];
         };
 
         hosts = {
