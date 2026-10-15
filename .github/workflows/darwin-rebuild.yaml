@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         host:
-          - Fox
+          - WorkLaptop
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
