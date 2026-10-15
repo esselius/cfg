@@ -136,19 +136,6 @@
               }
             ];
           };
-
-          HomeUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
-            pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
-            extraSpecialArgs = { inherit inputs; };
-            modules = common ++ [
-              {
-                context = "home";
-                formfactor = "desktop";
-                mainUser = "peteresselius";
-                home.stateVersion = "24.05";
-              }
-            ];
-          };
         };
 
       easy-hosts = {
@@ -167,23 +154,6 @@
         };
 
         hosts = {
-          HomeDesktop = {
-            arch = "aarch64";
-            class = "darwin";
-            nixpkgs = inputs.nixpkgs-darwin-26-05;
-            nix-darwin = inputs.nix-darwin-26-05;
-            modules = [
-              {
-                nix.enable = false; # Determinate Nix
-                system.primaryUser = "peteresselius";
-                system.stateVersion = 4;
-              }
-
-              ./darwin-modules/homebrew-packages/home.nix
-            ];
-            specialArgs = { inherit inputs; };
-          };
-
           WorkLaptop = {
             arch = "aarch64";
             class = "darwin";
