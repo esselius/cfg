@@ -18,43 +18,6 @@ sudo nix run nix-darwin -- switch --flake .
 nix run home-manager -- switch --flake .
 ```
 
-## Raspberry Pi bootstrap
-
-Generate SD card image
-
-```shell
-task nixos:sd host=starbuck
-```
-
-1. Flash SD card or USB stick with `sd.img`
-2. Put SD card in RPi
-3. Start RPi attached to network
-
-Grab new ssh host key.
-
-```shell
-ssh-keyscan 192.168.1.195
-```
-
-Update host key in `secrets/secrets.nix` and rekey secrets.
-
-```shell
-cd secrets
-agenix --rekey
-```
-
-Copy user secret decryption key to home dir.
-
-```shell
-scp ~/.ssh/id_ed25519 starbuck:.ssh/
-```
-
-Deploy refreshed secrets.
-
-```shell
-nixos-rebuild switch --flake . --target-host 192.168.1.195 --fast --use-remote-sudo
-```
-
 VM install
 
 ```shell

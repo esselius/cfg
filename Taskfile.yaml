@@ -4,11 +4,6 @@ tasks:
   update:
     cmds:
       - nix flake update
-      - task: nixos-rebuild
-        vars:
-          command: build
-          host: starbuck
-      - cachix push esselius ./result
 
   darwin:build:
     requires:
