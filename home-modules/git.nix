@@ -1,20 +1,58 @@
-{ pkgs, lib, ... }:
+{ pkgs
+, lib
+, options
+, ...
+}:
 
+let
+  # home-manager 25.11+ moved userName/userEmail/aliases/extraConfig into programs.git.settings
+  hasSettings = options.programs.git ? settings;
+
+  user = {
+    name = "Peter Esselius";
+    email = lib.mkDefault "pepp@me.com";
+  };
+
+  aliases = {
+    l = "log --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s %C(yellow)(%C(cyan)%ar%C(yellow), %C(blue)%an%C(yellow))%C(reset)\"";
+    ll = "log --graph --decorate --stat --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s%n %C(cyan)%ar%C(reset), %C(blue)%an%C(reset)%n\"";
+    wc = "whatchanged -p --abbrev-commit --pretty=medium";
+    dc = "diff --cached";
+    unstage = "reset HEAD";
+    uncommit = "reset --soft HEAD^";
+  };
+
+  extraConfig = {
+    init = {
+      defaultBranch = "main";
+    };
+    rebase = {
+      autoSquash = true;
+      autoStash = true;
+    };
+    rerere = {
+      enabled = true;
+      autoUpdate = true;
+    };
+    pull = {
+      rebase = true;
+    };
+    push = {
+      default = "simple";
+    };
+    color = {
+      ui = "auto";
+    };
+    ghq = {
+      root = "~/src";
+    };
+    url."git@github.com:pagero".insteadOf = "https://github.com/pagero";
+    url."git@github.com:esselius".insteadOf = "https://github.com/esselius";
+  };
+in
 {
   programs.git = {
     enable = true;
-
-    userName = "Peter Esselius";
-    userEmail = lib.mkDefault "pepp@me.com";
-
-    aliases = {
-      l = "log --graph --decorate --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s %C(yellow)(%C(cyan)%ar%C(yellow), %C(blue)%an%C(yellow))%C(reset)\"";
-      ll = "log --graph --decorate --stat --pretty=format:\"%C(yellow)%h%C(reset)%C(auto)%d%C(reset) %s%n %C(cyan)%ar%C(reset), %C(blue)%an%C(reset)%n\"";
-      wc = "whatchanged -p --abbrev-commit --pretty=medium";
-      dc = "diff --cached";
-      unstage = "reset HEAD";
-      uncommit = "reset --soft HEAD^";
-    };
 
     ignores = [
       ".*.swp"
@@ -23,35 +61,22 @@
       ".bloop/"
       ".vscode/"
     ];
-
-    extraConfig = {
-      init = {
-        defaultBranch = "main";
-      };
-      rebase = {
-        autoSquash = true;
-        autoStash = true;
-      };
-      rerere = {
-        enabled = true;
-        autoUpdate = true;
-      };
-      pull = {
-        rebase = true;
-      };
-      push = {
-        default = "simple";
-      };
-      color = {
-        ui = "auto";
-      };
-      ghq = {
-        root = "~/src";
-      };
-      url."git@github.com:pagero".insteadOf = "https://github.com/pagero";
-      url."git@github.com:esselius".insteadOf = "https://github.com/esselius";
-    };
-  };
+  }
+  // (
+    if hasSettings then
+      {
+        settings = extraConfig // {
+          inherit user;
+          alias = aliases;
+        };
+      }
+    else
+      {
+        userName = user.name;
+        userEmail = user.email;
+        inherit aliases extraConfig;
+      }
+  );
 
   programs.fish = {
     shellAliases = {

@@ -49,5 +49,7 @@
     nodejs
     btop
     coreutils
+    colima
+    incus.client
   ];
 }

@@ -18,15 +18,12 @@
 
     nixpkgs.follows = "nixpkgs-unstable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-darwin-25-05.url = "github:NixOS/nixpkgs/nixpkgs-25.05-darwin";
     nixpkgs-darwin-26-05.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
     nix-darwin-26-05.url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
     nix-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
 
-    home-manager-darwin-25-05.url = "github:nix-community/home-manager/release-25.05";
-    home-manager-darwin-25-05.inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
     home-manager-darwin-26-05.url = "github:nix-community/home-manager/release-26.05";
     home-manager-darwin-26-05.inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
 
@@ -50,9 +47,9 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
-      inputs.nixpkgs.follows = "nixpkgs-darwin-25-05";
+    nixvim-26-05 = {
+      url = "github:nix-community/nixvim/nixos-26.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin-26-05";
     };
 
     # microvm = {
@@ -93,7 +90,6 @@
 
             inputs.agenix.homeManagerModules.default
             inputs.nix-index-database.homeModules.nix-index
-            inputs.nixvim.homeModules.nixvim
             inputs.krewfile.homeManagerModules.krewfile
 
             (
@@ -108,10 +104,11 @@
           ];
         in
         {
-          WorkUser = inputs.home-manager-darwin-25-05.lib.homeManagerConfiguration {
-            pkgs = inputs.nixpkgs-darwin-25-05.legacyPackages.aarch64-darwin;
+          WorkUser = inputs.home-manager-darwin-26-05.lib.homeManagerConfiguration {
+            pkgs = inputs.nixpkgs-darwin-26-05.legacyPackages.aarch64-darwin;
             extraSpecialArgs = { inherit inputs; };
             modules = common ++ [
+              inputs.nixvim-26-05.homeModules.nixvim
               {
                 formfactor = "laptop";
                 mainUser = "pepp";
@@ -138,7 +135,6 @@
         perClass = _: {
           modules = [
             ./darwin-modules/tiling-wm.nix
-            ./darwin-modules/linux-builder.nix
             ./darwin-modules/security.nix
             ./darwin-modules/homebrew-packages
             ./darwin-modules/user.nix
@@ -157,6 +153,7 @@
             nix-darwin = inputs.nix-darwin-26-05;
             modules = [
               inputs.determinate.darwinModules.default
+              ./darwin-modules/linux-builder.nix
               {
                 system.primaryUser = "pepp";
                 system.stateVersion = 5;
